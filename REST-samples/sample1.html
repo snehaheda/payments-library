@@ -66,14 +66,14 @@
 			The following parameters and optional:
 				* contactId - if it is passed, the created Payment Method will be linked to the specified Contact
 				* amount - if it is passsed, after creating the Payment Method, the card will be charged with the specified amount.
-				  The amount is set by cents.
+				  The amount is set in dollars.
 	
 		*/		
  			
  		var endpoint = 'https://paym6-dev-developer-edition.na35.force.com/h/services/apexrest/checkout';
 
  		var publishableKey = 'pk_test_kUHtTE2jDeUnwCDFNCjCyTXe';
-		var contactId = '00341000003ftLk';
+		var contactId = '00341000003ftLm';
 		var amount = 900;
 
 		// You are setting the keys for Stripe
@@ -130,8 +130,8 @@
 			var d = {
 				token : JSON.stringify(stripeResponse),
 			 		publishableKey : publishableKey,
-			 		//contactId : contactId
-			 		//amount : amount
+			 		contactId : contactId,
+			 		amount : amount,
 			 		//targetId : targetId,
 		 	};		
 
@@ -155,7 +155,6 @@
 			var res = JSON.parse(d);
 			if (res.success === true) { onSuccess(res); }
 			if (res.success === false) { onFail(res); }
-			};
 		}
 
 
