@@ -6,8 +6,8 @@
 
 	<!-- This is your Credit Card form. You can modify it, but you NEED to get
 		* CC Number
+		* Expiration month
 		* Expiration year
-		* Expirtation month
 		* CVV
 	-->
 
@@ -52,9 +52,9 @@
 
 	<script type="text/javascript">	
 		/*
-			These are the parameters which you are passing to the endpoint hosted on you SF org.
+			These are the parameters which you are passing to the endpoint hosted on your SF org.
 
-			A good way to test if you endpoint work to ping it with 'curl':
+			A good way to test if you endpoint works is to ping it with 'curl':
 				curl https://paym6-dev-developer-edition.na35.force.com/h/services/apexrest/checkout -d x
 
 			You should get something like this:
@@ -63,10 +63,10 @@
 			You MUST pass the following parameters:
 				* publishableKey - the value of 'Stripe Publishable Key' field on your 'Payment Gateway' record
 			
-			The following parameters and optional:
+			The following parameters are optional:
 				* contactId - if it is passed, the created Payment Method will be linked to the specified Contact
 				* amount - if it is passsed, after creating the Payment Method, the card will be charged with the specified amount.
-				  The amount is set in dollars.
+				  The amount is set in dollars as we do not yet support currency processing other than USD (coming soon).
 	
 		*/		
  			
@@ -121,9 +121,11 @@
 		/*
 			This function constructs a POST call to the Salesforce org.
 			Along with the token, you should send your parameters.
-			Only 'publishableKey' is required, other are optional.
+			Only 'publishableKey' is required, others are optional. 
+			The publishableKey can be found in your SF org on your Payment Gateway record. 
+			(NOT within the Stripe dashboard)
 
-			Here we are using JQuery to for the POST call, but you can implement using any other library.
+			Here we are using JQuery for the POST call, but you can implement using any other library.
 			The endpoint accepts 'application/x-www-form-urlencoded' content type.
 		*/
 		function sendToSalesforceInstance(stripeResponse) {
@@ -145,7 +147,7 @@
 
 		/*
 			Finally, you will receive a response from the Salesforce endpoint.
-			It is a JSON object with the followin properties:
+			It is a JSON object with the following properties:
 				* success - A boolean, indicates if the operation was successful
 				* errorMessage - A message, if something went wrong
 				* pm - The newly created Payment Methods record
