@@ -1,138 +1,189 @@
 <html>
 <body>
 
-
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 	<script type="text/javascript" src="https://js.stripe.com/v2/"></script>
+
+	<!-- This is your Credit Card form. You can modify it, but you NEED to get
+		* CC Number
+		* Expiration year
+		* Expirtation month
+		* CVV
+	-->
+
+	<form action="" method="POST" id="payment-form">
+
+		<span class="payment-errors"></span>
+
+		<div class="form-row">
+		
+			<label>
+				<span>Card Number</span>
+				<input type="text" size="20" data-stripe="number">
+			</label>
+		
+		</div>
+
+		<div class="form-row">
+
+			<label>
+				<span>Expiration (MM/YY)</span>
+				<input type="text" size="2" data-stripe="exp_month">
+			</label>
+			<span> / </span>
+			<input type="text" size="2" data-stripe="exp_year">
+			
+		</div>
+
+		<div class="form-row">
+
+			<label>
+				<span>CVC</span>
+				<input type="text" size="4" data-stripe="cvc">
+			</label>
+		
+		</div>
+
+		<input type="submit" class="submit" value="Submit Payment">
+
+	</form>
 
 
 
 	<script type="text/javascript">	
-		Stripe.setPublishableKey('pk_test_kUHtTE2jDeUnwCDFNCjCyTXe');
-		//var endpoint = 'https://p360peterdev5191-developer-edition.na35.force.com/webhook/services/apexrest/checkout';
+		/*
+			These are the parameters which you are passing to the endpoint hosted on you SF org.
+
+			A good way to test if you endpoint work to ping it with 'curl':
+				curl https://paym6-dev-developer-edition.na35.force.com/h/services/apexrest/checkout -d x
+
+			You should get something like this:
+				{"tra":null,"success":false,"pm":null,"errorMessage":"null input to JSON parser\n Class.System.JSON.deserialize: line 15, column 1\nClass.REST_Checkout.doPost: line 25, column 1"}18:02:16-tempflip~/sf/payment360-library/REST-samples (master)$ 
+
+			You MUST pass the following parameters:
+				* publishableKey - the value of 'Stripe Publishable Key' field on your 'Payment Gateway' record
+			
+			The following parameters and optional:
+				* contactId - if it is passed, the created Payment Method will be linked to the specified Contact
+				* amount - if it is passsed, after creating the Payment Method, the card will be charged with the specified amount.
+				  The amount is set by cents.
+	
+		*/		
  			
  		var endpoint = 'https://paym6-dev-developer-edition.na35.force.com/h/services/apexrest/checkout';
 
- 		var paymentGatewayId = 'a0141000001OaBF'; 
- 		var contactId = '00341000003ftLk';
+ 		var publishableKey = 'pk_test_kUHtTE2jDeUnwCDFNCjCyTXe';
+		var contactId = '00341000003ftLk';
+		var amount = 900;
+
+		// You are setting the keys for Stripe
+ 		Stripe.setPublishableKey(publishableKey);
+
+ 		/* 
+ 			This is a convenience function. You can remove it, but you should implement the 
+ 			Stripe.card.createToken() line.
+
+ 			Please see 
+ 			https://stripe.com/docs/stripe.js
+ 			for details.
+ 		*/
 
 		$(function() {
 			var $form = $('#payment-form');
 			$form.submit(function(event) {
-			    // Disable the submit button to prevent repeated clicks:
-			    $form.find('.submit').prop('disabled', true);
+				// Disable the submit button to prevent repeated clicks:
+				$form.find('.submit').prop('disabled', true);
 
-			    // Request a token from Stripe:
-			    Stripe.card.createToken($form, stripeResponseHandler);
+				// Request a token from Stripe:
+				Stripe.card.createToken($form, stripeResponseHandler);
 
-			    // Prevent the form from being submitted:
-			    return false;
+				// Prevent the form from being submitted:
+				return false;
 			});
 		});
 
 
-	function stripeResponseHandler(status, response) {
-		// Grab the form:
-		var $form = $('#payment-form');
+		// After passing credit card data to Stripe, you will get back a token.
+		// If there was no error, you should pass this token to the Salesforce endpoint. (the sendToSalesforceInstance() function)
+		function stripeResponseHandler(status, response) {
+			// Grab the form:
+			var $form = $('#payment-form');
 
-		if (response.error) { // Problem!
+			if (response.error) { // Problem!
+				// Show the errors on the form:
+				$form.find('.payment-errors').text(response.error.message);
+				$form.find('.submit').prop('disabled', false); // Re-enable submission
+			} else { // Token was created!
+				sendToSalesforceInstance(response);
+			}
+		};
 
-		    // Show the errors on the form:
-		    $form.find('.payment-errors').text(response.error.message);
-		    $form.find('.submit').prop('disabled', false); // Re-enable submission
+		/*
+			This function constructs a POST call to the Salesforce org.
+			Along with the token, you should send your parameters.
+			Only 'publishableKey' is required, other are optional.
 
-		} else { // Token was created!
+			Here we are using JQuery to for the POST call, but you can implement using any other library.
+			The endpoint accepts 'application/x-www-form-urlencoded' content type.
+		*/
+		function sendToSalesforceInstance(stripeResponse) {
+			var d = {
+				token : JSON.stringify(stripeResponse),
+			 		publishableKey : publishableKey,
+			 		//contactId : contactId
+			 		//amount : amount
+			 		//targetId : targetId,
+		 	};		
 
-		    // Get the token ID:
-		    var token = response;
-		    console.log(token);
-
-		    sendToSalesforceInstance(response);
+			$.ajax({
+				type : 'POST',
+				url : endpoint,
+				data : formEncode(d),
+				success : salesforceCallback
+				}); 
 		}
-	};
 
-	function sendToSalesforceInstance(stripeResponse) {
-		
-		console.log('### TOKEN', stripeResponse);
-
-		var d = {
-			token : JSON.stringify(stripeResponse),
-	   		paymentGatewayId : paymentGatewayId,
-	   		//targetId : targetId,
-	   		//customerId : customerId,
-	   		//contactId : contactId
-	 	};		
-
-	 	console.log(formEncode(d));
-
-		$.ajax({
-			type : 'POST',
-			url : endpoint,
-			data : formEncode(d),
-			success : salesforceCallback
-  		}); 
-	
-	}
-
-	function salesforceCallback(d) {
-		var res = JSON.parse(d);
-		console.log('salesforceCallback', res);
-		if (res.success === true) { onSuccess(res); }
-		if (res.success === false) { onFail(res); }
-  	};
-
-  	function onSuccess(res) {
-  		console.log(res);
-  	}
-
-  	function onFail(res) {
-  		console.log(res);
-  	}
-
-  	// turns JSON to form encoded string
-	function formEncode(d) {
-		var l = [];
-		for (var k in d) {
-			l.push(k + '=' + encodeURIComponent(d[k]));
+		/*
+			Finally, you will receive a response from the Salesforce endpoint.
+			It is a JSON object with the followin properties:
+				* success - A boolean, indicates if the operation was successful
+				* errorMessage - A message, if something went wrong
+				* pm - The newly created Payment Methods record
+				* tra - The newly create Transaction (if there is so)
+		*/
+		function salesforceCallback(d) {
+			var res = JSON.parse(d);
+			if (res.success === true) { onSuccess(res); }
+			if (res.success === false) { onFail(res); }
+			};
 		}
-		return l.join('&');
-	};
 
 
 
 
+		function onSuccess(res) {
+			console.log('## Great, it was successful!');
+			console.log(res);
+		}
+
+		function onFail(res) {
+			console.log('## Oh no, it went wrong:(');
+			console.log(res);
+		}
+
+		// A helper function, turns JSON to form encoded string
+		function formEncode(d) {
+			var l = [];
+			for (var k in d) {
+				l.push(k + '=' + encodeURIComponent(d[k]));
+			}
+			return l.join('&');
+		};
 
 	</script>
 
 
-	<form action="" method="POST" id="payment-form">
-	  <span class="payment-errors"></span>
 
-	  <div class="form-row">
-	    <label>
-	      <span>Card Number</span>
-	      <input type="text" size="20" data-stripe="number">
-	    </label>
-	  </div>
-
-	  <div class="form-row">
-	    <label>
-	      <span>Expiration (MM/YY)</span>
-	      <input type="text" size="2" data-stripe="exp_month">
-	    </label>
-	    <span> / </span>
-	    <input type="text" size="2" data-stripe="exp_year">
-	  </div>
-
-	  <div class="form-row">
-	    <label>
-	      <span>CVC</span>
-	      <input type="text" size="4" data-stripe="cvc">
-	    </label>
-	  </div>
-
-	  <input type="submit" class="submit" value="Submit Payment">
-	</form>
 
 
 </body>
