@@ -86,7 +86,8 @@
 				* contactId - if it is passed, the created Payment Method will be linked to the specified Contact
 				* amount - if it is passsed, after creating the Payment Method, the card will be charged with the specified amount.
 				  The amount is set in dollars as we do not yet support currency processing other than USD (coming soon).
-	
+				* targetId - value of the parent lookup on the transaction
+				* email - email of the newly created cusomer
 		*/		
  			
  		var endpoint = 'https://paym6-dev-developer-edition.na35.force.com/h/services/apexrest/checkout';
