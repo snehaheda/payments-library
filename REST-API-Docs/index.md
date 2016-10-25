@@ -95,7 +95,7 @@ Creates a Customer class from an existing SOQL **bt_stripe__Stripe_Customer__c**
 * __paymentGatewayId__ Id of the Payment Gateway associated with the Stripe Customer. Required.
 * __accountId__ Id of the Account associated with the Customer.
 * __contactId__ Id of the Contact associated with the Customer.
-* __record__ bt_stripe__Stripe_Customer__c record of the customer. Available after calling the `registerCustomer()` method.
+* __record__ bt_stripe__Stripe_Customer__c record of the Customer. Available after calling the `registerCustomer()` method.
 
 #### Actions
 
