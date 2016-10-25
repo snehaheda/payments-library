@@ -9,17 +9,17 @@ All off the classes are part of the `bt_stripe.P360_API_v1` class.
 
 The following wrapper classes are available:
 
-* `bt_stripe.Customer` represents a Customer in Stripe database. Corresponds to the **bt_stripe__Stripe_Customer__c** object
-* `bt_stripe.PM` represents Payment Method in Stripe database. Corresponds to the **bt_stripe__Payment_Method__c** object
-* `bt_stripe.Tra` represents Transaction in Stripe database. Corresponds to the **bt_stripe__Transaction__c** object
+* `bt_stripe.Customer` represents a Customer in Stripe's database. Corresponds to the **bt_stripe__Stripe_Customer__c** object
+* `bt_stripe.PM` represents Payment Method in Stripe's database. Corresponds to the **bt_stripe__Payment_Method__c** object
+* `bt_stripe.Tra` represents Transaction in Stripe's database. Corresponds to the **bt_stripe__Transaction__c** object
 
-You should create these objects using factory methods because the API class should register their in the background. Use the following factory methods:
+You should create these objects using factory methods because the API class should register them in the background. Use the following factory methods:
 
 * `bt_stripe.P360_API_v1.customerFactory()`
 * `bt_stripe.P360_API_v1.paymentMethodFactory()`
 * `bt_stripe.P360_API_v1.transactionFactory()`
 
-After you created your entity objects and did some actions, you need to commit your work using the following method:
+After you create your entity objects and some actions, you need to commit your work using the following method:
 
 `bt_stripe.P360_API_v1.commitWork()`
 
