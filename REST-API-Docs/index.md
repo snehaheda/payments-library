@@ -15,11 +15,56 @@ The following wrapper classes are available:
 
 You should create these objects using factory methods because the API class should register their in the background. Use the following factory methods:
 
-* `bt_stripe.P360_API_v1.customerFactory`
-* `bt_stripe.P360_API_v1.paymentMethodFactory`
-* `bt_stripe.P360_API_v1.transactionFactory`
+* `bt_stripe.P360_API_v1.customerFactory()`
+* `bt_stripe.P360_API_v1.paymentMethodFactory()`
+* `bt_stripe.P360_API_v1.transactionFactory()`
+
+After you created your entity objects and did some actions, you need to commit your work using the following method:
+
+`bt_stripe.P360_API_v1.commitWork()`
+
+This call saves your work in existing or new SOQL objects. This is a DML operation, so make sure you don't make any HTTP callouts after making the commit call. Also, after the commit don't do any payment360 API actions -- this should be the last action in your executing context.
+
+## A basic example
+
+This code snippet creates a new Customer and adds a new Payment Method. Once the payment method is registered to Stripe, a new Transaction is created and captured.
+
+Note that all the entities are created using the factory methods. You need to set all the required properties and after they are set, you can call action methods on them. For example `c.registerCustomer()` or `t.capture()`.
 
 
+```
+		try {
+			bt_stripe.P360_API_v1.Customer c = bt_stripe.P360_API_v1.customerFactory();
+			c.paymentGatewayId = pgList[0].Id;
+			c.name = name;
+			c.email = email;
+			c.registerCustomer();
+
+			bt_stripe.P360_API_v1.PM pm = bt_stripe.P360_API_v1.paymentMethodFactory();
+			pm.paymentGatewayId = pgList[0].Id;
+			pm.customer = c;
+			pm.cardHolderName = name;
+			pm.cardNumber = cardNumber;
+			pm.cardExpYear = cardExpYear;
+			pm.cardExpMonth = cardExpMonth;
+			pm.cvv = cvc;
+			pm.registerPM();
+
+			system.debug('++++ ' + pm.record);
+
+			bt_stripe.P360_API_v1.Tra t = bt_stripe.P360_API_v1.transactionFactory();
+			t.paymentGatewayId = pgList[0].Id;
+			t.pm = pm;
+			t.amount = amount;
+			t.capture();
+
+			bt_stripe.P360_API_v1.commitWork();
+		} catch(bt_stripe.P360_API_v1.P360_Exception e) {
+			// do something on the exception
+			system.debug(e.getMessage());
+		}
+
+```
 
 
 
