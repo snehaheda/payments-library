@@ -31,6 +31,10 @@ This code snippet creates a new Customer and adds a new Payment Method. Once the
 
 Note that all the entities are created using the factory methods. You need to set all the required properties and after they are set, you can call action methods on them. For example `c.registerCustomer()` or `t.capture()`.
 
+Also note that `bt_stripe.P360_API_v1.commitWork()` is happening as the very last action.
+
+It is very important to catch the error. If some error happens (for example, a payment method can't be registered for some reason), the API is throwing a `bt_stripe.P360_API_v1.P360_Exception`. Catching the error you can decide about the further flow of your business logic. 
+
 
 ```
 		try {
@@ -65,6 +69,48 @@ Note that all the entities are created using the factory methods. You need to se
 		}
 
 ```
+
+## Classes
+
+### bt_stripe.P360_API_v1.Customer
+
+Represents a Stripe Customer
+
+#### Properties
+
+* __name__ Name of the Customer. Required.
+* __email__ Email of the Customer.
+* __paymentGatewayId__ Id of the Payment Gateway associated with the Stripe Customer. Required.
+* __accountId__ Id of the Account associated with the Customer.
+* __contactId__ Id of the Contact associated with the Customer.
+* __record__ bt_stripe__Stripe_Customer__c record of the customer. Available after calling the `registerCustomer()` method.
+
+#### Actions
+
+* `registerCustomer()` Registers the Customer in Stripe. After calling the method, __record__ property is available.
+
+* `updateCustomer()` Need to implement.
+
+
+
+
+### bt_stripe.P360_API_v1.PM
+
+
+
+### bt_stripe.P360_API_v1.Tra
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
