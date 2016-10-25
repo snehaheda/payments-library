@@ -76,6 +76,16 @@ It is very important to catch the error. If some error happens (for example, a p
 
 Represents a Stripe Customer
 
+#### Initializing
+
+Use the `customerFactory()` method.
+
+`bt_stripe.P360_API_v1.Customer c = bt_stripe.P360_API_v1.customerFactory();`
+Creates an empty Customer class.
+
+`bt_stripe.P360_API_v1.Customer c = bt_stripe.P360_API_v1.customerFactory(stripeCustomerId);`
+Creates a Customer class from an existing SOQL __bt_stripe__Stripe_Customer__c__ object.
+
 #### Properties
 
 * __name__ Name of the Customer. Required.
