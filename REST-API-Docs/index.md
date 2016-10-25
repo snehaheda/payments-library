@@ -10,8 +10,8 @@ All off classes are parts of the `bt_stripe.P360_API_v1` class.
 The following wrapper classes are available:
 
 * `bt_stripe.Customer` represents a Customer in Stripe database. Corresponds to the **bt_stripe__Stripe_Customer__c** object
-* `bt_stripe.PM` represents Payment Method in Stripe database. Corresponds to the __bt_stripe__Payment_Method__c__ object
-* `bt_stripe.Tra` represents Transaction in Stripe database. Corresponds to the __bt_stripe__Transaction__c__ object
+* `bt_stripe.PM` represents Payment Method in Stripe database. Corresponds to the **bt_stripe__Payment_Method__c** object
+* `bt_stripe.Tra` represents Transaction in Stripe database. Corresponds to the **bt_stripe__Transaction__c** object
 
 You should create these objects using factory methods because the API class should register their in the background. Use the following factory methods:
 
