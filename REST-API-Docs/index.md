@@ -80,11 +80,11 @@ Represents a Stripe Customer
 
 Use the `customerFactory()` method.
 
-`bt_stripe.P360_API_v1.Customer c = bt_stripe.P360_API_v1.customerFactory();`
+* `bt_stripe.P360_API_v1.Customer c = bt_stripe.P360_API_v1.customerFactory();`
 
 Creates an empty Customer class.
 
-`bt_stripe.P360_API_v1.Customer c = bt_stripe.P360_API_v1.customerFactory(stripeCustomerId);`
+* `bt_stripe.P360_API_v1.Customer c = bt_stripe.P360_API_v1.customerFactory(stripeCustomerId);`
 
 Creates a Customer class from an existing SOQL **bt_stripe__Stripe_Customer__c** object.
 
