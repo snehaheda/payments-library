@@ -95,7 +95,7 @@ Creates a Customer class from an existing SOQL **bt_stripe__Stripe_Customer__c**
 * __paymentGatewayId__ Id of the Payment Gateway associated with the Stripe Customer. Required.
 * __accountId__ Id of the Account associated with the Customer.
 * __contactId__ Id of the Contact associated with the Customer.
-* __record__ 'bt_stripe__Stripe_Customer__c' record of the Customer. Available after calling the `registerCustomer()` method.
+* __record__ **bt_stripe__Stripe_Customer__c** record of the Customer. Available after calling the `registerCustomer()` method.
 
 #### Actions
 
@@ -124,14 +124,14 @@ Creates a PM class from an existing SOQL **bt_stripe__Payment_Method__c** object
 
 #### Properties
 
-* __customer__ reference to bt_stripe.P360_API_v1.Customer object for associating PM to Customer. Required.
+* __customer__ reference to bt_stripe.P360_API_v1.Customer object for associating Payment Method to Customer. Required.
 * __cardHolderName__ Name on the card. Required.
 * __cardNumber__ The card number, as a string without any separators. Required.
-* __cardExpYear__ Two or four digit number representing the card's expiration year. Required.
+* __cardExpYear__ Two or four digit number representing the card's expiration year. Required. **(Peter please confirm usage of 4 digits. Also stripe documentation has it as non-mandatory for few countries, what's our behavior?)**
 * __cardExpMonth__ Two digit number representing the card's expiration month. Required.
 * __cvv__ Card security code. Required.
 * __paymentGatewayId__ Id of the Payment Gateway associated with the Stripe Payment Method. Required.
-* __record__ 'bt_stripe__Payment_Method__c' record of the Payment Method. Available after calling the `registerPM()` method.
+* __record__ **bt_stripe__Payment_Method__c** record of the Payment Method. Available after calling the `registerPM()` method.
 
 #### Actions
 
@@ -141,6 +141,43 @@ Creates a PM class from an existing SOQL **bt_stripe__Payment_Method__c** object
 
 
 ### bt_stripe.P360_API_v1.Tra
+
+Represents a Stripe Transaction
+
+#### Initializing
+
+Use the `transactionFactory()` method.
+
+* `bt_stripe.P360_API_v1.Tra c = bt_stripe.P360_API_v1.transactionFactory();`
+
+Creates an empty Tra class.
+
+* `bt_stripe.P360_API_v1.Tra c = bt_stripe.P360_API_v1.transactionFactory(transId);`
+
+Creates a Tra class from an existing SOQL **bt_stripe__Transaction__c** object.
+
+#### Properties
+
+* __pm__ reference to bt_stripe.P360_API_v1.PM object for associating Transaction to Payment Method. Required.
+* __amount__ Decimal number representing how much to charge. Required. **(Peter please confirm unit here i.e. stripe asks for smalleset currency unit and smallest charge can eb $0.5)**
+* __dueDate__ Non-mandatory information, used by Payment360 app for auto-processing transactions on scheduled dates.
+* __authOnly__ Boolean flag for creating authorize-only transaction. Default value is false.
+* __paymentGatewayId__ Id of the Payment Gateway associated with the Stripe Transaction. Required.
+* __record__ **bt_stripe__Transaction__c** record of the Payment Method. Available after calling the `register()` method.
+
+#### Actions
+
+* `register()` Registers the Payment Method in Stripe. After calling the method, __record__ property is available.
+
+* `authorize()` Authorizes existing open transaction. Throws exception if transaction is already authorized or captured.
+
+* `capture()` Captures existing authorized transaction. Throws exception if transaction is not authorized or its already captured
+
+* `refund()` For making full refund on captured transaction. Need to implement.
+
+* `refundAmount(Decimal refundAmount)` For making partial refund on captured transaction. Need to implement.
+
+* `setParent(Schema.SObjectField field, Object value)` For associating transaction record to a parent SObject record. Need to implement.
 
 
 
