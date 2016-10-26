@@ -114,11 +114,11 @@ Represents a Stripe Payment Method (Works with credit cards only for now)
 
 Use the `paymentMethodFactory()` method.
 
-* `bt_stripe.P360_API_v1.PM c = bt_stripe.P360_API_v1.paymentMethodFactory();`
+* `bt_stripe.P360_API_v1.PM p = bt_stripe.P360_API_v1.paymentMethodFactory();`
 
 Creates an empty PM class.
 
-* `bt_stripe.P360_API_v1.PM c = bt_stripe.P360_API_v1.paymentMethodFactory(paymentMethodId);`
+* `bt_stripe.P360_API_v1.PM p = bt_stripe.P360_API_v1.paymentMethodFactory(paymentMethodId);`
 
 Creates a PM class from an existing SOQL **bt_stripe__Payment_Method__c** object.
 
@@ -148,11 +148,11 @@ Represents a Stripe Transaction
 
 Use the `transactionFactory()` method.
 
-* `bt_stripe.P360_API_v1.Tra c = bt_stripe.P360_API_v1.transactionFactory();`
+* `bt_stripe.P360_API_v1.Tra t = bt_stripe.P360_API_v1.transactionFactory();`
 
 Creates an empty Tra class.
 
-* `bt_stripe.P360_API_v1.Tra c = bt_stripe.P360_API_v1.transactionFactory(transId);`
+* `bt_stripe.P360_API_v1.Tra t = bt_stripe.P360_API_v1.transactionFactory(transId);`
 
 Creates a Tra class from an existing SOQL **bt_stripe__Transaction__c** object.
 
