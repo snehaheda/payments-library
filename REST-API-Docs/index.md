@@ -95,7 +95,7 @@ Creates a Customer class from an existing SOQL **bt_stripe__Stripe_Customer__c**
 * __paymentGatewayId__ Id of the Payment Gateway associated with the Stripe Customer. Required.
 * __accountId__ Id of the Account associated with the Customer.
 * __contactId__ Id of the Contact associated with the Customer.
-* __record__ bt_stripe__Stripe_Customer__c record of the Customer. Available after calling the `registerCustomer()` method.
+* __record__ 'bt_stripe__Stripe_Customer__c' record of the Customer. Available after calling the `registerCustomer()` method.
 
 #### Actions
 
@@ -131,7 +131,7 @@ Creates a PM class from an existing SOQL **bt_stripe__Payment_Method__c** object
 * __cardExpMonth__ Two digit number representing the card's expiration month. Required.
 * __cvv__ Card security code. Required.
 * __paymentGatewayId__ Id of the Payment Gateway associated with the Stripe Payment Method. Required.
-* __record__ bt_stripe__Payment_Method__c record of the Payment Method. Available after calling the `registerPM()` method.
+* __record__ 'bt_stripe__Payment_Method__c' record of the Payment Method. Available after calling the `registerPM()` method.
 
 #### Actions
 
