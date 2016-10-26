@@ -167,7 +167,7 @@ Creates a Tra class from an existing SOQL **bt_stripe__Transaction__c** object.
 
 #### Actions
 
-* `register()` Registers the Payment Method in Stripe. After calling the method, __record__ property is available.
+* `register()` Registers an open transaction in Salesforce.com database without sending it to Stripe server. After calling the method, __record__ property is available.
 
 * `authorize()` Authorizes existing open transaction. Throws exception if transaction is already authorized or captured.
 
