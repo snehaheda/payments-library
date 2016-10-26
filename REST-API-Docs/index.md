@@ -169,9 +169,9 @@ Creates a Tra class from an existing SOQL **bt_stripe__Transaction__c** object.
 
 * `register()` Registers an open transaction in Salesforce.com database without sending it to Stripe server. After calling the method, __record__ property is available.
 
-* `authorize()` Authorizes existing open transaction. Throws exception if transaction is already authorized or captured.
+* `authorize()` Authorizes a new or existing open transaction. Throws exception if transaction is already authorized or captured.
 
-* `capture()` Captures existing authorized transaction. Throws exception if transaction is not authorized or its already captured
+* `capture()` Captures a new or existing open/authorized transaction. Throws exception if transaction is already captured.
 
 * `refund()` For making full refund on captured transaction. Need to implement.
 
@@ -179,6 +179,233 @@ Creates a Tra class from an existing SOQL **bt_stripe__Transaction__c** object.
 
 * `setParent(Schema.SObjectField field, Object value)` For associating transaction record to a parent SObject record. Need to implement.
 
+### Examples
+
+Example 1: creating a Stripe Customer
+
+	try {
+		bt_stripe.P360_API_v1.Customer c = bt_stripe.P360_API_v1.customerFactory();
+		
+		c.paymentGatewayId = pgList[0].Id;
+		c.name = name;
+		c.email = email;
+		
+		//optionally set AccountId and/or ContactId for associating new customer with
+		c.accountId = accountId;
+		c.contactId = contactId;
+		
+		//bt_stripe.P360_API_v1.P360_Exception if something goes wrong with creating customer in Stripe
+		c.registerCustomer();
+		
+		//bt_stripe.P360_API_v1.P360_Exception if something goes wrong with committing records in database
+		bt_stripe.P360_API_v1.commitWork();
+	} catch (Exception ex) {
+		//do error handling here
+	}
+
+Example 2: creating a Stripe Customer and Stripe Payment Method
+
+	try {
+		bt_stripe.P360_API_v1.Customer c = bt_stripe.P360_API_v1.customerFactory();
+		
+		c.paymentGatewayId = pgList[0].Id;
+		c.name = name;
+		c.email = email;
+		//optionally set AccountId and/or ContactId for associating new customer with
+		c.accountId = accountId;
+		c.contactId = contactId;
+		//bt_stripe.P360_API_v1.P360_Exception if something goes wrong with creating customer in Stripe
+		c.registerCustomer();
+		
+		bt_stripe.P360_API_v1.PM pm = bt_stripe.P360_API_v1.paymentMethodFactory();
+		pm.paymentGatewayId = pgList[0].Id;
+		pm.customer = c;
+		pm.cardHolderName = 'test customer';
+		pm.cardNumber = '4242424242424242';
+		pm.cardExpYear = '19';
+		pm.cardExpMonth = '09';
+		pm.cvv = '000';
+		//bt_stripe.P360_API_v1.P360_Exception if something goes wrong with creating Payment Method in Stripe
+		pm.registerPM();
+		
+		//bt_stripe.P360_API_v1.P360_Exception if something goes wrong with committing records in database
+		bt_stripe.P360_API_v1.commitWork();
+	} catch (Exception ex) {
+		//do error handling here
+	}
+
+Example 3: creating a Stripe Customer, Stripe Payment Method and capture Stripe Transaction
+
+	try {
+		bt_stripe.P360_API_v1.Customer c = bt_stripe.P360_API_v1.customerFactory();
+		
+		c.paymentGatewayId = pgList[0].Id;
+		c.name = name;
+		c.email = email;
+		//optionally set AccountId and/or ContactId for associating new customer with
+		c.accountId = accountId;
+		c.contactId = contactId;
+		//bt_stripe.P360_API_v1.P360_Exception if something goes wrong with creating customer in Stripe
+		c.registerCustomer();
+		
+		bt_stripe.P360_API_v1.PM pm = bt_stripe.P360_API_v1.paymentMethodFactory();
+		pm.paymentGatewayId = pgList[0].Id;
+		pm.customer = c;
+		pm.cardHolderName = 'test customer';
+		pm.cardNumber = '4242424242424242';
+		pm.cardExpYear = '19';
+		pm.cardExpMonth = '09';
+		pm.cvv = '000';
+		//bt_stripe.P360_API_v1.P360_Exception if something goes wrong with creating Payment Method in Stripe
+		pm.registerPM();
+		
+		bt_stripe.P360_API_v1.Tra t = bt_stripe.P360_API_v1.transactionFactory();
+		t.paymentGatewayId = pgList[0].Id;
+		t.pm = pm;
+		t.amount = 110.5;
+		//bt_stripe.P360_API_v1.P360_Exception if something goes wrong with processing Transaction
+		t.capture();
+		
+		//bt_stripe.P360_API_v1.P360_Exception if something goes wrong with committing records in database
+		bt_stripe.P360_API_v1.commitWork();
+	} catch (Exception ex) {
+		//do error handling here
+	}
+	
+Example 4: Creating Payment Method for existing Customer
+
+	try {
+		bt_stripe.P360_API_v1.Customer c = bt_stripe.P360_API_v1.customerFactory('0Xxxx0123afg');
+		
+		bt_stripe.P360_API_v1.PM pm = bt_stripe.P360_API_v1.paymentMethodFactory();
+		pm.paymentGatewayId = pgList[0].Id;
+		pm.customer = c;
+		pm.cardHolderName = 'test customer';
+		pm.cardNumber = '4242424242424242';
+		pm.cardExpYear = '19';
+		pm.cardExpMonth = '09';
+		pm.cvv = '000';
+		//bt_stripe.P360_API_v1.P360_Exception if something goes wrong with creating Payment Method in Stripe
+		pm.registerPM();
+		
+		//bt_stripe.P360_API_v1.P360_Exception if something goes wrong with committing records in database
+		bt_stripe.P360_API_v1.commitWork();
+	} catch (Exception ex) {
+		//do error handling here
+	}
+	
+Example 5: Creating an Open transaction with existing Payment Method (and customer, as its associated with PM)
+
+	try {
+		bt_stripe.P360_API_v1.PM pm = bt_stripe.P360_API_v1.paymentMethodFactory('0Xxxx0123afg');
+		
+		bt_stripe.P360_API_v1.Tra t = bt_stripe.P360_API_v1.transactionFactory();
+		t.paymentGatewayId = pgList[0].Id;
+		t.pm = pm;
+		t.amount = 110.5;
+		t.register();
+		
+		//bt_stripe.P360_API_v1.P360_Exception if something goes wrong with committing records in database
+		bt_stripe.P360_API_v1.commitWork();
+	} catch (Exception ex) {
+		//do error handling here
+	}
+	
+Example 5: Authorizing an existing Open transaction
+
+	try {
+		bt_stripe.P360_API_v1.Tra t = bt_stripe.P360_API_v1.transactionFactory('0Xxxx0123afg');
+		t.authorize();
+		
+		//bt_stripe.P360_API_v1.P360_Exception if something goes wrong with committing records in database
+		bt_stripe.P360_API_v1.commitWork();
+	} catch (Exception ex) {
+		//do error handling here
+	}
+	
+Example 6: Capturing an existing Open/Authorized transaction
+
+	try {
+		bt_stripe.P360_API_v1.Tra t = bt_stripe.P360_API_v1.transactionFactory('0Xxxx0123afg');
+		t.capture();
+		
+		//bt_stripe.P360_API_v1.P360_Exception if something goes wrong with committing records in database
+		bt_stripe.P360_API_v1.commitWork();
+	} catch (Exception ex) {
+		//do error handling here
+	}
+	
+Example 7: Processing multiple transactions
+
+	try {
+		bt_stripe.P360_API_v1.PM pm = bt_stripe.P360_API_v1.paymentMethodFactory('0Xxxx0123afg');
+		
+		bt_stripe.P360_API_v1.Tra t1 = bt_stripe.P360_API_v1.transactionFactory();
+		t1.paymentGatewayId = pgList[0].Id;
+		t1.pm = pm;
+		t1.amount = 110.5;
+		t1.capture();
+		
+		bt_stripe.P360_API_v1.Tra t2 = bt_stripe.P360_API_v1.transactionFactory();
+		t2.paymentGatewayId = pgList[0].Id;
+		t2.pm = pm;
+		t2.amount = 110.5;
+		t2.capture();
+		
+		bt_stripe.P360_API_v1.Tra t3 = bt_stripe.P360_API_v1.transactionFactory();
+		t3.paymentGatewayId = pgList[0].Id;
+		t3.pm = pm;
+		t3.amount = 110.5;
+		t3.capture();
+		
+		//bt_stripe.P360_API_v1.P360_Exception if something goes wrong with committing records in database
+		bt_stripe.P360_API_v1.commitWork();
+	} catch (Exception ex) {
+		//do error handling here
+	}
+
+Example 7: Error handling and partial commits
+
+Each `registerCustomer()`, `registerPM()`, `capture()` and `authorize()` call is one webservice callout and is independent of each other. Therefore, its possible to handle error and perform partial commits to database.
+
+	try {
+		bt_stripe.P360_API_v1.PM pm = bt_stripe.P360_API_v1.paymentMethodFactory('0Xxxx0123afg');
+		
+		try {
+			bt_stripe.P360_API_v1.Tra t1 = bt_stripe.P360_API_v1.transactionFactory();
+			t1.paymentGatewayId = pgList[0].Id;
+			t1.pm = pm;
+			t1.amount = 110.5;
+			t1.capture();
+		} catch (Exception ex) {
+			//do error handling here
+		}
+		
+		try {
+			bt_stripe.P360_API_v1.Tra t2 = bt_stripe.P360_API_v1.transactionFactory();
+			t2.paymentGatewayId = pgList[0].Id;
+			t2.pm = pm;
+			t2.amount = 110.5;
+			t2.capture();
+		} catch (Exception ex) {
+			//do error handling here
+		}
+		
+		try {
+			bt_stripe.P360_API_v1.Tra t3 = bt_stripe.P360_API_v1.transactionFactory();
+			t3.paymentGatewayId = pgList[0].Id;
+			t3.pm = pm;
+			t3.amount = 110.5;
+			t3.capture();
+		} catch (Exception ex) {
+			//do error handling here
+		}
+		
+		//bt_stripe.P360_API_v1.P360_Exception if something goes wrong with committing records in database
+		bt_stripe.P360_API_v1.commitWork();
+	} catch (Exception ex) {
+		//do error handling here
+	}
 
 
 
