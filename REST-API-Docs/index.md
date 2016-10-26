@@ -108,6 +108,36 @@ Creates a Customer class from an existing SOQL **bt_stripe__Stripe_Customer__c**
 
 ### bt_stripe.P360_API_v1.PM
 
+Represents a Stripe Payment Method (Works with credit cards only for now)
+
+#### Initializing
+
+Use the `paymentMethodFactory()` method.
+
+* `bt_stripe.P360_API_v1.PM c = bt_stripe.P360_API_v1.paymentMethodFactory();`
+
+Creates an empty PM class.
+
+* `bt_stripe.P360_API_v1.PM c = bt_stripe.P360_API_v1.paymentMethodFactory(paymentMethodId);`
+
+Creates a PM class from an existing SOQL **bt_stripe__Payment_Method__c** object.
+
+#### Properties
+
+* __customer__ reference to bt_stripe.P360_API_v1.Customer object for associating PM to Customer. Required.
+* __cardHolderName__ Name on the card. Required.
+* __cardNumber__ The card number, as a string without any separators. Required.
+* __cardExpYear__ Two or four digit number representing the card's expiration year. Required.
+* __cardExpMonth__ Two digit number representing the card's expiration month. Required.
+* __cvv__ Card security code. Required.
+* __paymentGatewayId__ Id of the Payment Gateway associated with the Stripe Payment Method. Required.
+* __record__ bt_stripe__Payment_Method__c record of the Payment Method. Available after calling the `registerPM()` method.
+
+#### Actions
+
+* `registerPM()` Registers the Payment Method in Stripe. After calling the method, __record__ property is available.
+
+* `updatePM()` Need to implement.
 
 
 ### bt_stripe.P360_API_v1.Tra
