@@ -37,15 +37,35 @@ It is very important to catch the error. If some error happens (for example, a p
 
 
 ```
+		// You need to select a Payment Gateway. It should not be the Default one, but this is the typical case
+		// It is important to set the paymentGatewayId property on all object instances.
+		
+		bt_stripe__Payment_Gateway__c[] pgList = [SELECT Id
+													FROM bt_stripe__Payment_Gateway__c
+													WHERE bt_stripe__Default__c = true];
+		
+		
+		// It is good practice to put your p360 action in a try block. If something goes wrong
+		// the API throws a bt_stripe.P360_API_v1.P360_Exception exception
+		
 		try {
+		
+			// You can initialize object instances using factory methods.
+			
 			bt_stripe.P360_API_v1.Customer c = bt_stripe.P360_API_v1.customerFactory();
 			c.paymentGatewayId = pgList[0].Id;
 			c.name = name;
 			c.email = email;
+			
+			// After setting all the required properties you can call the action methods.
+			
 			c.registerCustomer();
 
 			bt_stripe.P360_API_v1.PM pm = bt_stripe.P360_API_v1.paymentMethodFactory();
 			pm.paymentGatewayId = pgList[0].Id;
+			
+			// Some properties are object instances. For example a bt_stripe.P360_API_v1.Customer object instance.
+			
 			pm.customer = c;
 			pm.cardHolderName = name;
 			pm.cardNumber = cardNumber;
@@ -54,7 +74,6 @@ It is very important to catch the error. If some error happens (for example, a p
 			pm.cvv = cvc;
 			pm.registerPM();
 
-			system.debug('++++ ' + pm.record);
 
 			bt_stripe.P360_API_v1.Tra t = bt_stripe.P360_API_v1.transactionFactory();
 			t.paymentGatewayId = pgList[0].Id;
@@ -62,9 +81,14 @@ It is very important to catch the error. If some error happens (for example, a p
 			t.amount = amount;
 			t.capture();
 
+			// It is important to call the commitWork() method after calling the action methods.
+			// If you not call this method, the data IS NOT SAVED as SOQL in records.
+			// Also, as this is a DML action, you can not do any HTTP callouts after this point.
+		
 			bt_stripe.P360_API_v1.commitWork();
+			
 		} catch(bt_stripe.P360_API_v1.P360_Exception e) {
-			// do something on the exception
+			// Do something on errors
 			system.debug(e.getMessage());
 		}
 
