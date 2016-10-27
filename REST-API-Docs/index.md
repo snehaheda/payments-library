@@ -151,7 +151,7 @@ Creates a PM class from an existing SOQL **bt_stripe__Payment_Method__c** object
 * __customer__ reference to bt_stripe.P360_API_v1.Customer object for associating Payment Method to Customer. Required.
 * __cardHolderName__ Name on the card. Required.
 * __cardNumber__ The card number, as a string without any separators. Required.
-* __cardExpYear__ Two or four digit number representing the card's expiration year. Required. **(Peter please confirm usage of 4 digits. Also stripe documentation has it as non-mandatory for few countries, what's our behavior?)**
+* __cardExpYear__ Two or four digit number representing the card's expiration year. Required. 
 * __cardExpMonth__ Two digit number representing the card's expiration month. Required.
 * __cvv__ Card security code. Required.
 * __paymentGatewayId__ Id of the Payment Gateway associated with the Stripe Payment Method. Required.
@@ -183,7 +183,7 @@ Creates a Tra class from an existing SOQL **bt_stripe__Transaction__c** object.
 #### Properties
 
 * __pm__ reference to bt_stripe.P360_API_v1.PM object for associating Transaction to Payment Method. Required.
-* __amount__ Decimal number representing how much to charge. Required. **(Peter please confirm unit here i.e. stripe asks for smalleset currency unit and smallest charge can eb $0.5)**
+* __amount__ Decimal number representing how much to charge (in dollars). The smallest accepted amount is 0.05. Required.
 * __dueDate__ Non-mandatory information, used by Payment360 app for auto-processing transactions on scheduled dates.
 * __authOnly__ Boolean flag for creating authorize-only transaction. Default value is false.
 * __paymentGatewayId__ Id of the Payment Gateway associated with the Stripe Transaction. Required.
