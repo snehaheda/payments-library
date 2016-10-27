@@ -2,10 +2,10 @@
 
 ## Introduction
 
-The purpose of the Apex API is to provide salesforce developers classes and methods to manipulate payment methods, transactions and Stripe customers. The API is created in the form of a global Apex class, so it is available in your org if the payment360 package is installed.
+The purpose of the Apex API is to provide Salesforce developers classes and methods to manipulate payment methods, transactions and Stripe customers. The API is created in the form of a global Apex class, so it is available in your org if the payment360 package is installed.
 
 ## Structure
-All off the classes are part of the `bt_stripe.P360_API_v1` class.
+All of the classes are part of the `bt_stripe.P360_API_v1` class.
 
 The following wrapper classes are available:
 
@@ -27,17 +27,17 @@ This call saves your work in existing or new SOQL objects. This is a DML operati
 
 ## A basic example
 
-This code snippet creates a new Customer and adds a new Payment Method. Once the payment method is registered to Stripe, a new Transaction is created and captured.
+This code snippet creates a new Customer and adds a new Payment Method. Once the Payment Method is registered to Stripe, a new Transaction is created and captured.
 
 Note that all the entities are created using the factory methods. You need to set all the required properties and after they are set, you can call action methods on them. For example `c.registerCustomer()` or `t.capture()`.
 
 Also note that `bt_stripe.P360_API_v1.commitWork()` is happening as the very last action.
 
-It is very important to catch the error. If some error happens (for example, a payment method can't be registered for some reason), the API is throwing a `bt_stripe.P360_API_v1.P360_Exception`. Catching the error you can decide about the further flow of your business logic. 
+It is very important to catch the error. If some error happens (for example, a Payment Method can't be registered for some reason), the API is throwing a `bt_stripe.P360_API_v1.P360_Exception`. Catching the error can let you decide about the further flow of your business logic. 
 
 
 ```
-		// You need to select a Payment Gateway. It should not be the Default one, but this is the typical case
+		// You need to select a Payment Gateway.
 		// It is important to set the paymentGatewayId property on all object instances.
 		
 		bt_stripe__Payment_Gateway__c[] pgList = [SELECT Id
@@ -45,7 +45,7 @@ It is very important to catch the error. If some error happens (for example, a p
 													WHERE bt_stripe__Default__c = true];
 		
 		
-		// It is good practice to put your p360 action in a try block. If something goes wrong
+		// It is a good practice to put your p360 action in a try block. If something goes wrong,
 		// the API throws a bt_stripe.P360_API_v1.P360_Exception exception
 		
 		try {
