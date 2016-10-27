@@ -153,7 +153,7 @@ Creates a PM class from an existing SOQL **bt_stripe__Payment_Method__c** object
 * __cardNumber__ The card number, as a string without any separators. Required.
 * __cardExpYear__ Two or four digit number representing the card's expiration year. Required. 
 * __cardExpMonth__ Two digit number representing the card's expiration month. Required.
-* __cvv__ Card security code. Required.
+* __cvv__ Card security code. Not required, but it is a good practive to always pass this property.
 * __paymentGatewayId__ Id of the Payment Gateway associated with the Stripe Payment Method. Required.
 * __record__ **bt_stripe__Payment_Method__c** record of the Payment Method. Available after calling the `registerPM()` method.
 
