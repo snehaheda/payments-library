@@ -1,0 +1,67 @@
+<html>
+<head>
+		<meta charset="utf-8">
+		<title>Mocha Tests</title>
+	<link href="https://cdn.rawgit.com/mochajs/mocha/2.2.5/mocha.css" rel="stylesheet" />
+</head>
+
+<body>
+	<div id="mocha"></div>
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	<script src="https://cdn.rawgit.com/mochajs/mocha/2.2.5/mocha.js"></script>
+    <script src="http://chaijs.com/chai.js"></script>
+
+	<script>
+
+        // the api callers
+        var ENDPOINT = 'https://paym6-dev-developer-edition.na35.force.com/h/services/apexrest/v1';
+
+        var callREST_API = function(d, callback) {
+            $.ajax({
+                type : 'POST',
+                url : ENDPOINT,
+                headers : {
+                    "content-type": "text/plain"
+                },
+                data : JSON.stringify(d),
+                success : callback
+            }); 
+        }
+        
+
+        // the test cases
+        mocha.setup('bdd');
+        var should = chai.should();
+
+        describe("p360 REST API test #1", function() {
+
+            describe("Error handling on init", function() {
+
+                it("Should throw an error on wrong action param", function(done) {
+                    "x".should.equals('x');
+                    var d = {
+                        "action" : "x"
+                    };
+                    callREST_API(d, function(r) {
+                        try {
+                            r.success.should.equal(false);
+                            r.errorParam.should.equal("action");
+                            done();
+                        } catch(e) {
+                            done(e);
+                        }
+                    });
+                }).timeout(5000);
+
+
+
+            });
+        });
+
+        mocha.run();
+
+	</script>
+</body>
+</html>
