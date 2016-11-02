@@ -1,24 +1,63 @@
 <html>
 <head>
-		<meta charset="utf-8">
-		<title>Mocha Tests</title>
+	<meta charset="utf-8">
+	<title>Mocha Tests</title>
 	<link href="https://cdn.rawgit.com/mochajs/mocha/2.2.5/mocha.css" rel="stylesheet" />
 </head>
 
 <body>
 	<div id="mocha"></div>
 
-
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-	<script src="https://cdn.rawgit.com/mochajs/mocha/2.2.5/mocha.js"></script>
+    <script src="https://js.stripe.com/v2/"></script>
+
+    <script src="https://cdn.rawgit.com/mochajs/mocha/2.2.5/mocha.js"></script>
     <script src="http://chaijs.com/chai.js"></script>
 
 	<script>
 
         // the api callers
         var ENDPOINT = 'https://paym6-dev-developer-edition.na35.force.com/h/services/apexrest/v1';
+        var PUBLISHABLE_KEY = 'pk_test_rx6uxcAgv6PZM2LuH7TL9imW';
+
+        var CC_HOLDER_NAME = "Holder Maki";
+        var CC_NUMBER = "4242424242424242";
+        var CC_CVC = "123";
+        var EXP_MONTH = "5";
+        var EXP_YEAR = "2019";
+
+        var ADDRESS_CITY = "Budapest";
+        var ADDRESS_LINE1 = "Add l. 1";
+        var ADDRESS_ZIP = "1234";
+        var ADDRES_COUNTRY = "Hungary";
+
+        var PAYMENT_GATEWAY_ID = "a0141000001jhoh";
+
+
+        var getTokenAndCallREST_API = function(d, callback) {
+            Stripe.setPublishableKey(PUBLISHABLE_KEY);
+            Stripe.card.createToken({
+                number: CC_NUMBER,
+                cvc: CC_CVC,
+                exp_month: EXP_MONTH,
+                exp_year: EXP_YEAR,
+                name: CC_HOLDER_NAME,
+                address_line1: ADDRESS_LINE1,
+                address_city: ADDRESS_CITY, 
+                address_zip: ADDRESS_ZIP,
+                address_country: ADDRES_COUNTRY
+            }, function(status, response) {
+                if (response.error) {
+                    throw "Something went wrong when getting token from Stripe " + response.error.message;
+                }
+                d.stripePayload = JSON.stringify(response);
+                callREST_API(d, callback);             
+            });
+        }
 
         var callREST_API = function(d, callback) {
+
+            console.log('## callREST_API', d);
             $.ajax({
                 type : 'POST',
                 url : ENDPOINT,
@@ -39,11 +78,11 @@
 
             describe("Error handling on init", function() {
 
-                it("Should throw an error on wrong action param", function(done) {
-                    "x".should.equals('x');
+                it("Error: Should throw an error on a missing action param", function(done) {
+
                     var d = {
-                        "action" : "x"
                     };
+
                     callREST_API(d, function(r) {
                         try {
                             r.success.should.equal(false);
@@ -55,10 +94,113 @@
                     });
                 }).timeout(5000);
 
+                it("Error: Should throw an error on an unknown action param", function(done) {
 
+                    var d = {
+                        "action" : "x"
+                    };
+
+                    callREST_API(d, function(r) {
+                        try {
+                            r.success.should.equal(false);
+                            r.errorParam.should.equal("action");
+                            done();
+                        } catch(e) {
+                            done(e);
+                        }
+                    });
+                }).timeout(5000);
 
             });
-        });
+
+
+
+            describe("createPaymentMethod action tests", function() {
+                it("Error: Should throw an error on a broken accountId param", function(done) {
+
+                    var d = {
+                        "action" : "createPaymentMethod",
+                        "accountId" : "xx"
+                    };
+
+                    callREST_API(d, function(r) {
+                        try {
+                            r.success.should.equal(false);
+                            r.errorParam.should.equal("accountId");
+                            done();
+                        } catch(e) {
+                            done(e);
+                        }
+                    });                    
+                }).timeout(5000);
+
+                it("Error: Should throw an error on a broken contactId param", function(done) {
+
+                    var d = {
+                        "action" : "createPaymentMethod",
+                        "contactId" : "xx"
+                    };
+
+                    callREST_API(d, function(r) {
+                        try {
+                            r.success.should.equal(false);
+                            r.errorParam.should.equal("contactId");
+                            done();
+                        } catch(e) {
+                            done(e);
+                        }
+                    });                    
+                }).timeout(5000);
+
+
+                it("Error: Should throw an error on a broken customerId param", function(done) {
+
+                    var d = {
+                        "action" : "createPaymentMethod",
+                        "customerId" : "xx"
+                    };
+
+                    callREST_API(d, function(r) {
+                        try {
+                            r.success.should.equal(false);
+                            r.errorParam.should.equal("customerId");
+                            done();
+                        } catch(e) {
+                            done(e);
+                        }
+                    });                    
+                });
+
+                it("Success: Stripe payload, paymentGatewayId set, no other parameters.", function(done) {
+
+                    var d = {
+                        "action" : "createPaymentMethod",
+                        "paymentGatewayId" : PAYMENT_GATEWAY_ID
+                    };
+
+                    getTokenAndCallREST_API(d, function(r) {
+                        console.log("r:", r);
+                        try {
+                            r.success.should.equal(true);
+                            r.paymentMethodList.length.should.equal(1);                            
+                            r.paymentMethodList[0].addressCity.should.equal(ADDRESS_CITY);
+                            r.paymentMethodList[0].addressCountry.should.equal(ADDRES_COUNTRY);
+                            r.paymentMethodList[0].addressPostalCode.should.equal(ADDRESS_ZIP);
+                            r.paymentMethodList[0].brand.should.equal("Visa");
+                            r.paymentMethodList[0].expMonth.should.equal(EXP_MONTH);
+                            r.paymentMethodList[0].expYear.should.equal(EXP_YEAR);
+                            r.paymentMethodList[0].holderName.should.equal(CC_HOLDER_NAME);
+                            r.paymentMethodList[0].last4.should.equal(CC_NUMBER.substr(CC_NUMBER.length-4));
+                            r.paymentMethodList[0].brand.should.equal("Visa");
+                            done();
+                        } catch(e) {
+                            done(e);
+                        }
+                    });                    
+                }).timeout(5000);
+            });
+
+        }); // end of all mocha tests
 
         mocha.run();
 
