@@ -40,6 +40,7 @@ All data is passed in a single POST call in format `application/json`
 ### The __Payment Method__ object
 
 * __holderName__
+* __email__
 * __expMonth__ - updateable
 * __expYear__ - updateable
 * __last4__
