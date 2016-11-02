@@ -32,7 +32,9 @@
         var ADDRES_COUNTRY = "Hungary";
 
         var PAYMENT_GATEWAY_ID = "a0141000001jhoh";
-
+        var CONTACT_ID = "00341000003ftLmAAI";
+        var ACCOUNT_ID = "00141000004fyVJAAY";
+        var CUSTOMER_ID = "a0741000002RrjO";
 
         var getTokenAndCallREST_API = function(d, callback) {
             Stripe.setPublishableKey(PUBLISHABLE_KEY);
@@ -169,7 +171,42 @@
                             done(e);
                         }
                     });                    
-                });
+                }).timeout(5000);
+
+                it("Error: Missing paymentGatewayId", function(done) {
+
+                    var d = {
+                        "action" : "createPaymentMethod",
+                    };
+
+                    getTokenAndCallREST_API(d, function(r) {
+                        try {
+                            r.success.should.equal(false);
+                            r.errorParam.should.equal("paymentGatewayId");
+                            done();
+                        } catch(e) {
+                            done(e);
+                        }
+                    });                    
+                }).timeout(5000);
+
+                it("Error: Missing stripePayload", function(done) {
+
+                    var d = {
+                        "action" : "createPaymentMethod",
+                        "paymentGatewayId" : PAYMENT_GATEWAY_ID
+                    };
+
+                    callREST_API(d, function(r) {
+                        try {
+                            r.success.should.equal(false);
+                            r.errorParam.should.equal("stripePayload");
+                            done();
+                        } catch(e) {
+                            done(e);
+                        }
+                    });                    
+                }).timeout(5000);
 
                 it("Success: Stripe payload, paymentGatewayId set, no other parameters.", function(done) {
 
@@ -192,12 +229,119 @@
                             r.paymentMethodList[0].holderName.should.equal(CC_HOLDER_NAME);
                             r.paymentMethodList[0].last4.should.equal(CC_NUMBER.substr(CC_NUMBER.length-4));
                             r.paymentMethodList[0].brand.should.equal("Visa");
+
+                            r.paymentMethodList[0].customerId.should.not.equal(null);
+
                             done();
                         } catch(e) {
                             done(e);
                         }
                     });                    
                 }).timeout(5000);
+
+                it("Success: Stripe payload, paymentGatewayId set, connect to a Customer.", function(done) {
+
+                    var d = {
+                        "action" : "createPaymentMethod",
+                        "paymentGatewayId" : PAYMENT_GATEWAY_ID,
+                        "customerId" : CUSTOMER_ID
+                    };
+
+                    getTokenAndCallREST_API(d, function(r) {
+                        console.log("r:", r);
+                        try {
+                            r.success.should.equal(true);
+                            r.paymentMethodList.length.should.equal(1);       
+
+                            r.paymentMethodList[0].addressCity.should.equal(ADDRESS_CITY);
+                            r.paymentMethodList[0].addressCountry.should.equal(ADDRES_COUNTRY);
+                            r.paymentMethodList[0].addressPostalCode.should.equal(ADDRESS_ZIP);
+                            r.paymentMethodList[0].brand.should.equal("Visa");
+                            r.paymentMethodList[0].expMonth.should.equal(EXP_MONTH);
+                            r.paymentMethodList[0].expYear.should.equal(EXP_YEAR);
+                            r.paymentMethodList[0].holderName.should.equal(CC_HOLDER_NAME);
+                            r.paymentMethodList[0].last4.should.equal(CC_NUMBER.substr(CC_NUMBER.length-4));
+                            r.paymentMethodList[0].brand.should.equal("Visa");
+
+                            r.paymentMethodList[0].customerId.should.not.equal(null);
+
+                            done();
+                        } catch(e) {
+                            done(e);
+                        }
+                    });                    
+                }).timeout(5000);
+
+                it("Success: Stripe payload, paymentGatewayId set, connect to a Contact.", function(done) {
+
+                    var d = {
+                        "action" : "createPaymentMethod",
+                        "paymentGatewayId" : PAYMENT_GATEWAY_ID,
+                        "contactId" : CONTACT_ID
+                    };
+
+                    getTokenAndCallREST_API(d, function(r) {
+                        console.log("r:", r);
+                        try {
+                            r.success.should.equal(true);
+                            r.paymentMethodList.length.should.equal(1);       
+
+                            r.paymentMethodList[0].addressCity.should.equal(ADDRESS_CITY);
+                            r.paymentMethodList[0].addressCountry.should.equal(ADDRES_COUNTRY);
+                            r.paymentMethodList[0].addressPostalCode.should.equal(ADDRESS_ZIP);
+                            r.paymentMethodList[0].brand.should.equal("Visa");
+                            r.paymentMethodList[0].expMonth.should.equal(EXP_MONTH);
+                            r.paymentMethodList[0].expYear.should.equal(EXP_YEAR);
+                            r.paymentMethodList[0].holderName.should.equal(CC_HOLDER_NAME);
+                            r.paymentMethodList[0].last4.should.equal(CC_NUMBER.substr(CC_NUMBER.length-4));
+                            r.paymentMethodList[0].brand.should.equal("Visa");
+
+                            r.paymentMethodList[0].customerId.should.not.equal(null);
+                            r.paymentMethodList[0].contactId.should.equal(CONTACT_ID);
+
+                            done();
+                        } catch(e) {
+                            done(e);
+                        }
+                    });                    
+                }).timeout(5000);
+
+
+                it("Success: Stripe payload, paymentGatewayId set, connect to a Account.", function(done) {
+
+                    var d = {
+                        "action" : "createPaymentMethod",
+                        "paymentGatewayId" : PAYMENT_GATEWAY_ID,
+                        "accountId" : ACCOUNT_ID
+                    };
+
+                    getTokenAndCallREST_API(d, function(r) {
+                        console.log("r:", r);
+                        try {
+                            r.success.should.equal(true);
+                            r.paymentMethodList.length.should.equal(1);       
+
+                            r.paymentMethodList[0].addressCity.should.equal(ADDRESS_CITY);
+                            r.paymentMethodList[0].addressCountry.should.equal(ADDRES_COUNTRY);
+                            r.paymentMethodList[0].addressPostalCode.should.equal(ADDRESS_ZIP);
+                            r.paymentMethodList[0].brand.should.equal("Visa");
+                            r.paymentMethodList[0].expMonth.should.equal(EXP_MONTH);
+                            r.paymentMethodList[0].expYear.should.equal(EXP_YEAR);
+                            r.paymentMethodList[0].holderName.should.equal(CC_HOLDER_NAME);
+                            r.paymentMethodList[0].last4.should.equal(CC_NUMBER.substr(CC_NUMBER.length-4));
+                            r.paymentMethodList[0].brand.should.equal("Visa");
+
+                            r.paymentMethodList[0].customerId.should.not.equal(null);
+                            r.paymentMethodList[0].accountId.should.equal(ACCOUNT_ID);
+
+                            done();
+                        } catch(e) {
+                            done(e);
+                        }
+                    });                    
+                }).timeout(5000);
+
+
             });
 
         }); // end of all mocha tests
