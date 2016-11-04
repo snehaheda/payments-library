@@ -18,7 +18,7 @@ All data is passed in a single POST call in format `application/json`
 * __authOnly__ If true, will create an auth only transaction.
 * __openOnly__ If true, will not charge the transaction.
 * __dueDate__ Due date of the transaction, in YYYY-MM-DD format.
-* __id__ Transaction Id -- if this is an existing record. Used only in private mode.
+* __transactionId__ Transaction Id -- if this is an existing record. Used only in private mode.
 * __paymentMethodId__ The associated PM Id. Used only in private mode. 
 * __transactionStatus__ -- Read only field
 * __paymentStatus__ -- Read only field
