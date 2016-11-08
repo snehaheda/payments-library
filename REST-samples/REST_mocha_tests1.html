@@ -77,6 +77,7 @@
         // the test cases
         mocha.setup('bdd');
         var should = chai.should();
+        var expect = chai.expect;
 
         describe("p360 REST API test #1", function() {
 
@@ -451,6 +452,345 @@
                         }
                     });                    
                 }).timeout(TIMEOUT_MS);
+            
+                it("Success: Stripe payload, paymentGatewayId set, 2 transactions to charge", function(done) {
+
+                    var d = {
+                        "action" : "createPaymentMethod",
+                        "paymentGatewayId" : PAYMENT_GATEWAY_ID,
+                        "transactionList" : [
+                            {
+                                "amount" : 100,
+                                "dueDate" : "2019-05-17"
+                            },
+                            {
+                                "amount" : 200,
+                                "dueDate" : "2019-01-01"
+                            }
+                        ]
+                    };
+
+                    getTokenAndCallREST_API(d, function(r) {
+                        console.log("r:", r);
+                        try {
+                            r.success.should.equal(true);
+                            r.paymentMethodList.length.should.equal(1);                            
+                            r.paymentMethodList[0].addressCity.should.equal(ADDRESS_CITY);
+                            r.paymentMethodList[0].addressCountry.should.equal(ADDRES_COUNTRY);
+                            r.paymentMethodList[0].addressPostalCode.should.equal(ADDRESS_ZIP);
+                            r.paymentMethodList[0].brand.should.equal("Visa");
+                            r.paymentMethodList[0].expMonth.should.equal(EXP_MONTH);
+                            r.paymentMethodList[0].expYear.should.equal(EXP_YEAR);
+                            r.paymentMethodList[0].holderName.should.equal(CC_HOLDER_NAME);
+                            r.paymentMethodList[0].last4.should.equal(CC_NUMBER.substr(CC_NUMBER.length-4));
+                            r.paymentMethodList[0].brand.should.equal("Visa");
+                            r.paymentMethodList[0].customerId.should.not.equal(null);
+
+                            r.transactionList.length.should.equal(2);
+                            r.transactionList[0].amount.should.equal(100);
+                            r.transactionList[0].dueDate.should.equal('2019-05-17');
+                            r.transactionList[0].paymentGatewayId.should.equal(r.paymentMethodList[0].paymentGatewayId);
+                            r.transactionList[0].paymentStatus.should.equal('Captured');
+                            r.transactionList[0].transactionId.should.not.equal(null);
+                            r.transactionList[0].transactionStatus.should.equal('Completed');
+
+                            r.transactionList[1].amount.should.equal(200);
+                            r.transactionList[1].dueDate.should.equal('2019-01-01');
+                            r.transactionList[1].paymentGatewayId.should.equal(r.paymentMethodList[0].paymentGatewayId);
+                            r.transactionList[1].paymentStatus.should.equal('Captured');
+                            r.transactionList[1].transactionId.should.not.equal(null);
+                            r.transactionList[1].transactionStatus.should.equal('Completed');
+
+                            done();
+                        } catch(e) {
+                            done(e);
+                        }
+                    });                    
+                }).timeout(TIMEOUT_MS);
+
+                it("Success: Stripe payload, paymentGatewayId set, 1 transaction to open only, with due date", function(done) {
+
+                    var d = {
+                        "action" : "createPaymentMethod",
+                        "paymentGatewayId" : PAYMENT_GATEWAY_ID,
+                        "transactionList" : [
+                            {
+                                "amount" : 100,
+                                "dueDate" : "2019-12-31",
+                                "openOnly" : true
+                            }
+                        ]
+                    };
+
+                    getTokenAndCallREST_API(d, function(r) {
+                        console.log("r:", r);
+                        try {
+                            r.success.should.equal(true);
+                            r.paymentMethodList.length.should.equal(1);                            
+                            r.paymentMethodList[0].addressCity.should.equal(ADDRESS_CITY);
+                            r.paymentMethodList[0].addressCountry.should.equal(ADDRES_COUNTRY);
+                            r.paymentMethodList[0].addressPostalCode.should.equal(ADDRESS_ZIP);
+                            r.paymentMethodList[0].brand.should.equal("Visa");
+                            r.paymentMethodList[0].expMonth.should.equal(EXP_MONTH);
+                            r.paymentMethodList[0].expYear.should.equal(EXP_YEAR);
+                            r.paymentMethodList[0].holderName.should.equal(CC_HOLDER_NAME);
+                            r.paymentMethodList[0].last4.should.equal(CC_NUMBER.substr(CC_NUMBER.length-4));
+                            r.paymentMethodList[0].brand.should.equal("Visa");
+                            r.paymentMethodList[0].customerId.should.not.equal(null);
+
+                            r.transactionList.length.should.equal(1);
+                            r.transactionList[0].amount.should.equal(100);
+                            r.transactionList[0].dueDate.should.equal('2019-12-31');
+                            r.transactionList[0].paymentGatewayId.should.equal(r.paymentMethodList[0].paymentGatewayId);
+                            r.transactionList[0].transactionId.should.not.equal(null);
+                            r.transactionList[0].transactionStatus.should.equal('Open');
+                            expect(r.transactionList[0].paymentStatus).to.equal(null);
+                            r.transactionList[0].openOnly.should.equal(true);
+
+                            done();
+                        } catch(e) {
+                            done(e);
+                        }
+                    });                    
+                }).timeout(TIMEOUT_MS);
+
+                it("Success: Stripe payload, paymentGatewayId set, 2 transactions to open only, with due date", function(done) {
+
+                    var d = {
+                        "action" : "createPaymentMethod",
+                        "paymentGatewayId" : PAYMENT_GATEWAY_ID,
+                        "transactionList" : [
+                            {
+                                "amount" : 999,
+                                "dueDate" : "2019-12-31",
+                                "openOnly" : true
+                            },
+                            {
+                                "amount" : 11,
+                                "openOnly" : true
+                            }
+                        ]
+                    };
+
+                    getTokenAndCallREST_API(d, function(r) {
+                        console.log("r:", r);
+                        try {
+                            r.success.should.equal(true);
+                            r.paymentMethodList.length.should.equal(1);                            
+                            r.paymentMethodList[0].addressCity.should.equal(ADDRESS_CITY);
+                            r.paymentMethodList[0].addressCountry.should.equal(ADDRES_COUNTRY);
+                            r.paymentMethodList[0].addressPostalCode.should.equal(ADDRESS_ZIP);
+                            r.paymentMethodList[0].brand.should.equal("Visa");
+                            r.paymentMethodList[0].expMonth.should.equal(EXP_MONTH);
+                            r.paymentMethodList[0].expYear.should.equal(EXP_YEAR);
+                            r.paymentMethodList[0].holderName.should.equal(CC_HOLDER_NAME);
+                            r.paymentMethodList[0].last4.should.equal(CC_NUMBER.substr(CC_NUMBER.length-4));
+                            r.paymentMethodList[0].brand.should.equal("Visa");
+                            r.paymentMethodList[0].customerId.should.not.equal(null);
+
+                            r.transactionList.length.should.equal(2);
+
+                            r.transactionList[0].amount.should.equal(999);
+                            r.transactionList[0].dueDate.should.equal('2019-12-31');
+                            r.transactionList[0].paymentGatewayId.should.equal(r.paymentMethodList[0].paymentGatewayId);
+                            r.transactionList[0].transactionId.should.not.equal(null);
+                            r.transactionList[0].transactionStatus.should.equal('Open');
+                            expect(r.transactionList[0].paymentStatus).to.equal(null);
+                            r.transactionList[0].openOnly.should.equal(true);
+
+                            r.transactionList[1].amount.should.equal(11);
+                            expect(r.transactionList[1].dueDate).to.equal(null);
+                            r.transactionList[1].paymentGatewayId.should.equal(r.paymentMethodList[0].paymentGatewayId);
+                            r.transactionList[1].transactionId.should.not.equal(null);
+                            r.transactionList[1].transactionStatus.should.equal('Open');
+                            expect(r.transactionList[1].paymentStatus).to.equal(null);
+                            r.transactionList[1].openOnly.should.equal(true);
+
+                            done();
+                        } catch(e) {
+                            done(e);
+                        }
+                    });                    
+                }).timeout(TIMEOUT_MS);
+
+                it("Success: Stripe payload, paymentGatewayId set, one transaction to charge, one to open", function(done) {
+
+                    var d = {
+                        "action" : "createPaymentMethod",
+                        "paymentGatewayId" : PAYMENT_GATEWAY_ID,
+                        "transactionList" : [
+                            {
+                                "amount" : 999,
+                            },
+                            {
+                                "amount" : 11,
+                                "openOnly" : true
+                            }
+                        ]
+                    };
+
+                    getTokenAndCallREST_API(d, function(r) {
+                        console.log("r:", r);
+                        try {
+                            r.success.should.equal(true);
+                            r.paymentMethodList.length.should.equal(1);                            
+                            r.paymentMethodList[0].addressCity.should.equal(ADDRESS_CITY);
+                            r.paymentMethodList[0].addressCountry.should.equal(ADDRES_COUNTRY);
+                            r.paymentMethodList[0].addressPostalCode.should.equal(ADDRESS_ZIP);
+                            r.paymentMethodList[0].brand.should.equal("Visa");
+                            r.paymentMethodList[0].expMonth.should.equal(EXP_MONTH);
+                            r.paymentMethodList[0].expYear.should.equal(EXP_YEAR);
+                            r.paymentMethodList[0].holderName.should.equal(CC_HOLDER_NAME);
+                            r.paymentMethodList[0].last4.should.equal(CC_NUMBER.substr(CC_NUMBER.length-4));
+                            r.paymentMethodList[0].brand.should.equal("Visa");
+                            r.paymentMethodList[0].customerId.should.not.equal(null);
+
+                            r.transactionList.length.should.equal(2);
+
+                            r.transactionList[0].amount.should.equal(999);
+                            r.transactionList[0].paymentGatewayId.should.equal(r.paymentMethodList[0].paymentGatewayId);
+                            r.transactionList[0].transactionId.should.not.equal(null);
+                            r.transactionList[0].transactionStatus.should.equal('Completed');
+                            r.transactionList[0].paymentStatus.should.equal('Captured');
+                            expect(r.transactionList[0].openOnly).to.not.equal(true);
+
+                            r.transactionList[1].amount.should.equal(11);
+                            expect(r.transactionList[1].dueDate).to.equal(null);
+                            r.transactionList[1].paymentGatewayId.should.equal(r.paymentMethodList[0].paymentGatewayId);
+                            r.transactionList[1].transactionId.should.not.equal(null);
+                            r.transactionList[1].transactionStatus.should.equal('Open');
+                            expect(r.transactionList[1].paymentStatus).to.equal(null);
+                            r.transactionList[1].openOnly.should.equal(true);
+
+                            done();
+                        } catch(e) {
+                            done(e);
+                        }
+                    });                    
+                }).timeout(TIMEOUT_MS);
+
+
+                it("Success: Stripe payload, paymentGatewayId set, 1 transaction to auth only", function(done) {
+
+                    var d = {
+                        "action" : "createPaymentMethod",
+                        "paymentGatewayId" : PAYMENT_GATEWAY_ID,
+                        "transactionList" : [
+                            {
+                                "amount" : 111,
+                                "dueDate" : "2019-1-1",
+                                "authOnly" : true
+                            }
+                        ]
+                    };
+
+                    getTokenAndCallREST_API(d, function(r) {
+                        console.log("r:", r);
+                        try {
+                            r.success.should.equal(true);
+                            r.paymentMethodList.length.should.equal(1);                            
+                            r.paymentMethodList[0].addressCity.should.equal(ADDRESS_CITY);
+                            r.paymentMethodList[0].addressCountry.should.equal(ADDRES_COUNTRY);
+                            r.paymentMethodList[0].addressPostalCode.should.equal(ADDRESS_ZIP);
+                            r.paymentMethodList[0].brand.should.equal("Visa");
+                            r.paymentMethodList[0].expMonth.should.equal(EXP_MONTH);
+                            r.paymentMethodList[0].expYear.should.equal(EXP_YEAR);
+                            r.paymentMethodList[0].holderName.should.equal(CC_HOLDER_NAME);
+                            r.paymentMethodList[0].last4.should.equal(CC_NUMBER.substr(CC_NUMBER.length-4));
+                            r.paymentMethodList[0].brand.should.equal("Visa");
+                            r.paymentMethodList[0].customerId.should.not.equal(null);
+
+                            r.transactionList.length.should.equal(1);
+                            r.transactionList[0].amount.should.equal(111);
+                            r.transactionList[0].dueDate.should.equal('2019-01-01');
+                            r.transactionList[0].paymentGatewayId.should.equal(r.paymentMethodList[0].paymentGatewayId);
+                            r.transactionList[0].transactionId.should.not.equal(null);
+                            r.transactionList[0].transactionStatus.should.equal('Completed');
+                            r.transactionList[0].paymentStatus.should.equal('Authorized');
+                            r.transactionList[0].openOnly.should.equal(false);
+                            r.transactionList[0].authOnly.should.equal(true);
+
+
+                            done();
+                        } catch(e) {
+                            done(e);
+                        }
+                    });                    
+                }).timeout(TIMEOUT_MS);
+
+
+                it("Success: Stripe payload, paymentGatewayId set, 1 transaction to auth only, 1 to open, 1 to charge", function(done) {
+
+                    var d = {
+                        "action" : "createPaymentMethod",
+                        "paymentGatewayId" : PAYMENT_GATEWAY_ID,
+                        "transactionList" : [
+                            {
+                                "amount" : 111,
+                                "dueDate" : "2019-1-1",
+                                "authOnly" : true
+                            },
+                            {
+                                "amount" : 55,
+                                "dueDate" : "2019-3-3",
+                                "openOnly" : true
+                            },
+                            {
+                                "amount" : 77,
+                            }
+                        ]
+                    };
+
+                    getTokenAndCallREST_API(d, function(r) {
+                        console.log("r:", r);
+                        try {
+                            r.success.should.equal(true);
+                            r.paymentMethodList.length.should.equal(1);                            
+                            r.paymentMethodList[0].addressCity.should.equal(ADDRESS_CITY);
+                            r.paymentMethodList[0].addressCountry.should.equal(ADDRES_COUNTRY);
+                            r.paymentMethodList[0].addressPostalCode.should.equal(ADDRESS_ZIP);
+                            r.paymentMethodList[0].brand.should.equal("Visa");
+                            r.paymentMethodList[0].expMonth.should.equal(EXP_MONTH);
+                            r.paymentMethodList[0].expYear.should.equal(EXP_YEAR);
+                            r.paymentMethodList[0].holderName.should.equal(CC_HOLDER_NAME);
+                            r.paymentMethodList[0].last4.should.equal(CC_NUMBER.substr(CC_NUMBER.length-4));
+                            r.paymentMethodList[0].brand.should.equal("Visa");
+                            r.paymentMethodList[0].customerId.should.not.equal(null);
+
+                            r.transactionList.length.should.equal(3);
+                            
+                            r.transactionList[0].amount.should.equal(111);
+                            r.transactionList[0].dueDate.should.equal('2019-01-01');
+                            r.transactionList[0].paymentGatewayId.should.equal(r.paymentMethodList[0].paymentGatewayId);
+                            r.transactionList[0].transactionId.should.not.equal(null);
+                            r.transactionList[0].transactionStatus.should.equal('Completed');
+                            r.transactionList[0].paymentStatus.should.equal('Authorized');
+                            r.transactionList[0].openOnly.should.equal(false);
+                            r.transactionList[0].authOnly.should.equal(true);
+
+                            r.transactionList[1].amount.should.equal(55);
+                            r.transactionList[1].dueDate.should.equal('2019-03-03');
+                            r.transactionList[1].paymentGatewayId.should.equal(r.paymentMethodList[0].paymentGatewayId);
+                            r.transactionList[1].transactionId.should.not.equal(null);
+                            r.transactionList[1].transactionStatus.should.equal('Open');
+                            expect(r.transactionList[1].paymentStatus).to.equal(null);
+                            r.transactionList[1].openOnly.should.equal(true);
+
+                            r.transactionList[2].amount.should.equal(77);
+                            expect(r.transactionList[2].dueDate).to.equal(null);
+                            r.transactionList[2].paymentGatewayId.should.equal(r.paymentMethodList[0].paymentGatewayId);
+                            r.transactionList[2].paymentStatus.should.equal('Captured');
+                            r.transactionList[2].transactionId.should.not.equal(null);
+                            r.transactionList[2].transactionStatus.should.equal('Completed');
+
+
+                            done();
+                        } catch(e) {
+                            done(e);
+                        }
+                    });                    
+                }).timeout(TIMEOUT_MS);
+
 
             });
 
