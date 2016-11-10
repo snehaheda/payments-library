@@ -93,7 +93,7 @@
         var expect = chai.expect;
 
         describe("p360 REST API test #1", function() {
-            /*
+
             describe("Error handling on init", function() {
 
                 it("Error: Should throw an error on a missing action param", function(done) {
@@ -806,7 +806,6 @@
 
 
             });
-            */
 
             describe("Faulty PM / transaction data", function() {
                 it("Fail: Stripe payload with a faulty CVC test card", function(done) {
@@ -1025,6 +1024,105 @@
                             done(e);
                         }
                     }, FAULTY_FAILED_TRANSCTIONS_CARD);                    
+                }).timeout(TIMEOUT_MS); 
+
+                it("Fail: CC goes through, but transaction is faulty (0 amount)", function(done) {
+                    var d = {
+                        "action" : "createPaymentMethod",
+                        "paymentGatewayId" : PAYMENT_GATEWAY_ID,
+                        "transactionList" : [
+                            {
+                                "amount" : 0
+                            }
+                        ]
+                    };
+
+                    getTokenAndCallREST_API(d, function(r) {
+                        console.log("r:", r);
+                        try {
+                            r.success.should.equal(false);
+                            r.errorMessage.should.not.equal(null);
+
+                            r.paymentMethodList.length.should.equal(1);                            
+                            r.paymentMethodList[0].addressCity.should.equal(ADDRESS_CITY);
+                            r.paymentMethodList[0].addressCountry.should.equal(ADDRES_COUNTRY);
+                            r.paymentMethodList[0].addressPostalCode.should.equal(ADDRESS_ZIP);
+                            r.paymentMethodList[0].brand.should.equal("Visa");
+                            r.paymentMethodList[0].expMonth.should.equal(EXP_MONTH);
+                            r.paymentMethodList[0].expYear.should.equal(EXP_YEAR);
+                            r.paymentMethodList[0].holderName.should.equal(CC_HOLDER_NAME);
+                            r.paymentMethodList[0].last4.should.equal(CC_NUMBER.substr(CC_NUMBER.length-4));
+                            r.paymentMethodList[0].status.should.equal('Valid');
+                            r.paymentMethodList[0].customerId.should.not.equal(null);
+
+                            r.transactionList.length.should.equal(1);
+
+                            r.transactionList[0].amount.should.equal(0);
+                            r.transactionList[0].paymentGatewayId.should.equal(r.paymentMethodList[0].paymentGatewayId);
+                            r.transactionList[0].transactionId.should.not.equal(null);
+                            r.transactionList[0].transactionStatus.should.equal('Failed');
+                            expect(r.transactionList[0].errorMessage).to.equal(null);
+
+
+
+                            done();
+                        } catch(e) {
+                            done(e);
+                        }
+                    });                    
+                }).timeout(TIMEOUT_MS); 
+
+                it("Fail: CC goes through, but one transaction is broken (0 amount), one goes through", function(done) {
+                    var d = {
+                        "action" : "createPaymentMethod",
+                        "paymentGatewayId" : PAYMENT_GATEWAY_ID,
+                        "transactionList" : [
+                            {
+                                "amount" : 0
+                            },
+                            {
+                                "amount" : 66
+                            }
+                        ]
+                    };
+
+                    getTokenAndCallREST_API(d, function(r) {
+                        console.log("r:", r);
+                        try {
+                            r.success.should.equal(false);
+                            r.errorMessage.should.not.equal(null);
+
+                            r.paymentMethodList.length.should.equal(1);                            
+                            r.paymentMethodList[0].addressCity.should.equal(ADDRESS_CITY);
+                            r.paymentMethodList[0].addressCountry.should.equal(ADDRES_COUNTRY);
+                            r.paymentMethodList[0].addressPostalCode.should.equal(ADDRESS_ZIP);
+                            r.paymentMethodList[0].brand.should.equal("Visa");
+                            r.paymentMethodList[0].expMonth.should.equal(EXP_MONTH);
+                            r.paymentMethodList[0].expYear.should.equal(EXP_YEAR);
+                            r.paymentMethodList[0].holderName.should.equal(CC_HOLDER_NAME);
+                            r.paymentMethodList[0].last4.should.equal(CC_NUMBER.substr(CC_NUMBER.length-4));
+                            r.paymentMethodList[0].status.should.equal('Valid');
+                            r.paymentMethodList[0].customerId.should.not.equal(null);
+
+                            r.transactionList.length.should.equal(2);
+
+                            r.transactionList[0].amount.should.equal(0);
+                            r.transactionList[0].paymentGatewayId.should.equal(r.paymentMethodList[0].paymentGatewayId);
+                            r.transactionList[0].transactionId.should.not.equal(null);
+                            r.transactionList[0].transactionStatus.should.equal('Failed');
+                            expect(r.transactionList[0].errorMessage).to.equal(null);
+
+                            r.transactionList[1].amount.should.equal(66);
+                            r.transactionList[1].paymentGatewayId.should.equal(r.paymentMethodList[0].paymentGatewayId);
+                            r.transactionList[1].transactionId.should.not.equal(null);
+                            r.transactionList[1].transactionStatus.should.equal('Completed');
+                            r.transactionList[1].paymentStatus.should.equal('Captured');
+
+                            done();
+                        } catch(e) {
+                            done(e);
+                        }
+                    });                    
                 }).timeout(TIMEOUT_MS); 
 
             });
