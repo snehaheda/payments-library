@@ -38,10 +38,23 @@
         var ACCOUNT_ID = "00141000004fyVJAAY";
         var CUSTOMER_ID = "a0741000002RrjOAAS";
 
-        var getTokenAndCallREST_API = function(d, callback) {
+        var FAULTY_CVC_CARD = '4000000000000127';
+        var FAULTY_EXPIRED_CARD = '4000000000000069';
+        var FAULTY_PROCESSING_ERROR_CARD = '4000000000000119';
+        var FAULTY_INCORRECT_NUMBER_CARD = '4242424242424241';
+        var FAULTY_FAILED_TRANSCTIONS_CARD = '4000000000000341';
+
+
+        var getTokenAndCallREST_API = function(d, callback, alternate_cc_number) {
             Stripe.setPublishableKey(PUBLISHABLE_KEY);
+
+            var cc_number = CC_NUMBER;
+            if (alternate_cc_number) {
+                cc_number = alternate_cc_number;
+            }
+
             Stripe.card.createToken({
-                number: CC_NUMBER,
+                number: cc_number,
                 cvc: CC_CVC,
                 exp_month: EXP_MONTH,
                 exp_year: EXP_YEAR,
@@ -80,7 +93,7 @@
         var expect = chai.expect;
 
         describe("p360 REST API test #1", function() {
-
+            /*
             describe("Error handling on init", function() {
 
                 it("Error: Should throw an error on a missing action param", function(done) {
@@ -793,6 +806,229 @@
 
 
             });
+            */
+
+            describe("Faulty PM / transaction data", function() {
+                it("Fail: Stripe payload with a faulty CVC test card", function(done) {
+
+                    var d = {
+                        "action" : "createPaymentMethod",
+                        "paymentGatewayId" : PAYMENT_GATEWAY_ID
+                    };
+
+                    getTokenAndCallREST_API(d, function(r) {
+                        console.log("r:", r);
+                        try {
+                            r.success.should.equal(false);
+                            r.errorParam.should.equal('cvc');
+
+                            r.paymentMethodList.length.should.equal(1);                            
+                            r.paymentMethodList[0].addressCity.should.equal(ADDRESS_CITY);
+                            r.paymentMethodList[0].addressCountry.should.equal(ADDRES_COUNTRY);
+                            r.paymentMethodList[0].addressPostalCode.should.equal(ADDRESS_ZIP);
+                            r.paymentMethodList[0].brand.should.equal("Visa");
+                            r.paymentMethodList[0].expMonth.should.equal(EXP_MONTH);
+                            r.paymentMethodList[0].expYear.should.equal(EXP_YEAR);
+                            r.paymentMethodList[0].holderName.should.equal(CC_HOLDER_NAME);
+                            r.paymentMethodList[0].last4.should.equal(FAULTY_CVC_CARD.substr(FAULTY_CVC_CARD.length-4));
+                            r.paymentMethodList[0].status.should.equal('Invalid');
+                            r.paymentMethodList[0].customerId.should.not.equal(null);
+
+
+                            done();
+                        } catch(e) {
+                            done(e);
+                        }
+                    }, FAULTY_CVC_CARD);                    
+                }).timeout(TIMEOUT_MS);
+
+                it("Fail: Stripe payload with an expired test card", function(done) {
+                    var d = {
+                        "action" : "createPaymentMethod",
+                        "paymentGatewayId" : PAYMENT_GATEWAY_ID
+                    };
+
+                    getTokenAndCallREST_API(d, function(r) {
+                        console.log("r:", r);
+                        try {
+                            r.success.should.equal(false);
+                            r.errorParam.should.equal('exp_month');
+
+                            r.paymentMethodList.length.should.equal(1);                            
+                            r.paymentMethodList[0].addressCity.should.equal(ADDRESS_CITY);
+                            r.paymentMethodList[0].addressCountry.should.equal(ADDRES_COUNTRY);
+                            r.paymentMethodList[0].addressPostalCode.should.equal(ADDRESS_ZIP);
+                            r.paymentMethodList[0].brand.should.equal("Visa");
+                            r.paymentMethodList[0].expMonth.should.equal(EXP_MONTH);
+                            r.paymentMethodList[0].expYear.should.equal(EXP_YEAR);
+                            r.paymentMethodList[0].holderName.should.equal(CC_HOLDER_NAME);
+                            r.paymentMethodList[0].last4.should.equal(FAULTY_EXPIRED_CARD.substr(FAULTY_EXPIRED_CARD.length-4));
+                            r.paymentMethodList[0].status.should.equal('Invalid');
+                            r.paymentMethodList[0].customerId.should.not.equal(null);
+
+
+                            done();
+                        } catch(e) {
+                            done(e);
+                        }
+                    }, FAULTY_EXPIRED_CARD);                    
+                }).timeout(TIMEOUT_MS);
+
+                it("Fail: Stripe payload with a processing error test card", function(done) {
+                    var d = {
+                        "action" : "createPaymentMethod",
+                        "paymentGatewayId" : PAYMENT_GATEWAY_ID
+                    };
+
+                    getTokenAndCallREST_API(d, function(r) {
+                        console.log("r:", r);
+                        try {
+                            r.success.should.equal(false);
+
+                            r.paymentMethodList.length.should.equal(1);                            
+                            r.paymentMethodList[0].addressCity.should.equal(ADDRESS_CITY);
+                            r.paymentMethodList[0].addressCountry.should.equal(ADDRES_COUNTRY);
+                            r.paymentMethodList[0].addressPostalCode.should.equal(ADDRESS_ZIP);
+                            r.paymentMethodList[0].brand.should.equal("Visa");
+                            r.paymentMethodList[0].expMonth.should.equal(EXP_MONTH);
+                            r.paymentMethodList[0].expYear.should.equal(EXP_YEAR);
+                            r.paymentMethodList[0].holderName.should.equal(CC_HOLDER_NAME);
+                            r.paymentMethodList[0].last4.should.equal(FAULTY_PROCESSING_ERROR_CARD.substr(FAULTY_PROCESSING_ERROR_CARD.length-4));
+                            r.paymentMethodList[0].status.should.equal('Invalid');
+                            r.paymentMethodList[0].customerId.should.not.equal(null);
+
+
+                            done();
+                        } catch(e) {
+                            done(e);
+                        }
+                    }, FAULTY_PROCESSING_ERROR_CARD);                    
+                }).timeout(TIMEOUT_MS); 
+
+
+                it("Fail: Transaction can't go through if the CC is declined", function(done) {
+                    var d = {
+                        "action" : "createPaymentMethod",
+                        "paymentGatewayId" : PAYMENT_GATEWAY_ID,
+                        "transactionList" : [
+                            {
+                                "amount" : 100
+                            }
+                        ]
+                    };
+
+                    getTokenAndCallREST_API(d, function(r) {
+                        console.log("r:", r);
+                        try {
+                            r.success.should.equal(false);
+                            r.errorParam.should.equal('exp_month');
+
+                            r.paymentMethodList.length.should.equal(1);                            
+                            r.paymentMethodList[0].addressCity.should.equal(ADDRESS_CITY);
+                            r.paymentMethodList[0].addressCountry.should.equal(ADDRES_COUNTRY);
+                            r.paymentMethodList[0].addressPostalCode.should.equal(ADDRESS_ZIP);
+                            r.paymentMethodList[0].brand.should.equal("Visa");
+                            r.paymentMethodList[0].expMonth.should.equal(EXP_MONTH);
+                            r.paymentMethodList[0].expYear.should.equal(EXP_YEAR);
+                            r.paymentMethodList[0].holderName.should.equal(CC_HOLDER_NAME);
+                            r.paymentMethodList[0].last4.should.equal(FAULTY_EXPIRED_CARD.substr(FAULTY_EXPIRED_CARD.length-4));
+                            r.paymentMethodList[0].status.should.equal('Invalid');
+                            r.paymentMethodList[0].customerId.should.not.equal(null);
+
+                            r.transactionList.length.should.equal(1);
+                            
+                            r.transactionList[0].amount.should.equal(100);
+                            r.transactionList[0].paymentGatewayId.should.equal(r.paymentMethodList[0].paymentGatewayId);
+                            r.transactionList[0].transactionId.should.not.equal(null);
+                            r.transactionList[0].transactionStatus.should.equal('Open');
+                            r.transactionList[0].errorMessage.should.not.equal(null);
+
+                            done();
+                        } catch(e) {
+                            done(e);
+                        }
+                    }, FAULTY_EXPIRED_CARD);                    
+                }).timeout(TIMEOUT_MS);
+
+                it("Success: Failed transactions card can go through WITHOUT a transaction", function(done) {
+                    var d = {
+                        "action" : "createPaymentMethod",
+                        "paymentGatewayId" : PAYMENT_GATEWAY_ID
+                    };
+
+                    getTokenAndCallREST_API(d, function(r) {
+                        console.log("r:", r);
+                        try {
+                            r.success.should.equal(true);
+
+                            r.paymentMethodList.length.should.equal(1);                            
+                            r.paymentMethodList[0].addressCity.should.equal(ADDRESS_CITY);
+                            r.paymentMethodList[0].addressCountry.should.equal(ADDRES_COUNTRY);
+                            r.paymentMethodList[0].addressPostalCode.should.equal(ADDRESS_ZIP);
+                            r.paymentMethodList[0].brand.should.equal("Visa");
+                            r.paymentMethodList[0].expMonth.should.equal(EXP_MONTH);
+                            r.paymentMethodList[0].expYear.should.equal(EXP_YEAR);
+                            r.paymentMethodList[0].holderName.should.equal(CC_HOLDER_NAME);
+                            r.paymentMethodList[0].last4.should.equal(FAULTY_FAILED_TRANSCTIONS_CARD.substr(FAULTY_FAILED_TRANSCTIONS_CARD.length-4));
+                            r.paymentMethodList[0].status.should.equal('Valid');
+                            r.paymentMethodList[0].customerId.should.not.equal(null);
+
+
+                            done();
+                        } catch(e) {
+                            done(e);
+                        }
+                    }, FAULTY_FAILED_TRANSCTIONS_CARD);                    
+                }).timeout(TIMEOUT_MS); 
+
+                it("Fail: CC goes through, but transaction is declined", function(done) {
+                    var d = {
+                        "action" : "createPaymentMethod",
+                        "paymentGatewayId" : PAYMENT_GATEWAY_ID,
+                        "transactionList" : [
+                            {
+                                "amount" : 55
+                            }
+                        ]
+                    };
+
+                    getTokenAndCallREST_API(d, function(r) {
+                        console.log("r:", r);
+                        try {
+                            r.success.should.equal(false);
+                            r.errorMessage.should.not.equal(null);
+
+                            r.paymentMethodList.length.should.equal(1);                            
+                            r.paymentMethodList[0].addressCity.should.equal(ADDRESS_CITY);
+                            r.paymentMethodList[0].addressCountry.should.equal(ADDRES_COUNTRY);
+                            r.paymentMethodList[0].addressPostalCode.should.equal(ADDRESS_ZIP);
+                            r.paymentMethodList[0].brand.should.equal("Visa");
+                            r.paymentMethodList[0].expMonth.should.equal(EXP_MONTH);
+                            r.paymentMethodList[0].expYear.should.equal(EXP_YEAR);
+                            r.paymentMethodList[0].holderName.should.equal(CC_HOLDER_NAME);
+                            r.paymentMethodList[0].last4.should.equal(FAULTY_FAILED_TRANSCTIONS_CARD.substr(FAULTY_FAILED_TRANSCTIONS_CARD.length-4));
+                            r.paymentMethodList[0].status.should.equal('Valid');
+                            r.paymentMethodList[0].customerId.should.not.equal(null);
+
+                            r.transactionList.length.should.equal(1);
+
+                            r.transactionList[0].amount.should.equal(55);
+                            r.transactionList[0].paymentGatewayId.should.equal(r.paymentMethodList[0].paymentGatewayId);
+                            r.transactionList[0].transactionId.should.not.equal(null);
+                            r.transactionList[0].transactionStatus.should.equal('Failed');
+                            expect(r.transactionList[0].errorMessage).to.equal(null);
+
+
+
+                            done();
+                        } catch(e) {
+                            done(e);
+                        }
+                    }, FAULTY_FAILED_TRANSCTIONS_CARD);                    
+                }).timeout(TIMEOUT_MS); 
+
+            });
+
 
         }); // end of all mocha tests
 
