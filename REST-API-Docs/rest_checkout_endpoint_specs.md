@@ -113,7 +113,7 @@ Lists all the PMs for a given stripe customer / account / contact
 
 #### Params
 
-* __id__
+* __paymentMethodId__
 * __customerId__ Stripe Customer Id. If passed, don't pass contactId and/or accountId
 * __accountId__
 * __contactId__
