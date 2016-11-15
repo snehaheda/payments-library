@@ -1,3 +1,8 @@
+<!---
+
+This stuff is went to test.js
+
+-->
 <html>
 <head>
 	<meta charset="utf-8">
@@ -14,7 +19,7 @@
         <p/>
         Inter here the access_token:
         <p/>
-        <input type="text" id="access_token" value="00D41000000FyUV!AQcAQN06AdVf5BJdU4M2KtQRcRG0EC6udqV8p4i7nlm1c2YiklashmkIeKOdEbj0f7Q_kBnMJseYUDnMOpsm3jYGkPZ0mdPS"/>
+        <input type="text" id="access_token" value="00D41000000FyUV!AQcAQLqHpInN5kMq3g4SDUAMkqgnjfXi6p4kRzxcNcFlNJ0XQOPjlNcn.iv16APbrU2fxuo9zgWCMrnzP0kJfoj_dGH6zaJL"/>
 
     </div>
 
@@ -102,15 +107,14 @@
                 url = PRIVATE_ENDPOINT
                 headers['Authorization'] = 'Beaerer ' + $('#access_token').val();
             }
+
+
             console.log('## callREST_API', url, headers, d );
 
-            return
             $.ajax({
                 type : 'POST',
                 url : url,
-                headers : {
-                    "content-type": "text/plain"
-                },
+                headers : headers,
                 data : JSON.stringify(d),
                 success : callback
             }); 
@@ -143,7 +147,7 @@
                     });
                 }).timeout(TIMEOUT_MS);
 
-
+                /*
                 it("Error: get PM to the public endpoint", function(done) {
 
                     var d = {
@@ -160,7 +164,7 @@
                         }
                     });
                 }).timeout(TIMEOUT_MS);
-
+                */
             }); // end of describe
 
 
