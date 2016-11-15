@@ -208,9 +208,178 @@ describe("p360 REST API private actions", function() {
             });
 		}).timeout(TIMEOUT_MS);	
 
+		it("getPaymentMethods: can't add more than one param 1", function(done) {
+			var d = {
+                "action" : "getPaymentMethods",
+                "paymentMethodId" : ["a024100000334ocAAA"],
+                "customerId" : ["a024100000334ocAAA"]
+            };
+
+            callREST_API(d, false, function(r) {
+            	try {
+            		expect(r.success).to.equal(false);
+            		expect(r.errorParam).to.equal('customerId');
+            		done();
+            	} catch(e) {
+            		done(e);
+            	}
+            });
+		}).timeout(TIMEOUT_MS);	
+
+		it("getPaymentMethods: can't add more than one param 2", function(done) {
+			var d = {
+                "action" : "getPaymentMethods",
+                "paymentMethodId" : ["a024100000334ocAAA"],
+                "accountId" : ["a024100000334ocAAA"]
+            };
+
+            callREST_API(d, false, function(r) {
+            	try {
+            		expect(r.success).to.equal(false);
+            		expect(r.errorParam).to.equal('accountId');
+            		done();
+            	} catch(e) {
+            		done(e);
+            	}
+            });
+		}).timeout(TIMEOUT_MS);	
+
+		it("getPaymentMethods: can't add more than one param 3", function(done) {
+			var d = {
+                "action" : "getPaymentMethods",
+                "paymentMethodId" : ["a024100000334ocAAA"],
+                "contactId" : ["a024100000334ocAAA"]
+            };
+
+            callREST_API(d, false, function(r) {
+            	try {
+            		expect(r.success).to.equal(false);
+            		expect(r.errorParam).to.equal('contactId');
+            		done();
+            	} catch(e) {
+            		done(e);
+            	}
+            });
+		}).timeout(TIMEOUT_MS);	
+
+		it("getPaymentMethods: can't add more than one param 4", function(done) {
+			var d = {
+                "action" : "getPaymentMethods",
+                "customerId" : ["a024100000334ocAAA"],
+                "contactId" : ["a024100000334ocAAA"]
+            };
+
+            callREST_API(d, false, function(r) {
+            	try {
+            		expect(r.success).to.equal(false);
+            		expect(r.errorParam).to.equal('contactId');
+            		done();
+            	} catch(e) {
+            		done(e);
+            	}
+            });
+		}).timeout(TIMEOUT_MS);	
+
+		it("getPaymentMethods: can't add more than one param 5", function(done) {
+			var d = {
+                "action" : "getPaymentMethods",
+                "customerId" : ["a024100000334ocAAA"],
+                "accountId" : ["a024100000334ocAAA"]
+            };
+
+            callREST_API(d, false, function(r) {
+            	try {
+            		expect(r.success).to.equal(false);
+            		expect(r.errorParam).to.equal('accountId');
+            		done();
+            	} catch(e) {
+            		done(e);
+            	}
+            });
+		}).timeout(TIMEOUT_MS);	
+
+		it("getPaymentMethods: can't add more than one param 6", function(done) {
+			var d = {
+                "action" : "getPaymentMethods",
+                "contactId" : ["a024100000334ocAAA"],
+                "accountId" : ["a024100000334ocAAA"]
+            };
+
+            callREST_API(d, false, function(r) {
+            	try {
+            		expect(r.success).to.equal(false);
+            		expect(r.errorParam).to.equal('accountId');
+            		done();
+            	} catch(e) {
+            		done(e);
+            	}
+            });
+		}).timeout(TIMEOUT_MS);	
+
+		it("getPaymentMethods: retrieving one paymentMethod by customerId", function(done) {
+			var d = {
+                "action" : "getPaymentMethods",
+                "customerId" : ["a0741000003CzqkAAC"]
+            };
+
+            callREST_API(d, false, function(r) {
+            	try {
+            		expect(r.success).to.equal(true);
+            		expect(r.errorParam).to.equal(null);
+            		expect(r.paymentMethodList.length).to.equal(1);
+
+            		expect(r.paymentMethodList[0].customerId).to.equal('a0741000003CzqkAAC');
+
+            		done();
+            	} catch(e) {
+            		done(e);
+            	}
+            });
+		}).timeout(TIMEOUT_MS);	
+
+		it("getPaymentMethods: retrieving one paymentMethod by contactId", function(done) {
+			var d = {
+                "action" : "getPaymentMethods",
+                "contactId" : ["00341000003ftLlAAI"]
+            };
+
+            callREST_API(d, false, function(r) {
+            	try {
+            		expect(r.success).to.equal(true);
+            		expect(r.errorParam).to.equal(null);
+
+            		expect(r.paymentMethodList[0].contactId).to.equal('00341000003ftLlAAI');
+
+            		done();
+            	} catch(e) {
+            		done(e);
+            	}
+            });
+		}).timeout(TIMEOUT_MS);	
+
+		it("getPaymentMethods: retrieving one paymentMethod by accountId", function(done) {
+			var d = {
+                "action" : "getPaymentMethods",
+                "accountId" : ["00141000004fyVJAAY"]
+            };
+
+            callREST_API(d, false, function(r) {
+            	try {
+            		expect(r.success).to.equal(true);
+            		expect(r.errorParam).to.equal(null);
+
+            		r.paymentMethodList.forEach(function(e) {
+            			expect(e.accountId).to.equal('00141000004fyVJAAY');
+            		});
+
+
+            		done();
+            	} catch(e) {
+            		done(e);
+            	}
+            });
+		}).timeout(TIMEOUT_MS);	
+
 	});
-
-
-
 
 });
