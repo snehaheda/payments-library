@@ -1,0 +1,224 @@
+<html>
+<body>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	<script type="text/javascript" src="https://js.stripe.com/v2/"></script>
+
+	<!-- This is your Credit Card form. You can modify it, but you NEED to get
+		* CC Number
+		* Expiration month
+		* Expiration year
+		* CVV
+	-->
+
+	<div class="form-row">
+
+		<label>
+			<span>Email</span>
+			<input id="email" type="text">
+		</label>
+		
+	</div>
+
+	<form action="" method="POST" id="payment-form">
+
+		<span class="payment-errors"></span>
+
+		<div class="form-row">
+		
+			<label>
+				<span>Holder's Name</span>
+				<input type="text" value="peter" size="50" data-stripe="name">
+			</label>
+		
+		</div>
+
+		<div class="form-row">
+		
+			<label>
+				<span>Card Number</span>
+				<input type="text" value="4242424242424242" size="20" data-stripe="number">
+			</label>
+		
+		</div>
+
+		<div class="form-row">
+
+			<label>
+				<span>Expiration (MM/YY)</span>
+				<input type="text" value="11" size="2" data-stripe="exp_month">
+			</label>
+			<span> / </span>
+			<input type="text" value="19" size="2" data-stripe="exp_year">
+			
+		</div>
+
+		<div class="form-row">
+
+			<label>
+				<span>CVC</span>
+				<input type="text" value="123" size="4" data-stripe="cvc">
+			</label>
+		
+		</div>
+
+
+		<input type="submit" class="submit" value="Submit Payment">
+
+	</form>
+
+
+
+	<script type="text/javascript">	
+		/*
+			These are the parameters which you are passing to the endpoint hosted on your SF org.
+
+			A good way to test if you endpoint works is to ping it with 'curl':
+				curl https://paym6-dev-developer-edition.na35.force.com/h/services/apexrest/bt_stripe/checkout -d x
+
+			You should get something like this:
+				{"tra":null,"success":false,"pm":null,"errorMessage":"null input to JSON parser\n Class.System.JSON.deserialize: line 15, column 1\nClass.REST_Checkout.doPost: line 25, column 1"}18:02:16-tempflip~/sf/payment360-library/REST-samples (master)$ 
+
+			You MUST pass the following parameters:
+				* publishableKey - the value of 'Stripe Publishable Key' field on your 'Payment Gateway' record
+			
+			The following parameters are optional:
+				* contactId - if it is passed, the created Payment Method will be linked to the specified Contact
+				* amount - if it is passsed, after creating the Payment Method, the card will be charged with the specified amount.
+				  The amount is set in dollars as we do not yet support currency processing other than USD (coming soon).
+				* targetId - value of the parent lookup on the transaction
+				* email - email of the newly created cusomer
+		*/		
+ 			
+ 		var endpoint = 'https://paym6-dev-developer-edition.na35.force.com/h/services/apexrest/v1';
+
+ 		var publishableKey = 'pk_test_rx6uxcAgv6PZM2LuH7TL9imW';
+ 		var paymentGatewayId = ''
+		var contactId = 'a0141000001jhoh';
+		var amount = 900;
+
+		// You are setting the keys for Stripe
+ 		Stripe.setPublishableKey(publishableKey);
+
+ 		/* 
+ 			This is a convenience function. You can remove it, but you should implement the 
+ 			Stripe.card.createToken() line.
+
+ 			Please see 
+ 			https://stripe.com/docs/stripe.js
+ 			for details.
+ 		*/
+
+		$(function() {
+			var $form = $('#payment-form');
+			$form.submit(function(event) {
+				// Disable the submit button to prevent repeated clicks:
+				$form.find('.submit').prop('disabled', true);
+
+				// Request a token from Stripe:
+				Stripe.card.createToken($form, stripeResponseHandler);
+
+				// Prevent the form from being submitted:
+				return false;
+			});
+		});
+
+
+		// After passing credit card data to Stripe, you will get back a token.
+		// If there was no error, you should pass this token to the Salesforce endpoint. (the sendToSalesforceInstance() function)
+		function stripeResponseHandler(status, response) {
+			// Grab the form:
+			var $form = $('#payment-form');
+
+			if (response.error) { // Problem!
+				// Show the errors on the form:
+				$form.find('.payment-errors').text(response.error.message);
+				$form.find('.submit').prop('disabled', false); // Re-enable submission
+			} else { // Token was created!
+				sendToSalesforceInstance(response);
+			}
+		};
+
+		/*
+			This function constructs a POST call to the Salesforce org.
+			Along with the token, you should send your parameters.
+			Only 'publishableKey' is required, others are optional. 
+			The publishableKey can be found in your SF org on your Payment Gateway record. 
+			(NOT within the Stripe dashboard)
+
+			Here we are using JQuery for the POST call, but you can implement using any other library.
+			The endpoint accepts 'application/x-www-form-urlencoded' content type.
+		*/
+		function sendToSalesforceInstance(stripeResponse) {
+			// email is a parameter on the request to Salesforce 
+			var email = $('#email').val();
+			console.log(JSON.stringify(stripeResponse));
+			var d = {
+				//stripePayload : JSON.stringify(stripeResponse),
+			 	paymentGatewayId : paymentGatewayId,
+			 	action : "xcreatePaymentMethod",
+			 		//publishableKey : publishableKey,
+			 		//contactId : contactId,
+			 		//amount : amount,
+			 		//targetId : targetId,
+			 		//email : email
+		 	};		
+
+			$.ajax({
+				type : 'POST',
+				url : endpoint,
+				headers : {
+					"content-type": "text/plain"
+				},
+				data : JSON.stringify(d),
+
+				success : salesforceCallback
+				}); 
+		}
+
+		/*
+			Finally, you will receive a response from the Salesforce endpoint.
+			It is a JSON object with the following properties:
+				* success - A boolean, indicates if the operation was successful
+				* errorMessage - A message, if something went wrong
+				* pm - The newly created Payment Methods record
+				* tra - The newly create Transaction (if there is so)
+		*/
+		function salesforceCallback(d) {
+			console.log('### response', d);
+
+			//var res = JSON.parse(d);
+			//if (res.success === true) { onSuccess(res); }
+			//if (res.success === false) { onFail(res); }
+		}
+
+
+
+
+		function onSuccess(res) {
+			console.log('## Great, it was successful!');
+			console.log(res);
+		}
+
+		function onFail(res) {
+			console.log('## Oh no, it went wrong:(');
+			console.log(res);
+		}
+
+		// A helper function, turns JSON to form encoded string
+		function formEncode(d) {
+			var l = [];
+			for (var k in d) {
+				l.push(k + '=' + encodeURIComponent(d[k]));
+			}
+			return l.join('&');
+		};
+
+	</script>
+
+
+
+
+
+</body>
+</html>
