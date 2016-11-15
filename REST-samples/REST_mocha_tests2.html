@@ -1,0 +1,173 @@
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Mocha Tests</title>
+	<link href="https://cdn.rawgit.com/mochajs/mocha/2.2.5/mocha.css" rel="stylesheet" />
+</head>
+
+<body>
+    <div>
+        Use the following call to obtain an access token:
+        <p/>
+        curl https://login.salesforce.com/services/oauth2/token -X POST -d 'grant_type=password&client_id=3MVG9szVa2RxsqBaVMAZFSLdWv5BZvhnb15ChwBZzbVVyb_u9j08M.xnlQ5Ly15mI6KZfVRTsjTQSMsY27rDT&client_secret=5979639566859185104&username=peter%40paym6.dev&password=xstdev%2B19843go69jH2St9TNsWLGuFK3kTHz' 
+
+        <p/>
+        Inter here the access_token:
+        <p/>
+        <input type="text" id="access_token" value="00D41000000FyUV!AQcAQN06AdVf5BJdU4M2KtQRcRG0EC6udqV8p4i7nlm1c2YiklashmkIeKOdEbj0f7Q_kBnMJseYUDnMOpsm3jYGkPZ0mdPS"/>
+
+    </div>
+
+	<div id="mocha"></div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://js.stripe.com/v2/"></script>
+
+    <script src="https://cdn.rawgit.com/mochajs/mocha/2.2.5/mocha.js"></script>
+    <script src="http://chaijs.com/chai.js"></script>
+
+	<script>
+
+        // the api callers
+        var TIMEOUT_MS = 10000;
+        var PUBLIC_ENDPOINT = 'https://paym6-dev-developer-edition.na35.force.com/h/services/apexrest/v1';
+        var PRIVATE_ENDPOINT = 'https://p360-dev-6-dev-ed.my.salesforce.com/services/apexrest/v1';
+        var PUBLISHABLE_KEY = 'pk_test_rx6uxcAgv6PZM2LuH7TL9imW';
+
+        var CONSUMER_KEY = '3MVG9szVa2RxsqBaVMAZFSLdWv5BZvhnb15ChwBZzbVVyb_u9j08M.xnlQ5Ly15mI6KZfVRTsjTQSMsY27rDT';
+        var CONSUMER_SECRET = '5979639566859185104';
+        var SF_USERNAME = 'peter@paym6.dev';
+        var SF_PASSWORD = 'stdev+1984';
+
+        var CC_HOLDER_NAME = "Holder Maki";
+        var CC_NUMBER = "4242424242424242";
+        var CC_CVC = "123";
+        var EXP_MONTH = "5";
+        var EXP_YEAR = "2019";
+
+        var ADDRESS_CITY = "Budapest";
+        var ADDRESS_LINE1 = "Add l. 1";
+        var ADDRESS_ZIP = "1234";
+        var ADDRES_COUNTRY = "Hungary";
+        var CUSTOMER_EMAIL = "maki@gmail.com";
+
+        var PAYMENT_GATEWAY_ID = "a0141000001jhohAAA";
+        var CONTACT_ID = "00341000003ftLmAAI";
+        var ACCOUNT_ID = "00141000004fyVJAAY";
+        var CUSTOMER_ID = "a0741000002RrjOAAS";
+
+        var FAULTY_CVC_CARD = '4000000000000127';
+        var FAULTY_EXPIRED_CARD = '4000000000000069';
+        var FAULTY_PROCESSING_ERROR_CARD = '4000000000000119';
+        var FAULTY_INCORRECT_NUMBER_CARD = '4242424242424241';
+        var FAULTY_FAILED_TRANSCTIONS_CARD = '4000000000000341';
+
+        /*var getTokenAndCallREST_API = function(d, callback, alternate_cc_number) {
+            Stripe.setPublishableKey(PUBLISHABLE_KEY);
+
+            var cc_number = CC_NUMBER;
+            if (alternate_cc_number) {
+                cc_number = alternate_cc_number;
+            }
+
+            Stripe.card.createToken({
+                number: cc_number,
+                cvc: CC_CVC,
+                exp_month: EXP_MONTH,
+                exp_year: EXP_YEAR,
+                name: CC_HOLDER_NAME,
+                address_line1: ADDRESS_LINE1,
+                address_city: ADDRESS_CITY, 
+                address_zip: ADDRESS_ZIP,
+                address_country: ADDRES_COUNTRY
+            }, function(status, response) {
+                if (response.error) {
+                    throw "Something went wrong when getting token from Stripe " + response.error.message;
+                }
+                d.stripePayload = JSON.stringify(response);
+                callREST_API(d, callback);             
+            });
+        }*/
+
+        var callREST_API = function(d, usePublic, callback) {
+            var url;
+
+            var headers = {
+                    "content-type": "text/plain"
+                };
+
+            if (usePublic == true) {
+                url = PUBLIC_ENDPOINT
+            } else {
+                url = PRIVATE_ENDPOINT
+                headers['Authorization'] = 'Beaerer ' + $('#access_token').val();
+            }
+            console.log('## callREST_API', url, headers, d );
+
+            return
+            $.ajax({
+                type : 'POST',
+                url : url,
+                headers : {
+                    "content-type": "text/plain"
+                },
+                data : JSON.stringify(d),
+                success : callback
+            }); 
+        }
+        
+
+        // the test cases
+        mocha.setup('bdd');
+        var should = chai.should();
+        var expect = chai.expect;
+
+        describe("p360 REST API private actions", function() {
+
+            describe("getPaymentMethods action tests", function() {
+
+                it("Success: get PM by Id (a02410000031EHb)", function(done) {
+
+                    var d = {
+                        "action" : "createPaymentMethod"
+                    };
+
+                    callREST_API(d, false, function(r) {
+                        console.log("## return ", r);
+                        try {
+                            r.success.should.equal(true);
+                            done();
+                        } catch(e) {
+                            done(e);
+                        }
+                    });
+                }).timeout(TIMEOUT_MS);
+
+
+                it("Error: get PM to the public endpoint", function(done) {
+
+                    var d = {
+                        "action" : "getPaymentMethods"
+                    };
+
+                    callREST_API(d, true, function(r) {
+                        console.log("## return ", r);
+                        try {
+                            r.success.should.equal(true);
+                            done();
+                        } catch(e) {
+                            done(e);
+                        }
+                    });
+                }).timeout(TIMEOUT_MS);
+
+            }); // end of describe
+
+
+        }); // end of all mocha tests (describe)
+
+        mocha.run();
+
+	</script>
+</body>
+</html>
