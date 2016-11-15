@@ -131,16 +131,15 @@ describe("p360 REST API private actions", function() {
 	});
 
 
-	describe("getPaymentMethods action tests", function() {
+	describe("getPaymentMethods action tests:", function() {
 
-		it("getPaymentMethods should not run on public (errorParam: action)", function(done) {
+		it("getPaymentMethods: should not run on public (errorParam: action)", function(done) {
 			var d = {
                 "action" : "getPaymentMethods"
             };
 
             callREST_API(d, true, function(r) {
             	try {
-            		console.log(r);
             		expect(r.success).to.equal(false);
             		expect(r.errorParam).to.equal('action');
             		done();
@@ -150,15 +149,58 @@ describe("p360 REST API private actions", function() {
             });
 		}).timeout(TIMEOUT_MS);	
 
-
-		it("getPaymentMethods should run on private", function(done) {
+		it("getPaymentMethods: should have some parameters", function(done) {
 			var d = {
                 "action" : "getPaymentMethods"
             };
 
             callREST_API(d, false, function(r) {
             	try {
+            		expect(r.success).to.equal(false);
+            		expect(r.errorParam).to.equal('paymentMethodId');
+            		done();
+            	} catch(e) {
+            		done(e);
+            	}
+            });
+		}).timeout(TIMEOUT_MS);	
+
+		it("getPaymentMethods: retrieving one paymentMethod", function(done) {
+			var d = {
+                "action" : "getPaymentMethods",
+                "paymentMethodId" : ["a024100000334ocAAA"]
+            };
+
+            callREST_API(d, false, function(r) {
+            	try {
             		expect(r.success).to.equal(true);
+            		expect(r.errorParam).to.equal(null);
+            		expect(r.paymentMethodList.length).to.equal(1);
+
+            		expect(r.paymentMethodList[0].paymentMethodId).to.equal('a024100000334ocAAA');
+
+            		done();
+            	} catch(e) {
+            		done(e);
+            	}
+            });
+		}).timeout(TIMEOUT_MS);	
+
+		it("getPaymentMethods: retrieving two paymentMethod", function(done) {
+			var d = {
+                "action" : "getPaymentMethods",
+                "paymentMethodId" : ["a024100000334ocAAA", "a0241000003353pAAA"]
+            };
+
+            callREST_API(d, false, function(r) {
+            	try {
+            		expect(r.success).to.equal(true);
+            		expect(r.errorParam).to.equal(null);
+            		expect(r.paymentMethodList.length).to.equal(2);
+
+            		expect(r.paymentMethodList[0].paymentMethodId).to.equal('a024100000334ocAAA');
+            		expect(r.paymentMethodList[1].paymentMethodId).to.equal('a0241000003353pAAA');
+
             		done();
             	} catch(e) {
             		done(e);
@@ -167,4 +209,8 @@ describe("p360 REST API private actions", function() {
 		}).timeout(TIMEOUT_MS);	
 
 	});
+
+
+
+
 });

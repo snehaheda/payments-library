@@ -129,6 +129,23 @@
                     });
                 }).timeout(TIMEOUT_MS);
 
+                it("Error: Should not call the getPaymentMethods as this is a private action", function(done) {
+
+                    var d = {
+                        "action" : "getPaymentMethods"
+                    };
+
+                    callREST_API(d, function(r) {
+                        try {
+                            r.success.should.equal(false);
+                            r.errorParam.should.equal("action");
+                            done();
+                        } catch(e) {
+                            done(e);
+                        }
+                    });
+                }).timeout(TIMEOUT_MS);
+
             });
 
 
