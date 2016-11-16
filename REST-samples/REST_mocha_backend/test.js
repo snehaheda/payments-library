@@ -1,16 +1,11 @@
 /*
 Use the following call to obtain an access token:
 
-curl https://login.salesforce.com/services/oauth2/token -X POST -d 'grant_type=password&client_id=3MVG9szVa2RxsqBaVMAZFSLdWv5BZvhnb15ChwBZzbVVyb_u9j08M.xnlQ5Ly15mI6KZfVRTsjTQSMsY27rDT&client_secret=5979639566859185104&username=peter%40paym6.dev&password=xstdev%2B19843go69jH2St9TNsWLGuFK3kTHz' 
+curl https://login.salesforce.com/services/oauth2/token -X POST -d 'grant_type=password&client_id=3MVG9szVa2RxsqBaVMAZFSLdWv5BZvhnb15ChwBZzbVVyb_u9j08M.xnlQ5Ly15mI6KZfVRTsjTQSMsY27rDT&client_secret=5979639566859185104&username=peter%40paym6.dev&password=stdev%2B19843go69jH2St9TNsWLGuFK3kTHz' 
 */
 
-var ACCESS_TOKEN = '00D41000000FyUV!AQcAQLqHpInN5kMq3g4SDUAMkqgnjfXi6p4kRzxcNcFlNJ0XQOPjlNcn.iv16APbrU2fxuo9zgWCMrnzP0kJfoj_dGH6zaJL';
+var ACCESS_TOKEN = '00D41000000FyUV!AQcAQNgvNkIH3EnvZ3p7GwRfP7iCnjh1csWLA6sTC01Du0TCp81OGsrAsN9NuWxnT0A6n3oD7mPNPx5vyuW_nV2FWd.oSXhe';
 
-var assert = require("assert");
-var request = require('request');
-var expect = require("chai").expect;
-
-var TIMEOUT_MS = 10000;
 var PUBLIC_ENDPOINT = 'https://paym6-dev-developer-edition.na35.force.com/h/services/apexrest/v1';
 var PRIVATE_ENDPOINT = 'https://p360-dev-6-dev-ed.my.salesforce.com/services/apexrest/v1';
 var PUBLISHABLE_KEY = 'pk_test_rx6uxcAgv6PZM2LuH7TL9imW';
@@ -20,22 +15,19 @@ var CONSUMER_SECRET = '5979639566859185104';
 var SF_USERNAME = 'peter@paym6.dev';
 var SF_PASSWORD = 'stdev+1984';
 
-var CC_HOLDER_NAME = "Holder Maki";
-var CC_NUMBER = "4242424242424242";
-var CC_CVC = "123";
-var EXP_MONTH = "5";
-var EXP_YEAR = "2019";
-
-var ADDRESS_CITY = "Budapest";
-var ADDRESS_LINE1 = "Add l. 1";
-var ADDRESS_ZIP = "1234";
-var ADDRES_COUNTRY = "Hungary";
-var CUSTOMER_EMAIL = "maki@gmail.com";
-
-var PAYMENT_GATEWAY_ID = "a0141000001jhohAAA";
-var CONTACT_ID = "00341000003ftLmAAI";
+var CONTACT_ID = "00341000003ftLlAAI";
 var ACCOUNT_ID = "00141000004fyVJAAY";
-var CUSTOMER_ID = "a0741000002RrjOAAS";
+var CUSTOMER_ID = "a0741000003CzqkAAC";
+
+var PAYMENT_METHOD_ID1 = 'a024100000334ocAAA';
+var PAYMENT_METHOD_ID2 = 'a0241000003353pAAA';
+
+var assert = require("assert");
+var request = require('request');
+var expect = require("chai").expect;
+
+var TIMEOUT_MS = 10000;
+
 
 
 
@@ -168,7 +160,7 @@ describe("p360 REST API private actions", function() {
 		it("getPaymentMethods: retrieving one paymentMethod", function(done) {
 			var d = {
                 "action" : "getPaymentMethods",
-                "paymentMethodId" : ["a024100000334ocAAA"]
+                "paymentMethodId" : [PAYMENT_METHOD_ID1]
             };
 
             callREST_API(d, false, function(r) {
@@ -177,7 +169,7 @@ describe("p360 REST API private actions", function() {
             		expect(r.errorParam).to.equal(null);
             		expect(r.paymentMethodList.length).to.equal(1);
 
-            		expect(r.paymentMethodList[0].paymentMethodId).to.equal('a024100000334ocAAA');
+            		expect(r.paymentMethodList[0].paymentMethodId).to.equal(PAYMENT_METHOD_ID1);
 
             		done();
             	} catch(e) {
@@ -189,7 +181,7 @@ describe("p360 REST API private actions", function() {
 		it("getPaymentMethods: retrieving two paymentMethod", function(done) {
 			var d = {
                 "action" : "getPaymentMethods",
-                "paymentMethodId" : ["a024100000334ocAAA", "a0241000003353pAAA"]
+                "paymentMethodId" : [PAYMENT_METHOD_ID1, PAYMENT_METHOD_ID2]
             };
 
             callREST_API(d, false, function(r) {
@@ -198,8 +190,8 @@ describe("p360 REST API private actions", function() {
             		expect(r.errorParam).to.equal(null);
             		expect(r.paymentMethodList.length).to.equal(2);
 
-            		expect(r.paymentMethodList[0].paymentMethodId).to.equal('a024100000334ocAAA');
-            		expect(r.paymentMethodList[1].paymentMethodId).to.equal('a0241000003353pAAA');
+            		expect(r.paymentMethodList[0].paymentMethodId).to.equal(PAYMENT_METHOD_ID1);
+            		expect(r.paymentMethodList[1].paymentMethodId).to.equal(PAYMENT_METHOD_ID2);
 
             		done();
             	} catch(e) {
@@ -211,8 +203,8 @@ describe("p360 REST API private actions", function() {
 		it("getPaymentMethods: can't add more than one param 1", function(done) {
 			var d = {
                 "action" : "getPaymentMethods",
-                "paymentMethodId" : ["a024100000334ocAAA"],
-                "customerId" : ["a024100000334ocAAA"]
+                "paymentMethodId" : [PAYMENT_METHOD_ID1],
+                "customerId" : [PAYMENT_METHOD_ID1]
             };
 
             callREST_API(d, false, function(r) {
@@ -229,8 +221,8 @@ describe("p360 REST API private actions", function() {
 		it("getPaymentMethods: can't add more than one param 2", function(done) {
 			var d = {
                 "action" : "getPaymentMethods",
-                "paymentMethodId" : ["a024100000334ocAAA"],
-                "accountId" : ["a024100000334ocAAA"]
+                "paymentMethodId" : [PAYMENT_METHOD_ID1],
+                "accountId" : [PAYMENT_METHOD_ID1]
             };
 
             callREST_API(d, false, function(r) {
@@ -247,8 +239,8 @@ describe("p360 REST API private actions", function() {
 		it("getPaymentMethods: can't add more than one param 3", function(done) {
 			var d = {
                 "action" : "getPaymentMethods",
-                "paymentMethodId" : ["a024100000334ocAAA"],
-                "contactId" : ["a024100000334ocAAA"]
+                "paymentMethodId" : [PAYMENT_METHOD_ID1],
+                "contactId" : [PAYMENT_METHOD_ID1]
             };
 
             callREST_API(d, false, function(r) {
@@ -265,8 +257,8 @@ describe("p360 REST API private actions", function() {
 		it("getPaymentMethods: can't add more than one param 4", function(done) {
 			var d = {
                 "action" : "getPaymentMethods",
-                "customerId" : ["a024100000334ocAAA"],
-                "contactId" : ["a024100000334ocAAA"]
+                "customerId" : [PAYMENT_METHOD_ID1],
+                "contactId" : [PAYMENT_METHOD_ID1]
             };
 
             callREST_API(d, false, function(r) {
@@ -283,8 +275,8 @@ describe("p360 REST API private actions", function() {
 		it("getPaymentMethods: can't add more than one param 5", function(done) {
 			var d = {
                 "action" : "getPaymentMethods",
-                "customerId" : ["a024100000334ocAAA"],
-                "accountId" : ["a024100000334ocAAA"]
+                "customerId" : [PAYMENT_METHOD_ID1],
+                "accountId" : [PAYMENT_METHOD_ID1]
             };
 
             callREST_API(d, false, function(r) {
@@ -301,8 +293,8 @@ describe("p360 REST API private actions", function() {
 		it("getPaymentMethods: can't add more than one param 6", function(done) {
 			var d = {
                 "action" : "getPaymentMethods",
-                "contactId" : ["a024100000334ocAAA"],
-                "accountId" : ["a024100000334ocAAA"]
+                "contactId" : [PAYMENT_METHOD_ID1],
+                "accountId" : [PAYMENT_METHOD_ID1]
             };
 
             callREST_API(d, false, function(r) {
@@ -319,7 +311,7 @@ describe("p360 REST API private actions", function() {
 		it("getPaymentMethods: retrieving one paymentMethod by customerId", function(done) {
 			var d = {
                 "action" : "getPaymentMethods",
-                "customerId" : ["a0741000003CzqkAAC"]
+                "customerId" : [CUSTOMER_ID]
             };
 
             callREST_API(d, false, function(r) {
@@ -328,7 +320,7 @@ describe("p360 REST API private actions", function() {
             		expect(r.errorParam).to.equal(null);
             		expect(r.paymentMethodList.length).to.equal(1);
 
-            		expect(r.paymentMethodList[0].customerId).to.equal('a0741000003CzqkAAC');
+            		expect(r.paymentMethodList[0].customerId).to.equal(CUSTOMER_ID);
 
             		done();
             	} catch(e) {
@@ -340,7 +332,7 @@ describe("p360 REST API private actions", function() {
 		it("getPaymentMethods: retrieving one paymentMethod by contactId", function(done) {
 			var d = {
                 "action" : "getPaymentMethods",
-                "contactId" : ["00341000003ftLlAAI"]
+                "contactId" : [CONTACT_ID]
             };
 
             callREST_API(d, false, function(r) {
@@ -348,7 +340,7 @@ describe("p360 REST API private actions", function() {
             		expect(r.success).to.equal(true);
             		expect(r.errorParam).to.equal(null);
 
-            		expect(r.paymentMethodList[0].contactId).to.equal('00341000003ftLlAAI');
+            		expect(r.paymentMethodList[0].contactId).to.equal(CONTACT_ID);
 
             		done();
             	} catch(e) {
@@ -360,7 +352,7 @@ describe("p360 REST API private actions", function() {
 		it("getPaymentMethods: retrieving one paymentMethod by accountId", function(done) {
 			var d = {
                 "action" : "getPaymentMethods",
-                "accountId" : ["00141000004fyVJAAY"]
+                "accountId" : [ACCOUNT_ID]
             };
 
             callREST_API(d, false, function(r) {
@@ -369,7 +361,7 @@ describe("p360 REST API private actions", function() {
             		expect(r.errorParam).to.equal(null);
 
             		r.paymentMethodList.forEach(function(e) {
-            			expect(e.accountId).to.equal('00141000004fyVJAAY');
+            			expect(e.accountId).to.equal(ACCOUNT_ID);
             		});
 
 
