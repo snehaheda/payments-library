@@ -3,10 +3,6 @@
 	<meta charset="utf-8">
 	<title>Mocha Tests</title>
 	<link href="https://cdn.rawgit.com/mochajs/mocha/2.2.5/mocha.css" rel="stylesheet" />
-</head>
-
-<body>
-	<div id="mocha"></div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="https://js.stripe.com/v2/"></script>
@@ -14,12 +10,66 @@
     <script src="https://cdn.rawgit.com/mochajs/mocha/2.2.5/mocha.js"></script>
     <script src="http://chaijs.com/chai.js"></script>
 
+</head>
+
+<body>
+    <div>
+        <div>
+            Endpoint
+            <br/>
+            <input id="endpoint" value="https://paym6-dev-developer-edition.na35.force.com/h/services/apexrest/v1" style="width: 500px;"/>
+        </div>
+
+        <div>
+            Publishable Key
+            <br/>
+            <input id="publishable_key" value="pk_test_rx6uxcAgv6PZM2LuH7TL9imW" style="width: 500px;"/>
+        </div>
+
+        <div>
+            Payment Gateway Id
+            <br/>
+            <input id="payment_gateway_id" value="a0141000001jhohAAA" style="width: 500px;"/>
+        </div>
+
+        <div>
+            Contact Id
+            <br/>
+            <input id="contact_id" value="00341000003ftLmAAI" style="width: 500px;"/>
+        </div>
+
+        <div>
+            Account Id
+            <br/>
+            <input id="account_id" value="00141000004fyVJAAY" style="width: 500px;"/>
+        </div>
+
+        <div>
+            Customer Id
+            <br/>
+            <input id="customer_id" value="a0741000002RrjOAAS" style="width: 500px;"/>
+        </div>
+
+        <div>
+            <button id="start_tests">Start Tests</button>
+        </div>
+    </div>
+
+	<div id="mocha"></div>
+
+
+
 	<script>
 
-        // the api callers
+
+        var ENDPOINT;
+        var PUBLISHABLE_KEY;
+        var PAYMENT_GATEWAY_ID;
+        var CONTACT_ID;
+        var ACCOUNT_ID;
+        var CUSTOMER_ID;
+
         var TIMEOUT_MS = 10000;
-        var ENDPOINT = 'https://paym6-dev-developer-edition.na35.force.com/h/services/apexrest/v1';
-        var PUBLISHABLE_KEY = 'pk_test_rx6uxcAgv6PZM2LuH7TL9imW';
 
         var CC_HOLDER_NAME = "Holder Maki";
         var CC_NUMBER = "4242424242424242";
@@ -33,17 +83,24 @@
         var ADDRES_COUNTRY = "Hungary";
         var CUSTOMER_EMAIL = "maki@gmail.com";
 
-        var PAYMENT_GATEWAY_ID = "a0141000001jhohAAA";
-        var CONTACT_ID = "00341000003ftLmAAI";
-        var ACCOUNT_ID = "00141000004fyVJAAY";
-        var CUSTOMER_ID = "a0741000002RrjOAAS";
-
         var FAULTY_CVC_CARD = '4000000000000127';
         var FAULTY_EXPIRED_CARD = '4000000000000069';
         var FAULTY_PROCESSING_ERROR_CARD = '4000000000000119';
         var FAULTY_INCORRECT_NUMBER_CARD = '4242424242424241';
         var FAULTY_FAILED_TRANSCTIONS_CARD = '4000000000000341';
 
+
+        $(document).ready(function() {
+            $('#start_tests').click(function() {
+                ENDPOINT = $('#endpoint').val();
+                PUBLISHABLE_KEY = $('#publishable_key').val();
+                PAYMENT_GATEWAY_ID = $('#payment_gateway_id').val();
+                CONTACT_ID = $('#contact_id').val();
+                ACCOUNT_ID = $('#account_id').val();
+                CUSTOMER_ID = $('#customer_id').val();
+                startTests();
+            });
+        });
 
         var getTokenAndCallREST_API = function(d, callback, alternate_cc_number) {
             Stripe.setPublishableKey(PUBLISHABLE_KEY);
@@ -86,9 +143,15 @@
             }); 
         }
         
+        var startTests = function() {
+            mocha.run();
+        }
+
+
 
         // the test cases
         mocha.setup('bdd');
+        
         var should = chai.should();
         var expect = chai.expect;
 
@@ -1146,8 +1209,6 @@
 
 
         }); // end of all mocha tests
-
-        mocha.run();
 
 	</script>
 </body>
