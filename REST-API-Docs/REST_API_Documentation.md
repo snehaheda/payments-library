@@ -78,5 +78,21 @@ If the __success__ parameter equels false, than your action was not successful. 
 
 ### createPaymentMethod
 
+Currently the __createPaymentMethod__ is the only available action on the public endpoint. You can create a new Payment Method, link it to a Contact, Account or Stripe Customer. You can also charge the newly creted transaction. 
+
+It is important to understand that you can not pass directly credit card data to your endpoint. Instead, you are retrieving a JSON token from stripe.js and passing this data as the __stripePayload__ parameter. This way credit card data doesn't travel through possibly insecure network or code. 
+
+
+Params:
+* __action__ : required, always equals 'createPaymentMethod'
+* __paymentGatewayId__ : required, the Id of your Payment Gateway. This represents your Stripe Account.
+* __publishableKey__ : instead of __paymentGatewayId__ you can provide this property of the Payment Gateway
+* __stripePayload__ : String value of the JSON object returned by stripe.js
+* __email__ : the customer's email
+* __contactId__ : the customer's Contact id. The Payment Method will be linked to this Contact.
+* __accountId__ : the customer's Account id. The Payment Method will be linked to this Account.
+* __customerId__ : the customer's String Customer id. The Payment Method will be linked to this Stripe Customer.
+
+
 ### getPaymentMethods
 
