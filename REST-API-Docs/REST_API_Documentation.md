@@ -50,9 +50,29 @@ Example call to the public endpoint:
 ```
 
 
-### The stripe.js payload
+### The stripe.js payload (stripePayload parameter)
 
-## Error handling
+The Stripe Payload parameter used in __createPaymentMethod__ is returned by the stripe.js and has specific format:
+it should be a JSON object dumbed to a string. Please see the example above.
+
+### The result
+
+The result returned by the REST API is a JSON string with the following parameters:
+
+* Boolean success
+* String errorMessage
+* String errorParam
+* Tra[] transactionList
+* PM[] paymentMethodList
+* Customer[] customerList
+
+Not every property is populated in every action.
+
+## Success and Error handling
+
+The __success__ property is always provided by the REST API. If it equals true, than the action was performed properly, and you should receive your data in the corresponding properties. 
+
+If the __success__ parameter equels false, than your action was not successful. You should get an error message in the __errorMessage__ property, and the __errorParam__ propery usually gives you some clue about the wrong parameter.
 
 ##  Actions
 
