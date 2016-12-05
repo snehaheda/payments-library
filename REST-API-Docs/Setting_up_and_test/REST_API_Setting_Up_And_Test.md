@@ -4,4 +4,4 @@
 
 Go to __Setup | Sites__ and click __New__.
 
-!(site1.png)
+![Public facing site](site1.png)
