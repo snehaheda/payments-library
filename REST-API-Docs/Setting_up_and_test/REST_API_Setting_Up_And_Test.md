@@ -38,7 +38,7 @@ Your response should be similar to the following. You should see a JSON response
 
 ![curl response](curl.png)
 
-## Runnig the automated frontend tests
+## Downloading the automated frontend tests
 
 You can test the payment360 REST endpoint from your browser, so you can make sure your org is set up properly.
 
@@ -50,6 +50,8 @@ In order to get the testing environment, you need to clone the payment360 librar
 (you need the have git installed)
 
 After this command, you should have the `payment360-library` folder in your working directory.
+
+## Runnig the automated frontend tests
 
 ### Running the testing environment on your own machine
 
