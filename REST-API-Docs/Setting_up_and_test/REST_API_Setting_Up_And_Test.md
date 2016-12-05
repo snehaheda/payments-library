@@ -1,4 +1,4 @@
-# Setting up and Testing payment 360 REST API
+# Setting up and Testing the __payment360 REST API__
 
 ## Setting up your public facing site
 
@@ -8,15 +8,16 @@ Go to __Setup | Sites__ and click __New__.
 
 Note the url of your site.
 
-## Setting up guest user permissions.
+## Setting up guest user permissions
 
 ### Objects
 
-Your guest user needs permissions the use all the payment360 objects.
+Your guest user should have permissions to use all the payment360 objects.
+
 * Click the __Public Access Settings__ button
 * Go to __Object Settings__
 * Grant read access to __Payment Gateways__ and to all its fields
-* Grant read/write/edit access to __Stripe Customer__, __Payment Gateway__ and __Transaction__ objects and all properties. Grant access to all __Transaction__ record types.
+* Grant read/write/edit access to __Stripe Customer__, __Payment Gateway__ and __Transaction__ objects and all fields. Grant access to all __Transaction__ record types.
 
 ### Apex Class Access
 
@@ -66,6 +67,36 @@ Run a local HTTP server on your machine: `python -m SimpleHTTPServer`
 Open the following URL in your browser:
 
 `http://localhost:8000/REST_mocha_tests1.html`
+
+You should see the following page:
+
+![mocha test page](mocha1.png)
+
+Fill out all the field values __from your own org__ (the default settings are referring to blackthorn.io's test org).
+
+* __Endpoint__ : your payment360 REST API's endpoint (see section one in this document)
+* __Publishable key__ : copy this field value from your org's Payment Gateway
+* __Payment Gateway Id__ : your org's Payment Gateway Id (please note that your Payment Gateway should be connected to Stripe before testing the REST API)
+* __Contact Id__ : An Id of an arbitrary Contact from your org 
+* __Account Id__ : An Id of an arbitrary Account from your org 
+* __Customer Id__ : An Id of an arbitrary Stripe Customer. Therefore, you should have at least one Stripe Custmer registered, otherwise some test cases will fail.
+
+Click __Start Tests__ button.
+
+The tests will start.
+
+Ideally, you should have a return similar to this (all test cases passed, no failures).
+
+
+![mocha test page](mocha2.png)
+
+
+## Considerations
+
+* You should use long (18-byte long) record Id's in Account, Contact and Stripe Customer Fields
+* If some test cases are failing, make sure your the USD is a valid value on the __Currency ISO__ on the 'Stripe' record type
+
+
 
 
 
