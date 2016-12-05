@@ -20,6 +20,19 @@ Because you can use this endpoint without an authentication, it is safe to imple
 
 In order to set up the public endpoint, create a public site (Setup | Site) and grant acces to your Guest User to the __REST_API_v1__ class and objects.
 
+#### Testint your endpoint
+
+You can test if your endpoint is set up properly using the following command:
+(change the url and the site label to your org's setting)
+
+'''
+curl https://paym360-dev7-developer-edition.na35.force.com/slabel/services/bt_stripe/apexrest/v1 -d x
+
+{"transactionList":null,"success":false,"paymentMethodList":null,"errorParam":null,"errorMessage":"No content to map to Object due to end of input Class.System.JSON.deserialize: line 15, column 1\nClass.REST_API_v1.doPost: line 19, column 1","customerList":null}
+'''
+
+You should get back an error message formatted as a JSON string.
+
 ### Private Endpoint
 
 The purpose of the private endpoint is to perform action which are dealing with existing p360 data. As this data is sensible, you always need to authenticate yourself before performing actions.
