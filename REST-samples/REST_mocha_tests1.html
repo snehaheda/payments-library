@@ -17,7 +17,7 @@
         <div>
             Endpoint
             <br/>
-            <input id="endpoint" value="https://paym6-dev-developer-edition.na35.force.com/h/services/apexrest/v1" style="width: 500px;"/>
+            <input id="endpoint" value="https://maki-dev-developer-edition.na30.force.com/services/apexrest/bt_stripe/v1" style="width: 500px;"/>
         </div>
 
         <div>
@@ -29,25 +29,25 @@
         <div>
             Payment Gateway Id
             <br/>
-            <input id="payment_gateway_id" value="a0141000001jhohAAA" style="width: 500px;"/>
+            <input id="payment_gateway_id" value="a003600000AjOeL" style="width: 500px;"/>
         </div>
 
         <div>
             Contact Id
             <br/>
-            <input id="contact_id" value="00341000003ftLmAAI" style="width: 500px;"/>
+            <input id="contact_id" value="0033600000JHribAAD" style="width: 500px;"/>
         </div>
 
         <div>
             Account Id
             <br/>
-            <input id="account_id" value="00141000004fyVJAAY" style="width: 500px;"/>
+            <input id="account_id" value="0013600000Qtp7DAAR" style="width: 500px;"/>
         </div>
 
         <div>
             Customer Id
             <br/>
-            <input id="customer_id" value="a0741000002RrjOAAS" style="width: 500px;"/>
+            <input id="customer_id" value="a053600000HbCTiAAN" style="width: 500px;"/>
         </div>
 
         <div>
@@ -170,6 +170,8 @@
                             r.errorParam.should.equal("action");
                             done();
                         } catch(e) {
+                            console.log('This is failed assertion:');
+                            console.log(r);
                             done(e);
                         }
                     });
@@ -187,6 +189,8 @@
                             r.errorParam.should.equal("action");
                             done();
                         } catch(e) {
+                            console.log('This is failed assertion:');
+                            console.log(r);
                             done(e);
                         }
                     });
@@ -204,6 +208,8 @@
                             r.errorParam.should.equal("action");
                             done();
                         } catch(e) {
+                            console.log('This is failed assertion:');
+                            console.log(r);
                             done(e);
                         }
                     });
@@ -227,6 +233,8 @@
                             r.errorParam.should.equal("accountId");
                             done();
                         } catch(e) {
+                            console.log('This is failed assertion:');
+                            console.log(r);
                             done(e);
                         }
                     });                    
@@ -245,6 +253,8 @@
                             r.errorParam.should.equal("contactId");
                             done();
                         } catch(e) {
+                            console.log('This is failed assertion:');
+                            console.log(r);
                             done(e);
                         }
                     });                    
@@ -264,6 +274,8 @@
                             r.errorParam.should.equal("customerId");
                             done();
                         } catch(e) {
+                            console.log('This is failed assertion:');
+                            console.log(r);
                             done(e);
                         }
                     });                    
@@ -281,6 +293,8 @@
                             r.errorParam.should.equal("paymentGatewayId");
                             done();
                         } catch(e) {
+                            console.log('This is failed assertion:');
+                            console.log(r);
                             done(e);
                         }
                     });                    
@@ -299,6 +313,8 @@
                             r.errorParam.should.equal("stripePayload");
                             done();
                         } catch(e) {
+                            console.log('This is failed assertion:');
+                            console.log(r);
                             done(e);
                         }
                     });                    
@@ -312,7 +328,6 @@
                     };
 
                     getTokenAndCallREST_API(d, function(r) {
-                        console.log("r:", r);
                         try {
                             r.success.should.equal(true);
                             r.paymentMethodList.length.should.equal(1);                            
@@ -330,6 +345,8 @@
 
                             done();
                         } catch(e) {
+                            console.log('This is failed assertion:');
+                            console.log(r);
                             done(e);
                         }
                     });                    
@@ -343,7 +360,6 @@
                     };
 
                     getTokenAndCallREST_API(d, function(r) {
-                        console.log("r:", r);
                         try {
                             r.success.should.equal(true);
                             r.paymentMethodList.length.should.equal(1);                            
@@ -361,6 +377,8 @@
 
                             done();
                         } catch(e) {
+                            console.log('This is failed assertion:');
+                            console.log(r);
                             done(e);
                         }
                     });                    
@@ -375,7 +393,6 @@
                     };
 
                     getTokenAndCallREST_API(d, function(r) {
-                        console.log("r:", r);
                         try {
                             r.success.should.equal(true);
                             r.paymentMethodList.length.should.equal(1);                            
@@ -394,6 +411,8 @@
 
                             done();
                         } catch(e) {
+                            console.log('This is failed assertion:');
+                            console.log(r);
                             done(e);
                         }
                     });                    
@@ -408,7 +427,6 @@
                     };
 
                     getTokenAndCallREST_API(d, function(r) {
-                        console.log("r:", r);
                         try {
                             r.success.should.equal(true);
                             r.paymentMethodList.length.should.equal(1);       
@@ -442,7 +460,6 @@
                     };
 
                     getTokenAndCallREST_API(d, function(r) {
-                        console.log("r:", r);
                         try {
                             r.success.should.equal(true);
                             r.paymentMethodList.length.should.equal(1);       
@@ -462,6 +479,8 @@
 
                             done();
                         } catch(e) {
+                            console.log('This is failed assertion:');
+                            console.log(r);
                             done(e);
                         }
                     });                    
@@ -477,7 +496,6 @@
                     };
 
                     getTokenAndCallREST_API(d, function(r) {
-                        console.log("r:", r);
                         try {
                             r.success.should.equal(true);
                             r.paymentMethodList.length.should.equal(1);       
@@ -497,6 +515,8 @@
 
                             done();
                         } catch(e) {
+                            console.log('This is failed assertion:');
+                            console.log(r);
                             done(e);
                         }
                     });                    
@@ -516,7 +536,6 @@
                     };
 
                     getTokenAndCallREST_API(d, function(r) {
-                        console.log("r:", r);
                         try {
                             r.success.should.equal(true);
                             r.paymentMethodList.length.should.equal(1);                            
@@ -541,6 +560,8 @@
 
                             done();
                         } catch(e) {
+                            console.log('This is failed assertion:');
+                            console.log(r);
                             done(e);
                         }
                     });                    
@@ -564,7 +585,6 @@
                     };
 
                     getTokenAndCallREST_API(d, function(r) {
-                        console.log("r:", r);
                         try {
                             r.success.should.equal(true);
                             r.paymentMethodList.length.should.equal(1);                            
@@ -596,6 +616,8 @@
 
                             done();
                         } catch(e) {
+                            console.log('This is failed assertion:');
+                            console.log(r);
                             done(e);
                         }
                     });                    
@@ -616,7 +638,6 @@
                     };
 
                     getTokenAndCallREST_API(d, function(r) {
-                        console.log("r:", r);
                         try {
                             r.success.should.equal(true);
                             r.paymentMethodList.length.should.equal(1);                            
@@ -642,6 +663,8 @@
 
                             done();
                         } catch(e) {
+                            console.log('This is failed assertion:');
+                            console.log(r);
                             done(e);
                         }
                     });                    
@@ -666,7 +689,6 @@
                     };
 
                     getTokenAndCallREST_API(d, function(r) {
-                        console.log("r:", r);
                         try {
                             r.success.should.equal(true);
                             r.paymentMethodList.length.should.equal(1);                            
@@ -701,6 +723,8 @@
 
                             done();
                         } catch(e) {
+                            console.log('This is failed assertion:');
+                            console.log(r);
                             done(e);
                         }
                     });                    
@@ -723,7 +747,6 @@
                     };
 
                     getTokenAndCallREST_API(d, function(r) {
-                        console.log("r:", r);
                         try {
                             r.success.should.equal(true);
                             r.paymentMethodList.length.should.equal(1);                            
@@ -757,6 +780,8 @@
 
                             done();
                         } catch(e) {
+                            console.log('This is failed assertion:');
+                            console.log(r);
                             done(e);
                         }
                     });                    
@@ -778,7 +803,6 @@
                     };
 
                     getTokenAndCallREST_API(d, function(r) {
-                        console.log("r:", r);
                         try {
                             r.success.should.equal(true);
                             r.paymentMethodList.length.should.equal(1);                            
@@ -806,6 +830,8 @@
 
                             done();
                         } catch(e) {
+                            console.log('This is failed assertion:');
+                            console.log(r);
                             done(e);
                         }
                     });                    
@@ -835,7 +861,6 @@
                     };
 
                     getTokenAndCallREST_API(d, function(r) {
-                        console.log("r:", r);
                         try {
                             r.success.should.equal(true);
                             r.paymentMethodList.length.should.equal(1);                            
@@ -879,6 +904,8 @@
 
                             done();
                         } catch(e) {
+                            console.log('This is failed assertion:');
+                            console.log(r);
                             done(e);
                         }
                     });                    
@@ -928,7 +955,6 @@
                     };
 
                     getTokenAndCallREST_API(d, function(r) {
-                        console.log("r:", r);
                         try {
                             r.success.should.equal(false);
                             r.errorParam.should.equal('exp_month');
@@ -948,6 +974,8 @@
 
                             done();
                         } catch(e) {
+                            console.log('This is failed assertion:');
+                            console.log(r);
                             done(e);
                         }
                     }, FAULTY_EXPIRED_CARD);                    
@@ -960,7 +988,6 @@
                     };
 
                     getTokenAndCallREST_API(d, function(r) {
-                        console.log("r:", r);
                         try {
                             r.success.should.equal(false);
 
@@ -979,6 +1006,8 @@
 
                             done();
                         } catch(e) {
+                            console.log('This is failed assertion:');
+                            console.log(r);
                             done(e);
                         }
                     }, FAULTY_PROCESSING_ERROR_CARD);                    
@@ -997,7 +1026,6 @@
                     };
 
                     getTokenAndCallREST_API(d, function(r) {
-                        console.log("r:", r);
                         try {
                             r.success.should.equal(false);
                             r.errorParam.should.equal('exp_month');
@@ -1024,6 +1052,8 @@
 
                             done();
                         } catch(e) {
+                            console.log('This is failed assertion:');
+                            console.log(r);
                             done(e);
                         }
                     }, FAULTY_EXPIRED_CARD);                    
@@ -1036,7 +1066,6 @@
                     };
 
                     getTokenAndCallREST_API(d, function(r) {
-                        console.log("r:", r);
                         try {
                             r.success.should.equal(true);
 
@@ -1055,6 +1084,8 @@
 
                             done();
                         } catch(e) {
+                            console.log('This is failed assertion:');
+                            console.log(r);
                             done(e);
                         }
                     }, FAULTY_FAILED_TRANSCTIONS_CARD);                    
@@ -1072,7 +1103,6 @@
                     };
 
                     getTokenAndCallREST_API(d, function(r) {
-                        console.log("r:", r);
                         try {
                             r.success.should.equal(false);
                             r.errorMessage.should.not.equal(null);
@@ -1101,6 +1131,8 @@
 
                             done();
                         } catch(e) {
+                            console.log('This is failed assertion:');
+                            console.log(r);
                             done(e);
                         }
                     }, FAULTY_FAILED_TRANSCTIONS_CARD);                    
@@ -1118,7 +1150,6 @@
                     };
 
                     getTokenAndCallREST_API(d, function(r) {
-                        console.log("r:", r);
                         try {
                             r.success.should.equal(false);
                             r.errorMessage.should.not.equal(null);
@@ -1147,6 +1178,8 @@
 
                             done();
                         } catch(e) {
+                            console.log('This is failed assertion:');
+                            console.log(r);
                             done(e);
                         }
                     });                    
@@ -1167,7 +1200,6 @@
                     };
 
                     getTokenAndCallREST_API(d, function(r) {
-                        console.log("r:", r);
                         try {
                             r.success.should.equal(false);
                             r.errorMessage.should.not.equal(null);
@@ -1200,6 +1232,8 @@
 
                             done();
                         } catch(e) {
+                            console.log('This is failed assertion:');
+                            console.log(r);
                             done(e);
                         }
                     });                    
