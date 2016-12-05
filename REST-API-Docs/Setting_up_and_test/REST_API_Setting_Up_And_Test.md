@@ -87,7 +87,7 @@ Click __Start Tests__ button.
 
 The tests will start.
 
-Ideally, you should have a return similar to this (all test cases passed, no failures).
+Ideally, you should have a result similar to this (all test cases passed, no failures).
 
 
 ![mocha test page](mocha2.png)
