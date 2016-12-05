@@ -6,7 +6,8 @@ Go to __Setup | Sites__ and click __New__.
 
 ![Public facing site](site1.png)
 
-Note the url of your site.
+Note the url of your site. We suggest you to set up a HTTPS endpoint if available. However, as your endpoint is NOT dealing directly with sensitive credit card details, you can use HTTP as well.
+
 
 ## Setting up guest user permissions
 
@@ -17,7 +18,7 @@ Your guest user should have permissions to use all the payment360 objects.
 * Click the __Public Access Settings__ button
 * Go to __Object Settings__
 * Grant read access to __Payment Gateways__ and to all its fields
-* Grant read/write/edit access to __Stripe Customer__, __Payment Gateway__ and __Transaction__ objects and all fields. Grant access to all __Transaction__ record types.
+* Grant read/write/edit access to __Stripe Customer__, __Payment Method__ and __Transaction__ objects and all fields. Grant access to all __Transaction__ record types.
 
 ### Apex Class Access
 
