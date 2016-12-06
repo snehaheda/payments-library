@@ -5,6 +5,9 @@ var Payment360 = {
 	// Properties
 	publishableKey : null,
 	endpoint : null,
+	amount : null,
+	successCallback : null,
+	failCallback : null,
 
 	// objects
 	//////////
@@ -109,6 +112,16 @@ var Payment360 = {
 
 	},
 
+	/*
+	* Binds the payment to the form selected by the 'p360-form' class
+	*/
+	useCustomForm : function(amount, successCallback, failCallback) {
+		$_jq('.p360-form').submit(Payment360._submitForm);
+		Payment360.amount = amount;
+		Payment360.successCallback = successCallback;
+		Payment360.failCallback = failCallback;
+	},
+
 	// private methods
 	//////////////////
 	_chargePayload : function(payload, amount, successCallback, failCallback) {
@@ -122,6 +135,33 @@ var Payment360 = {
 
 		pm._createPaymentMethod(successCallback, failCallback);
 	},
+
+	_submitForm : function(e) {
+		e.preventDefault();
+		var formData = {};
+		$_jq(this).find(':input').each(function() {
+			var fieldName = $_jq(this).attr('data-p360');
+			if (fieldName != undefined) {
+				formData[fieldName] = $_jq(this).val();
+			} 
+		});
+
+		formData.email = undefined;
+
+		console.log(Payment360.publishableKey);
+		Stripe.setPublishableKey(Payment360.publishableKey);
+		Stripe.card.createToken(formData, function(status, response) {
+			if (status != 200) {
+				console.log(response);
+				return;
+			}
+			console.log(response);
+			Payment360._chargePayload(response, Payment360.amount, Payment360.successCallback, Payment360.failCallback);
+		});
+
+		
+	}
+
 
 };
 
