@@ -1,0 +1,52 @@
+<html>
+<head>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<script type="text/javascript" src="https://js.stripe.com/v2/"></script>
+	<script src="https://checkout.stripe.com/checkout.js"></script>
+	<script src="./p360-sdk.js"></script>
+
+</head>
+
+
+
+	<div class="p360-spinner">
+		This is your spinner div. 
+		<br/>
+		It is shown when p360 talks to it's endpoint.
+		</br/>
+		Put your spinner graphics here.
+	</div>
+
+
+<body>
+
+<script>
+
+	var success = function(r) {
+		// this is your success function
+		// it is called when the transaction was successful
+		console.log('its a success');
+		console.log(r);
+	}
+
+	var fail = function(r) {
+		// this is failure function
+		// it is called when the transaction was failed
+		console.log('its a fail');
+		console.log(r);
+	}	
+
+	Payment360.setPublishableKey('pk_test_rx6uxcAgv6PZM2LuH7TL9imW');
+	Payment360.setEndpoint('https://maki-dev-developer-edition.na30.force.com/services/apexrest/bt_stripe/v1');
+	
+	Payment360.popStripeCheckout('Product', 'Very Nice', 115.81, 'https://developer.salesforce.com/resource/images/trailhead/badges/modules/trailhead_module_wheres_astro.png', success, fail);
+
+
+</script>
+
+
+
+
+</body>
+
+</html>
