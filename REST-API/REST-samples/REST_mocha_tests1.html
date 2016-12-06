@@ -132,6 +132,7 @@
         var callREST_API = function(d, callback) {
 
             console.log('## callREST_API', d);
+            //console.log(JSON.stringify(d, null, 4));
             $.ajax({
                 type : 'POST',
                 url : ENDPOINT,
