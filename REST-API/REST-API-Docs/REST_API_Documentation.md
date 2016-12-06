@@ -69,6 +69,86 @@ The result returned by the REST API is a JSON string with the following paramete
 
 Not every property is populated in every action.
 
+An example result:
+
+```
+{
+    "transactionList": [
+        {
+            "transactionStatus": "Completed",
+            "transactionId": "a083600000Gn5rlAAB",
+            "refundAmount": null,
+            "paymentStatus": "Authorized",
+            "paymentMethodId": "a013600000Ij3BfAAJ",
+            "paymentGatewayId": "a003600000AjOeLAAV",
+            "openOnly": false,
+            "errorMessage": null,
+            "dueDate": "2019-01-01",
+            "customFieldMap": null,
+            "authOnly": true,
+            "amount": 111
+        },
+        {
+            "transactionStatus": "Open",
+            "transactionId": "a083600000Gn5rmAAB",
+            "refundAmount": null,
+            "paymentStatus": null,
+            "paymentMethodId": "a013600000Ij3BfAAJ",
+            "paymentGatewayId": "a003600000AjOeLAAV",
+            "openOnly": true,
+            "errorMessage": null,
+            "dueDate": "2019-03-03",
+            "customFieldMap": null,
+            "authOnly": false,
+            "amount": 55
+        },
+        {
+            "transactionStatus": "Completed",
+            "transactionId": "a083600000Gn5rnAAB",
+            "refundAmount": null,
+            "paymentStatus": "Captured",
+            "paymentMethodId": "a013600000Ij3BfAAJ",
+            "paymentGatewayId": "a003600000AjOeLAAV",
+            "openOnly": false,
+            "errorMessage": null,
+            "dueDate": null,
+            "customFieldMap": null,
+            "authOnly": false,
+            "amount": 77
+        }
+    ],
+    "success": true,
+    "paymentMethodList": [
+        {
+            "transactionList": null,
+            "stripePayload": null,
+            "status": "Valid",
+            "publishableKey": null,
+            "paymentMethodId": "a013600000Ij3BfAAJ",
+            "paymentGatewayId": "a003600000AjOeLAAV",
+            "matchByEmail": null,
+            "last4": "4242",
+            "holderName": "Holder Maki",
+            "expYear": "2019",
+            "expMonth": "5",
+            "email": null,
+            "customFieldMap": null,
+            "customerId": "a053600000HbMpUAAV",
+            "contactId": null,
+            "brand": "Visa",
+            "addressStreet": "Add l. 1",
+            "addressPostalCode": "1234",
+            "addressCountry": "Hungary",
+            "addressCity": "Budapest",
+            "accountId": null
+        }
+    ],
+    "errorParam": null,
+    "errorMessage": null,
+    "customerList": null
+}
+```
+
 ### Success and error handling
 
 The __success__ property is always provided by the REST API. If it equals true, than the action was performed properly, and you should receive your data in the corresponding properties. 
