@@ -41,6 +41,7 @@ var Payment360 = {
 			var evalClosure = function() {
 				return function(r) {
 					$_jq('.p360-spinner').hide();
+					Payment360._disableButton(false);
 					that._evalAPIReturn(r, successCallback, failCallback);
 				};
 			};
@@ -116,10 +117,13 @@ var Payment360 = {
 	* Binds the payment to the form selected by the 'p360-form' class
 	*/
 	useCustomForm : function(amount, successCallback, failCallback) {
-		$_jq('.p360-form').submit(Payment360._submitForm);
 		Payment360.amount = amount;
 		Payment360.successCallback = successCallback;
 		Payment360.failCallback = failCallback;
+
+		$_jq('.p360-form').submit(Payment360._submitForm);
+		$_jq('.p360-form').keyup(Payment360._validateForm);
+		Payment360._disableButton(true);
 	},
 
 	// private methods
@@ -136,19 +140,28 @@ var Payment360 = {
 		pm._createPaymentMethod(successCallback, failCallback);
 	},
 
+	_validateForm : function(e) {
+		var formData = Payment360._extractDataFromForm();
+
+		var valid = (
+			formData.name.length > 0
+			&& formData.number.length >= 15 && formData.number.length <= 16
+			&& !isNaN(formData.exp_month) && formData.exp_month >= 1 && formData.exp_month <= 12
+			&& !isNaN(formData.exp_year) && ((formData.exp_year >= 16 && formData.exp_year <= 50) || (formData.exp_year >= 2016 && formData.exp_year <= 2050))
+			&& !isNaN(formData.cvc) && (formData.cvc.length == 3 || formData.cvc.length == 4)
+		);
+
+		Payment360._disableButton(!valid);
+	},
+
 	_submitForm : function(e) {
 		e.preventDefault();
-		var formData = {};
-		$_jq(this).find(':input').each(function() {
-			var fieldName = $_jq(this).attr('data-p360');
-			if (fieldName != undefined) {
-				formData[fieldName] = $_jq(this).val();
-			} 
-		});
+		Payment360._disableButton(true);
+
+		var formData = Payment360._extractDataFromForm();
 
 		formData.email = undefined;
 
-		console.log(Payment360.publishableKey);
 		Stripe.setPublishableKey(Payment360.publishableKey);
 		Stripe.card.createToken(formData, function(status, response) {
 			if (status != 200) {
@@ -159,9 +172,22 @@ var Payment360 = {
 			Payment360._chargePayload(response, Payment360.amount, Payment360.successCallback, Payment360.failCallback);
 		});
 
-		
-	}
+	},
 
+	_disableButton(valid) {
+		$_jq('.p360-form').find(':submit').prop('disabled', valid);
+	},
+
+	_extractDataFromForm : function() {
+		var formData = {};
+		$_jq('.p360-form').find(':input').each(function() {
+			var fieldName = $_jq(this).attr('data-p360');
+			if (fieldName !== undefined) {
+				formData[fieldName] = $_jq(this).val();
+			} 
+		});
+		return formData;
+	},
 
 };
 
