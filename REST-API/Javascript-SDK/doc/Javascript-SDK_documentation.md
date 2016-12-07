@@ -46,12 +46,12 @@ However, passing the credit card token to Salesforce and charging the Transactio
 1. `Payment360.setPublishableKey` sets your Payment Gateway's publishable key
 2. `Payment360.setEndpoint` sets the URL of the payment360 REST API in your Salesforce org
 3. `Payment360.popStripeCheckout` pops the payment form. List of parameters:
- ..1. Product Name
- ..2. Product Description
- ..3. Price
- ..4. Logo url
- ..5. Success callback function
- ..6. Failure callback function
+..1. Product Name
+..2. Product Description
+..3. Price
+..4. Logo url
+..5. Success callback function
+..6. Failure callback function
 
 
 
