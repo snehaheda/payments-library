@@ -21,7 +21,7 @@ You need need to include the following Javascript scripts in your site (probably
 
 ## Using stripe checkout flow
 
-You can use stripe checkout with payment360 SDK. https://stripe.com/checkout
+You can use stripe [checkout](https://stripe.com/checkout) with payment360 SDK. 
 With stripe checkout you don't need to worry about the form itself, as it is managed by the code provided by stripe.
 However, passing the credit card token to Salesforce and charging the Transaction is managed by payment360.
 
@@ -53,11 +53,12 @@ However, passing the credit card token to Salesforce and charging the Transactio
 	5. Success callback function
 	6. Failure callback function
 
-Note that on callback functions getting the full response object from payment360 REST API, so you can process further the result.
+Note that on callback functions you get the full response object from payment360 REST API, so you can process further the result.
 
 ## Using the custom form flow
 
 With the custom form flow you can use your own design on the payment form.
+
 1. You should use the standard html `form` tag on your form.
 2. You should add a `p360-form` to your form, so the SDK know which form to process.
 3. There should be a `<input type="submit" />` tag on your form.
