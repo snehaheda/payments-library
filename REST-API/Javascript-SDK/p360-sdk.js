@@ -8,6 +8,7 @@ var Payment360 = {
 	amount : null,
 	successCallback : null,
 	failCallback : null,
+	email : null,
 
 	// objects
 	//////////
@@ -25,6 +26,8 @@ var Payment360 = {
 		*/
 		this._createPaymentMethod = function(successCallback, failCallback) {
 
+			var that = this;
+
 			var d = {
 				action : 'createPaymentMethod',
 				publishableKey : Payment360.publishableKey,
@@ -35,7 +38,6 @@ var Payment360 = {
 				transactionList : this.transactionList
 			};
 
-			var that = this;
 
 			var evalClosure = function() {
 				return function(r) {
@@ -134,6 +136,7 @@ var Payment360 = {
 		var pm = new Payment360.PaymentMethod();
 		pm.publishableKey = this.publishableKey;
 		pm.stripePayload = JSON.stringify(payload);
+		pm.email = Payment360.email;
 		pm.transactionList.push(tra);
 
 		pm._createPaymentMethod(successCallback, failCallback);
@@ -159,13 +162,14 @@ var Payment360 = {
 		Payment360._toggleSpinner();
 
 		var formData = Payment360._extractDataFromForm();
+		Payment360.email = formData.email;
 
 		formData.email = undefined;
 
 		Stripe.setPublishableKey(Payment360.publishableKey);
 		Stripe.card.createToken(formData, function(status, response) {
 			if (status != 200) {
-				console.log(response);
+				Payment360._failAction(Payment360.failCallback, undefined, response);
 				return;
 			}
 			Payment360._chargePayload(response, Payment360.amount, Payment360.successCallback, Payment360.failCallback);
@@ -194,11 +198,22 @@ var Payment360 = {
 		callback(r);
 	},
 
-	_failAction(callback, r) {
+	_failAction(callback, r, stripeError) {
 		Payment360._toggleSpinner();
 		$_jq('.p360-fail').show();
 		$_jq('.p360-hide-on-result').hide();
-		callback(r);
+
+		if (r !== undefined) {
+			$_jq('.p360-error').text(r.errorMessage);
+		}
+
+		if (stripeError !== undefined) {
+			$_jq('.p360-error').text(stripeError.error.message);
+		}
+
+		if (callback !== undefined) {
+			callback(r);
+		}	
 	},
 
 	_disableButton(valid) {
