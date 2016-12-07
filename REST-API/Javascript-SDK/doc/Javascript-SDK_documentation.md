@@ -43,6 +43,8 @@ However, passing the credit card token to Salesforce and charging the Transactio
 </script>
 ```
 
+### Javascript methods
+
 1. `Payment360.setPublishableKey` sets your Payment Gateway's publishable key
 2. `Payment360.setEndpoint` sets the URL of the payment360 REST API in your Salesforce org
 3. `Payment360.popStripeCheckout` pops the payment form. List of parameters:
@@ -59,16 +61,16 @@ Note that on callback functions you get the full response object from payment360
 
 With the custom form flow you can use your own design on the payment form.
 
-1. You should use the standard html `form` tag on your form.
-2. You should add a `p360-form` to your form, so the SDK know which form to process.
-3. There should be a `<input type="submit" />` tag on your form.
+1. You should use the standard HTML `form` tag on your form.
+2. You should add a `p360-form` class to your form, so the SDK know which form to process.
+3. There should be a `<input type="submit" />` tag in your form.
 4. You should add the following fields
 	* Holder Name
 	* Card Number
 	* Expiration Month
 	* Expiration Year
 	* CVC
-5. You are setting the input field with th `data-p360` property. For example, on the card number input field you should includ the `data-p360="number"` property.
+5. You are setting the input field data with the `data-p360` property. For example, on the card number input field you should include the `data-p360="number"` property.
 
 ### Example
 
@@ -128,6 +130,8 @@ With the custom form flow you can use your own design on the payment form.
 	Payment360.useCustomForm(200, success, fail);	
 </script>
 ```
+
+### Javascript methods
 
 1. `Payment360.setPublishableKey` sets your Payment Gateway's publishable key
 2. `Payment360.setEndpoint` sets the URL of the payment360 REST API in your Salesforce org
