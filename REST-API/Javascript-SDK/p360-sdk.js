@@ -24,7 +24,6 @@ var Payment360 = {
 		* This is a call for the REST endpoint.
 		*/
 		this._createPaymentMethod = function(successCallback, failCallback) {
-			$_jq('.p360-spinner').show();
 
 			var d = {
 				action : 'createPaymentMethod',
@@ -40,7 +39,6 @@ var Payment360 = {
 
 			var evalClosure = function() {
 				return function(r) {
-					$_jq('.p360-spinner').hide();
 					Payment360._disableButton(false);
 					that._evalAPIReturn(r, successCallback, failCallback);
 				};
@@ -60,9 +58,9 @@ var Payment360 = {
 
 		this._evalAPIReturn = function(r, successCallback, failCallback) {
 			if (r.success === true) {
-				successCallback(r);
+				Payment360._successAction(successCallback, r);
 			} else {
-				failCallback(r);
+				Payment360._failAction(failCallback, r);
 			}
 		};
 
@@ -99,6 +97,7 @@ var Payment360 = {
 			key: Payment360.publishableKey,
 			locale: 'auto',
 			token: function(payload) {
+				Payment360._toggleSpinner();
 				Payment360._chargePayload(payload, amount, successCallback, failCallback);
 			}
 		});
@@ -157,6 +156,7 @@ var Payment360 = {
 	_submitForm : function(e) {
 		e.preventDefault();
 		Payment360._disableButton(true);
+		Payment360._toggleSpinner();
 
 		var formData = Payment360._extractDataFromForm();
 
@@ -168,14 +168,9 @@ var Payment360 = {
 				console.log(response);
 				return;
 			}
-			console.log(response);
 			Payment360._chargePayload(response, Payment360.amount, Payment360.successCallback, Payment360.failCallback);
 		});
 
-	},
-
-	_disableButton(valid) {
-		$_jq('.p360-form').find(':submit').prop('disabled', valid);
 	},
 
 	_extractDataFromForm : function() {
@@ -189,10 +184,38 @@ var Payment360 = {
 		return formData;
 	},
 
+	// private DOM actions
+	////////////////
+
+	_successAction(callback, r) {
+		Payment360._toggleSpinner();
+		$_jq('.p360-success').show();
+		$_jq('.p360-hide-on-result').hide();
+		callback(r);
+	},
+
+	_failAction(callback, r) {
+		Payment360._toggleSpinner();
+		$_jq('.p360-fail').show();
+		$_jq('.p360-hide-on-result').hide();
+		callback(r);
+	},
+
+	_disableButton(valid) {
+		$_jq('.p360-form').find(':submit').prop('disabled', valid);
+	},
+
+	_toggleSpinner() {
+		$_jq('.p360-spinner').toggle();
+		$_jq('.p360-hide-on-load').toggle();
+	},
+
 };
 
 var _p360init = function() {
 	$_jq('.p360-spinner').hide();
+	$_jq('.p360-success').hide();
+	$_jq('.p360-fail').hide();
 };
 
 $_jq(document).ready(_p360init);
