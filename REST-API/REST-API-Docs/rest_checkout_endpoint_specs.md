@@ -128,6 +128,20 @@ All the parameters are a list. Returns all the matching PMs (i.e. not only for a
 
 * __paymentMethodList__ -- List of PMs to update. Payment Method ID is required.
 
+Updateable fields in the PM object:
+* email
+* expMonth
+* expYear
+* contactId
+* accountId
+* addressStreet
+* addressCity
+* addressPostalCode
+* addressCountry
+* addressState
+* customFieldMap
+
+
 ### deletePaymentMethods
 
 * __paymentMethodList__ -- List of PMs to update. Payment Method ID is required.
@@ -153,19 +167,27 @@ Charges an already existing transaction.
 
 Lists transactions. You SHOULD provide a __id__
 
+In order to authorize only the open transaction, use the __authOnly__ flag.
+
 #### Params
 
 * __transactionList__ -- List of transactions to create.
 
 ### refundTransactions
 
-Refunds transactions. You SHOULD provide a __id__ on transactions. If __refundAmount__ is provided on transactions, a partial refund will be maid.
+Refunds transactions. You need to provide a __id__ on transactions. If __refundAmount__ is provided on transactions, a partial refund will be created.
 
 #### Params
 
 * __transactionList__ -- List of transactions to create
 
 ### getCustomers
+
+You can query customer by the following parameters:
+* __id__
+* __email__
+* __accountId__
+* __contactId__
 
 ### createCustomers
 
