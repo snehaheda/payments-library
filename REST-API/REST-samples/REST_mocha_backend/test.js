@@ -4,7 +4,7 @@ Use the following call to obtain an access token:
 curl https://login.salesforce.com/services/oauth2/token -X POST -d 'grant_type=password&client_id=3MVG9szVa2RxsqBaVMAZFSLdWv5BZvhnb15ChwBZzbVVyb_u9j08M.xnlQ5Ly15mI6KZfVRTsjTQSMsY27rDT&client_secret=5979639566859185104&username=peter%40paym6.dev&password=stdev%2B19843go69jH2St9TNsWLGuFK3kTHz' 
 */
 
-var ACCESS_TOKEN = '00D41000000FyUV!AQcAQNgvNkIH3EnvZ3p7GwRfP7iCnjh1csWLA6sTC01Du0TCp81OGsrAsN9NuWxnT0A6n3oD7mPNPx5vyuW_nV2FWd.oSXhe';
+var ACCESS_TOKEN = '00D41000000FyUV!AQcAQMkNY7JnRSHf0AgsGy1Yp5.SI03Dxv3hrtJXy8eljMQS07zZwaaodsdVybKeV2VMGstLWoBX33edQp2qWuAT1HJhnxj1';
 
 var PUBLIC_ENDPOINT = 'https://paym6-dev-developer-edition.na35.force.com/h/services/apexrest/v1';
 var PRIVATE_ENDPOINT = 'https://p360-dev-6-dev-ed.my.salesforce.com/services/apexrest/v1';
