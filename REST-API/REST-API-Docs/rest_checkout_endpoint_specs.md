@@ -15,6 +15,7 @@ All data is passed in a single POST call in format `application/json`
 
 * __paymentGatewayId__
 * __amount__ Amount of the transaction (currently only in USD until multi-currency is supported)
+* __currencyISO__ Currency ISO
 * __authOnly__ If true, will create an auth only transaction.
 * __openOnly__ If true, will not charge the transaction.
 * __dueDate__ Due date of the transaction, in YYYY-MM-DD format.
@@ -87,11 +88,11 @@ Accepts a single __Payment Method__ object.
 
 The following field are accepted from the object:
 
-* __stripePayload__
+* __stripePayload__ REQ
 * __customerId__ -- Stripe Customer Id. If passed, don't pass contactId and/or accountId
 * __contactId__
 * __accountId__
-* __paymentGatewayId__ Payment Gateway or publishable key are required. Only one of them should be passed.
+* __paymentGatewayId__ Payment Gateway or publishable key are required. Only one of them should be passed. REQ
 * __publishableKey__ This key can be found on your Payment Gateway record in Salesforce. This is not a key from the Stripe Dashboard.
 * __matchByEmail__ if set to True, matches to an existing customer based on email
 * __customFieldMap__ A key/value map for any other maps to be populated. 
@@ -128,6 +129,20 @@ All the parameters are a list. Returns all the matching PMs (i.e. not only for a
 
 * __paymentMethodList__ -- List of PMs to update. Payment Method ID is required.
 
+Updateable fields in the PM object:
+* email
+* expMonth
+* expYear
+* contactId
+* accountId
+* addressStreet
+* addressCity
+* addressPostalCode
+* addressCountry
+* addressState
+* customFieldMap
+
+
 ### deletePaymentMethods
 
 * __paymentMethodList__ -- List of PMs to update. Payment Method ID is required.
@@ -140,12 +155,16 @@ Creates a transaction assigned to an already existing PM. You SHOULD provide a _
 
 * __transactionList__ -- List of transactions to create.
 
-
 ### getTransactions
 
-Lists transactions. You SHOULD provide a __id__ OR __paymentMethodId__ on your transactions.
+Lists transactions. 
 
-* __transactionList__ -- List of transactions to create.
+* __paymentMethodId[]__ * -- PMId of the transactions to list
+* __transactionId[]__ * 
+* __transactionStatus[]__ *
+* __dueDate__ { value, condition = "eq/gt/lt"}
+
+
 
 ### captureTransactions
 
@@ -153,19 +172,27 @@ Charges an already existing transaction.
 
 Lists transactions. You SHOULD provide a __id__
 
+In order to authorize only the open transaction, use the __authOnly__ flag.
+
 #### Params
 
 * __transactionList__ -- List of transactions to create.
 
 ### refundTransactions
 
-Refunds transactions. You SHOULD provide a __id__ on transactions. If __refundAmount__ is provided on transactions, a partial refund will be maid.
+Refunds transactions. You need to provide a __id__ on transactions. If __refundAmount__ is provided on transactions, a partial refund will be created.
 
 #### Params
 
 * __transactionList__ -- List of transactions to create
 
 ### getCustomers
+
+You can query customer by the following parameters:
+* __id__
+* __email__
+* __accountId__
+* __contactId__
 
 ### createCustomers
 
