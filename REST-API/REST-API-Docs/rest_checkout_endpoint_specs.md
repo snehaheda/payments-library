@@ -155,12 +155,16 @@ Creates a transaction assigned to an already existing PM. You SHOULD provide a _
 
 * __transactionList__ -- List of transactions to create.
 
-
 ### getTransactions
 
 Lists transactions. 
 
-* __paymentMethodId__* -- PMId of the transactions to list
+* __paymentMethodId[]__ * -- PMId of the transactions to list
+* __transactionId[]__ * 
+* __transactionStatus[]__ *
+* __dueDate__ { value, condition = "eq/gt/lt"}
+
+
 
 ### captureTransactions
 
