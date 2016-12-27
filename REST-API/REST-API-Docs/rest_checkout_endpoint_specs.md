@@ -15,6 +15,7 @@ All data is passed in a single POST call in format `application/json`
 
 * __paymentGatewayId__
 * __amount__ Amount of the transaction (currently only in USD until multi-currency is supported)
+* __currencyISO__ Currency ISO
 * __authOnly__ If true, will create an auth only transaction.
 * __openOnly__ If true, will not charge the transaction.
 * __dueDate__ Due date of the transaction, in YYYY-MM-DD format.
