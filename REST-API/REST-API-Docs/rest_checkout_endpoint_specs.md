@@ -157,9 +157,9 @@ Creates a transaction assigned to an already existing PM. You SHOULD provide a _
 
 ### getTransactions
 
-Lists transactions. You SHOULD provide a __id__ OR __paymentMethodId__ on your transactions.
+Lists transactions. 
 
-* __transactionList__ -- List of transactions to create.
+* __paymentMethodId__* -- PMId of the transactions to list
 
 ### captureTransactions
 
