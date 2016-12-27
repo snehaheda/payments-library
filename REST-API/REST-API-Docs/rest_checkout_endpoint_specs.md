@@ -88,11 +88,11 @@ Accepts a single __Payment Method__ object.
 
 The following field are accepted from the object:
 
-* __stripePayload__
+* __stripePayload__ REQ
 * __customerId__ -- Stripe Customer Id. If passed, don't pass contactId and/or accountId
 * __contactId__
 * __accountId__
-* __paymentGatewayId__ Payment Gateway or publishable key are required. Only one of them should be passed.
+* __paymentGatewayId__ Payment Gateway or publishable key are required. Only one of them should be passed. REQ
 * __publishableKey__ This key can be found on your Payment Gateway record in Salesforce. This is not a key from the Stripe Dashboard.
 * __matchByEmail__ if set to True, matches to an existing customer based on email
 * __customFieldMap__ A key/value map for any other maps to be populated. 
