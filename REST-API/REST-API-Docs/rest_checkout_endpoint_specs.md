@@ -83,7 +83,7 @@ All the actions return this object. The fields are populated in context of the g
 
 Action names are passed in the `action` param.
 
-### createPaymentMethod
+### createPaymentMethod 🐶
 Creates a new PM from a stripe.js payload.
 
 Accepts a single __Payment Method__ object.
@@ -112,7 +112,7 @@ This endpoint is available using an oAuth token.
 
 ## Actions
 
-### getPaymentMethods
+### getPaymentMethods 🐱
 
 Lists all the PMs for a given stripe customer / account / contact
 
@@ -159,13 +159,16 @@ Creates a transaction assigned to an already existing PM. You SHOULD provide a _
 
 * __transactionList__ -- List of transactions to create.
 
-### getTransactions
+### getTransactions 🐶
 
 Lists transactions. 
 
-* __paymentMethodId[]__ * -- PMId of the transactions to list
-* __transactionId[]__ * 
-* __transactionStatus[]__ *
+IMPORTANT: currently you can provide only ONE parameter; however, the goal is to implement the AND relationship.
+
+* __paymentMethodId[]__ 🐱 -- PMId of the transactions to list
+* __transactionId[]__  🐱 
+* __transactionStatus[]__ 🐱
+* __paymentStatus[]__ 🐱
 * __dueDate__ { value, condition = "eq/gt/lt"}
 
 
