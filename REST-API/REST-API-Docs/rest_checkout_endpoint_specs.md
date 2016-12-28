@@ -1,5 +1,9 @@
 # Specs for the Payment Request REST endpoint 
 
+__FYI: 🐱 -> implemented
+🐶 -> partially implemented
+__
+
 This is a single endpoint for passing payment request data for PAYMENT360.
 This endpoint runs as a public site on behalf of the guest user.
 All data is passed in a single POST call in format `application/json`
@@ -114,10 +118,10 @@ Lists all the PMs for a given stripe customer / account / contact
 
 #### Params
 
-* __paymentMethodId__[]
-* __customerId__[] Stripe Customer Id. If passed, don't pass contactId and/or accountId
-* __accountId__[]
-* __contactId__[]
+* __paymentMethodId__[] 🐱
+* __customerId__[] 🐱 Stripe Customer Id. If passed, don't pass contactId and/or accountId
+* __accountId__[] 🐱
+* __contactId__[] 🐱
 
 You can provide ONLY ONE of these parameters.
 All the parameters are a list. Returns all the matching PMs (i.e. not only for a single customer).
