@@ -173,13 +173,15 @@ IMPORTANT: currently you can provide only ONE parameter; however, the goal is to
 
 
 
-### captureTransactions
+### captureTransactions 🐶
 
 Charges an already existing transaction.
 
-Lists transactions. You SHOULD provide a __id__
-
+Lists transactions. You SHOULD provide a list of transactions. The transacions should have only an _id_
+ 
 In order to authorize only the open transaction, use the __authOnly__ flag.
+
+* __transactionList__ 🐶
 
 #### Params
 
