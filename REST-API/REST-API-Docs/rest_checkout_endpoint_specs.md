@@ -159,18 +159,29 @@ Creates a transaction assigned to an already existing PM. You SHOULD provide a _
 
 * __transactionList__ -- List of transactions to create.
 
-### getTransactions 🐶
+### getTransactions 🐱
 
 Lists transactions. 
 
-IMPORTANT: currently you can provide only ONE parameter; however, the goal is to implement the AND relationship.
+IMPORTANT: You can provide more than one parameter and they will be added to the query as AND-clauses.🐱
 
 * __paymentMethodId[]__ 🐱 -- PMId of the transactions to list
 * __transactionId[]__  🐱 
 * __transactionStatus[]__ 🐱
 * __paymentStatus[]__ 🐱
-* __dueDate__ { value, condition = "eq/gt/lt"}
+* __dueDate__ [ value, condition = "eq/gt/lt"} 🐱
 
+Example:
+```
+{
+		"action" : "getTransactions",
+		"transactionStatus" : ["Open"],
+		"dueDate" : [
+			{"rel" : "gte", "val" : "2016-12-26"},
+			{"rel" : "lt", "val" : "2016-12-29"},
+		]
+}
+```
 
 
 ### captureTransactions 🐶
