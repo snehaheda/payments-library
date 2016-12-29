@@ -169,7 +169,7 @@ IMPORTANT: You can provide more than one parameter and they will be added to the
 * __transactionId[]__  🐱 
 * __transactionStatus[]__ 🐱
 * __paymentStatus[]__ 🐱
-* __dueDate__ [ value, condition = "eq/gt/lt"} 🐱
+* __dueDate__ [ {"rel" : "eq/lt/lte/gt/gte", "val" : "YYYY-MM-DD" }, .......] 🐱
 
 Example:
 ```
@@ -184,15 +184,15 @@ Example:
 ```
 
 
-### captureTransactions 🐶
+### captureTransactions 🐱
 
 Charges an already existing transaction.
 
 Lists transactions. You SHOULD provide a list of transactions. The transacions should have only an _id_
  
-In order to authorize only the open transaction, use the __authOnly__ flag.
+In order to __authorize only__ the open transaction, use the __authOnly__ flag. 🐱
 
-* __transactionList__ 🐶
+* __transactionList__ 🐱
 
 #### Params
 
