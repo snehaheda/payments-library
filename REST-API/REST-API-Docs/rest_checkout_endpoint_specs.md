@@ -190,8 +190,10 @@ Charges an already existing transaction.
 
 Lists transactions. You SHOULD provide a list of transactions. The transacions should have an __id__)
  
-In order to __authorize only__ the open transaction, use the __authOnly__ flag. 🐱
-In order to add an existing PM to an Open transaction, use the __paymentMethodId__ param. 🐱
+* In order to __authorize only__ the open transaction, use the __authOnly__ flag. 🐱
+* In order to add an existing PM to an Open transaction, use the __paymentMethodId__ param. 🐱
+
+
 
 * __transactionList__ 🐱
 
