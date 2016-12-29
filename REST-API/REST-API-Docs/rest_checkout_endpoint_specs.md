@@ -197,6 +197,18 @@ Lists transactions. You SHOULD provide a list of transactions. The transacions s
 
 * __transactionList__ 🐱
 
+
+Example
+
+```
+	{
+		"action" : "captureTransactions",
+		"transactionList" : [
+			{"transactionId" : "a0941000001it2s", "authOnly" : True, "paymentMethodId" : "a0141000004MI1z"},
+			{"transactionId" : "a0941000001isqr"},
+		]
+	}
+```
 #### Params
 
 * __transactionList__ -- List of transactions to create.
