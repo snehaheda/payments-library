@@ -151,13 +151,24 @@ Updateable fields in the PM object:
 
 * __paymentMethodList__ -- List of PMs to update. Payment Method ID is required.
 
-### createTransactions
+### createTransactions 🐶
 
-Creates a transaction assigned to an already existing PM. You SHOULD provide a __paymentMethodId__ your transactions.
+Creates a transaction.
 
 #### Params
 
-* __transactionList__ -- List of transactions to create.
+* __transactionList__ 🐱
+
+#### Properties
+
+
+* __paymentGatewayId__ 🐱
+* __amount__ 🐱 REQ Amount of the transaction (currently only in USD until multi-currency is supported)
+* __currencyISO__ 🐱 REQ Currency ISO
+* __dueDate__ 🐱 Due date of the transaction, in YYYY-MM-DD format.
+* __paymentMethodId__ 🐱 The associated PM Id. Used only in private mode. 
+* __customFieldMap__ A key/value map for any other maps to be populated. 
+
 
 ### getTransactions 🐱
 
