@@ -213,13 +213,16 @@ Example
 
 * __transactionList__ -- List of transactions to create.
 
-### refundTransactions
-
-Refunds transactions. You need to provide a __id__ on transactions. If __refundAmount__ is provided on transactions, a partial refund will be created.
+### refundTransactions 🐱
 
 #### Params
 
 * __transactionList__ -- List of transactions to create
+
+Transaction properties:
+
+* __id__ - id of the transcation to refund 🐱
+* __refundAmount__ - amount to refund 🐱
 
 ### getCustomers
 
