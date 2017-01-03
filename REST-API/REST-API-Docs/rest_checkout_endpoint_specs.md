@@ -27,9 +27,12 @@ All data is passed in a single POST call in format `application/json`
 * __paymentMethodId__ The associated PM Id. Used only in private mode. 
 * __transactionStatus__ -- Read only field
 * __paymentStatus__ -- Read only field
-* __customFieldMap__ A key/value map for any other maps to be populated. 
+* __customFieldMap__ A key/value map for any other maps to be populated. 🐶
 * __refundAmount__ -- Amount to refund. Used only in refund context.
 * __reattemptTransactions__ 🐶
+* __description__ 🐶
+* __name__ 🐶
+
 
 
 ### The __Customer__ object
