@@ -29,6 +29,7 @@ All data is passed in a single POST call in format `application/json`
 * __paymentStatus__ -- Read only field
 * __customFieldMap__ A key/value map for any other maps to be populated. 
 * __refundAmount__ -- Amount to refund. Used only in refund context.
+* __reattemptTransactions__ 🐶
 
 
 ### The __Customer__ object
