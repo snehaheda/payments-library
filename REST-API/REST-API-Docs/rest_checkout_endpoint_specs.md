@@ -18,6 +18,7 @@ All data is passed in a single POST call in format `application/json`
 ### The __Transaction__ object
 
 * __paymentGatewayId__
+* __publishableKey__ -- it is populated only it the __paymentGatewayId__ is populated.
 * __amount__ Amount of the transaction (currently only in USD until multi-currency is supported)
 * __currencyISO__ Currency ISO
 * __authOnly__ If true, will create an auth only transaction.
