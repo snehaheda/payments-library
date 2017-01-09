@@ -83,7 +83,8 @@ All the actions return this object. The fields are populated in context of the g
 * __transactionList__ List of Transactions
 * __paymentMethodList__ The Payment Method record
 * __customerList__ The Stripe Customer record
-
+* __defaultGatewayId__ The default gateway id of the org
+* __defaultPublishableKey__ The publishable key on the default Payment Gateway of the org.
 
 # Public Actions
 (available without oauth authentication)
