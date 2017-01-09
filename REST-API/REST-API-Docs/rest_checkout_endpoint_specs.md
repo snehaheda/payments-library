@@ -31,8 +31,10 @@ All data is passed in a single POST call in format `application/json`
 * __customFieldMap__ A key/value map for any other maps to be populated. 🐶
 * __refundAmount__ -- Amount to refund. Used only in refund context.
 * __reattemptTransactions__ 🐶
-* __description__ 🐶
-* __name__ 🐶
+* __description__ 
+* __name__ 
+* __contact__
+* __account__
 
 
 
@@ -57,8 +59,8 @@ All data is passed in a single POST call in format `application/json`
 * __status__
 * __brand__
 * __customerId__ -- Stripe Customer Id. If passed, don't pass contactId and/or accountId
-* __contactId__
-* __accountId__
+* __contact__
+* __account__
 * __addressStreet__
 * __addressCity__
 * __addressPostalCode__
