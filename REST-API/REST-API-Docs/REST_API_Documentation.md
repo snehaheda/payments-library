@@ -2,7 +2,9 @@
 
 The purpose of the REST API is to create and retrieve payment360 records, as well as perform various actions (capture, retrieve, etc).
 In order to use the REST API you need to expose the __REST_API_v1__ class to your REST webservice user.
-You also need to grant acceess rights to the used p360 sObjects. Please see the __Setting up and test__ document for details.
+You also need to grant acceess rights to the used p360 sObjects. Please see the __Setting up and test__ document for details:
+
+https://bitbucket.org/blackthornio/payment360-library/src/c1bc1cc2c53898412e572aa7f3b8cd3fcc5c25b8/REST-API/REST-API-Docs/Setting_up_and_test/REST_API_Setting_Up_And_Test.md?at=master&fileviewer=file-view-default
 
 ## Endpoints
 

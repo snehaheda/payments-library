@@ -1,5 +1,9 @@
 # Specs for the Payment Request REST endpoint 
 
+__FYI: 🐱 -> implemented
+🐶 -> partially implemented
+__
+
 This is a single endpoint for passing payment request data for PAYMENT360.
 This endpoint runs as a public site on behalf of the guest user.
 All data is passed in a single POST call in format `application/json`
@@ -14,6 +18,7 @@ All data is passed in a single POST call in format `application/json`
 ### The __Transaction__ object
 
 * __paymentGatewayId__
+* __publishableKey__ -- it is populated only it the __paymentGatewayId__ is populated.
 * __amount__ Amount of the transaction (currently only in USD until multi-currency is supported)
 * __currencyISO__ Currency ISO
 * __authOnly__ If true, will create an auth only transaction.
@@ -23,8 +28,14 @@ All data is passed in a single POST call in format `application/json`
 * __paymentMethodId__ The associated PM Id. Used only in private mode. 
 * __transactionStatus__ -- Read only field
 * __paymentStatus__ -- Read only field
-* __customFieldMap__ A key/value map for any other maps to be populated. 
+* __customFieldMap__ A key/value map for any other maps to be populated. 🐶
 * __refundAmount__ -- Amount to refund. Used only in refund context.
+* __reattemptTransactions__ 🐶
+* __description__ 
+* __name__ 
+* __contact__
+* __account__
+
 
 
 ### The __Customer__ object
@@ -48,8 +59,8 @@ All data is passed in a single POST call in format `application/json`
 * __status__
 * __brand__
 * __customerId__ -- Stripe Customer Id. If passed, don't pass contactId and/or accountId
-* __contactId__
-* __accountId__
+* __contact__
+* __account__
 * __addressStreet__
 * __addressCity__
 * __addressPostalCode__
@@ -72,14 +83,15 @@ All the actions return this object. The fields are populated in context of the g
 * __transactionList__ List of Transactions
 * __paymentMethodList__ The Payment Method record
 * __customerList__ The Stripe Customer record
-
+* __defaultGatewayId__ The default gateway id of the org
+* __defaultPublishableKey__ The publishable key on the default Payment Gateway of the org.
 
 # Public Actions
 (available without oauth authentication)
 
 Action names are passed in the `action` param.
 
-### createPaymentMethod
+### createPaymentMethod 🐶
 Creates a new PM from a stripe.js payload.
 
 Accepts a single __Payment Method__ object.
@@ -88,15 +100,15 @@ Accepts a single __Payment Method__ object.
 
 The following field are accepted from the object:
 
-* __stripePayload__ REQ
-* __customerId__ -- Stripe Customer Id. If passed, don't pass contactId and/or accountId
-* __contactId__
-* __accountId__
-* __paymentGatewayId__ Payment Gateway or publishable key are required. Only one of them should be passed. REQ
-* __publishableKey__ This key can be found on your Payment Gateway record in Salesforce. This is not a key from the Stripe Dashboard.
+* __stripePayload__ 🐱 REQ
+* __customerId__ 🐱 -- Stripe Customer Id. If passed, don't pass contactId and/or accountId
+* __contactId__ 🐱
+* __accountId__ 🐱
+* __paymentGatewayId__ 🐱 Payment Gateway or publishable key are required. Only one of them should be passed. REQ
+* __publishableKey__ 🐱 This key can be found on your Payment Gateway record in Salesforce. This is not a key from the Stripe Dashboard.
 * __matchByEmail__ if set to True, matches to an existing customer based on email
 * __customFieldMap__ A key/value map for any other maps to be populated. 
-* __transactionList__ list of Transaction records. If a __transactionList__ param provided, creates and links the transaction(s) to the PM. If the Transactions doesn't have the __openOnly__ param set to __true__, the transaction will be charged immediately.
+* __transactionList__ 🐱 list of Transaction records. If a __transactionList__ param provided, creates and links the transaction(s) to the PM. If the Transactions doesn't have the __openOnly__ param set to __true__, the transaction will be charged immediately.
 * __email__ Email of the customer
 
 # Private actions
@@ -108,16 +120,16 @@ This endpoint is available using an oAuth token.
 
 ## Actions
 
-### getPaymentMethods
+### getPaymentMethods 🐱
 
 Lists all the PMs for a given stripe customer / account / contact
 
 #### Params
 
-* __paymentMethodId__[]
-* __customerId__[] Stripe Customer Id. If passed, don't pass contactId and/or accountId
-* __accountId__[]
-* __contactId__[]
+* __paymentMethodId__[] 🐱
+* __customerId__[] 🐱 Stripe Customer Id. If passed, don't pass contactId and/or accountId
+* __accountId__[] 🐱
+* __contactId__[] 🐱
 
 You can provide ONLY ONE of these parameters.
 All the parameters are a list. Returns all the matching PMs (i.e. not only for a single customer).
@@ -147,44 +159,89 @@ Updateable fields in the PM object:
 
 * __paymentMethodList__ -- List of PMs to update. Payment Method ID is required.
 
-### createTransactions
+### createTransactions 🐶
 
-Creates a transaction assigned to an already existing PM. You SHOULD provide a __paymentMethodId__ your transactions.
+Creates a transaction.
 
 #### Params
 
-* __transactionList__ -- List of transactions to create.
+* __transactionList__ 🐱
 
-### getTransactions
+#### Properties
+
+
+* __paymentGatewayId__ 🐱
+* __amount__ 🐱 REQ Amount of the transaction (currently only in USD until multi-currency is supported)
+* __currencyISO__ 🐱 REQ Currency ISO
+* __dueDate__ 🐱 Due date of the transaction, in YYYY-MM-DD format.
+* __paymentMethodId__ 🐱 The associated PM Id. Used only in private mode. 
+* __customFieldMap__ A key/value map for any other maps to be populated. 
+
+
+### getTransactions 🐱
 
 Lists transactions. 
 
-* __paymentMethodId[]__ * -- PMId of the transactions to list
-* __transactionId[]__ * 
-* __transactionStatus[]__ *
-* __dueDate__ { value, condition = "eq/gt/lt"}
+IMPORTANT: You can provide more than one parameter and they will be added to the query as AND-clauses.🐱
+
+* __paymentMethodId[]__ 🐱 -- PMId of the transactions to list
+* __transactionId[]__  🐱 
+* __transactionStatus[]__ 🐱
+* __paymentStatus[]__ 🐱
+* __dueDate__ [ {"rel" : "eq/lt/lte/gt/gte", "val" : "YYYY-MM-DD" }, .......] 🐱
+
+Example:
+```
+{
+		"action" : "getTransactions",
+		"transactionStatus" : ["Open"],
+		"dueDate" : [
+			{"rel" : "gte", "val" : "2016-12-26"},
+			{"rel" : "lt", "val" : "2016-12-29"},
+		]
+}
+```
 
 
-
-### captureTransactions
+### captureTransactions 🐱
 
 Charges an already existing transaction.
 
-Lists transactions. You SHOULD provide a __id__
+Lists transactions. You SHOULD provide a list of transactions. The transacions should have an __id__)
+ 
+* In order to __authorize only__ the open transaction, use the __authOnly__ flag. 🐱
+* In order to add an existing PM to an Open transaction, use the __paymentMethodId__ param. 🐱
 
-In order to authorize only the open transaction, use the __authOnly__ flag.
 
+
+* __transactionList__ 🐱
+
+
+Example
+
+```
+	{
+		"action" : "captureTransactions",
+		"transactionList" : [
+			{"transactionId" : "a0941000001it2s", "authOnly" : True, "paymentMethodId" : "a0141000004MI1z"},
+			{"transactionId" : "a0941000001isqr"},
+		]
+	}
+```
 #### Params
 
 * __transactionList__ -- List of transactions to create.
 
-### refundTransactions
-
-Refunds transactions. You need to provide a __id__ on transactions. If __refundAmount__ is provided on transactions, a partial refund will be created.
+### refundTransactions 🐱
 
 #### Params
 
 * __transactionList__ -- List of transactions to create
+
+Transaction properties:
+
+* __id__ - id of the transcation to refund 🐱
+* __refundAmount__ - amount to refund 🐱
 
 ### getCustomers
 
