@@ -11,18 +11,20 @@
 		* CVV
 	-->
 
-	<div class="form-row">
-
-		<label>
-			<span>Email</span>
-			<input id="email" type="text">
-		</label>
-		
-	</div>
 
 	<form action="" method="POST" id="payment-form">
 
 		<span class="payment-errors"></span>
+
+		<div class="form-row">
+
+			<label>
+				<span>Email</span>
+				<input id="email" type="text" data-stripe="email">
+			</label>
+			
+		</div>
+
 
 		<div class="form-row">
 		
