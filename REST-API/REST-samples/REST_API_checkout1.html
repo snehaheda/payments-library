@@ -1,0 +1,73 @@
+<html>
+
+<body>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	<script src="https://checkout.stripe.com/checkout.js"></script>
+	<script type="text/javascript" src="https://js.stripe.com/v2/"></script>
+
+
+	<button id="customButton">Purchase</button>
+
+	<script>
+
+ 		var endpoint = 'https://p360-dev8-developer-edition.na40.force.com/endpoint/services/apexrest/v1';
+ 		var publishableKey = 'pk_test_rx6uxcAgv6PZM2LuH7TL9imW';
+		var amount = 900;
+
+		var handler = StripeCheckout.configure({
+		  key: publishableKey,
+		  image: 'https://stripe.com/img/documentation/checkout/marketplace.png',
+		  locale: 'auto',
+		  token: sendToSalesforceInstance,
+		});
+
+		function sendToSalesforceInstance(stripeResponse) {
+			// email is a parameter on the request to Salesforce 
+			//var email = $('#email').val();
+			console.log(stripeResponse);
+			var d = {
+				stripePayload : JSON.stringify(stripeResponse),
+			 	action : "createPaymentMethod",
+			 	publishableKey : publishableKey,
+		 	};		
+
+		 	console.log('### d:', d);
+
+			$.ajax({
+				type : 'POST',
+				url : endpoint,
+				headers : {
+					"content-type": "text/plain"
+				},
+				data : JSON.stringify(d),
+
+				success : salesforceCallback
+				}); 
+		}
+
+		function salesforceCallback(r) {
+			console.log('response', r);
+		}
+
+
+
+
+
+		document.getElementById('customButton').addEventListener('click', function(e) {
+		  // Open Checkout with further options:
+		  handler.open({
+		    name: 'Demo Site',
+		    description: '2 widgets',
+		    amount: 2000
+		  });
+		  e.preventDefault();
+		});
+
+		// Close Checkout on page navigation:
+		window.addEventListener('popstate', function() {
+		  handler.close();
+		});
+	</script>
+
+</body>
+</html>
