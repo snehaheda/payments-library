@@ -90,11 +90,11 @@
 				* email - email of the newly created cusomer
 		*/		
  			
- 		var endpoint = 'https://paym6-dev-developer-edition.na35.force.com/h/services/apexrest/v1';
+ 		var endpoint = 'https://p360-dev8-developer-edition.na40.force.com/endpoint/services/apexrest/v1';
 
  		var publishableKey = 'pk_test_rx6uxcAgv6PZM2LuH7TL9imW';
  		var paymentGatewayId = ''
-		var contactId = 'a0141000001jhoh';
+		var contactId = '00346000001UfLs';
 		var amount = 900;
 
 		// You are setting the keys for Stripe
@@ -154,15 +154,18 @@
 			var email = $('#email').val();
 			console.log(JSON.stringify(stripeResponse));
 			var d = {
-				//stripePayload : JSON.stringify(stripeResponse),
-			 	paymentGatewayId : paymentGatewayId,
-			 	action : "xcreatePaymentMethod",
-			 		//publishableKey : publishableKey,
+				stripePayload : JSON.stringify(stripeResponse),
+			 	//paymentGatewayId : paymentGatewayId,
+			 	action : "createPaymentMethod",
+			 	publishableKey : publishableKey,
+
 			 		//contactId : contactId,
 			 		//amount : amount,
 			 		//targetId : targetId,
-			 		//email : email
+			 	email : email
 		 	};		
+
+		 	console.log('### d:', d);
 
 			$.ajax({
 				type : 'POST',
