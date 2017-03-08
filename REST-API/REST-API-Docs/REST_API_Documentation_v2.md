@@ -186,83 +186,83 @@
 
     * **Code:** 200 <br />
       **Content:** 
-      ```
-      {
-          "transactionList": [
-              {
-                  "transactionStatus": "Completed",
-                  "transactionId": "a083600000Gn5rlAAB",
-                  "refundAmount": null,
-                  "paymentStatus": "Authorized",
-                  "paymentMethodId": "a013600000Ij3BfAAJ",
-                  "paymentGatewayId": "a003600000AjOeLAAV",
-                  "openOnly": false,
-                  "errorMessage": null,
-                  "dueDate": "2019-01-01",
-                  "customFieldMap": null,
-                  "authOnly": true,
-                  "amount": 111
-              },
-              {
-                  "transactionStatus": "Open",
-                  "transactionId": "a083600000Gn5rmAAB",
-                  "refundAmount": null,
-                  "paymentStatus": null,
-                  "paymentMethodId": "a013600000Ij3BfAAJ",
-                  "paymentGatewayId": "a003600000AjOeLAAV",
-                  "openOnly": true,
-                  "errorMessage": null,
-                  "dueDate": "2019-03-03",
-                  "customFieldMap": null,
-                  "authOnly": false,
-                  "amount": 55
-              },
-              {
-                  "transactionStatus": "Completed",
-                  "transactionId": "a083600000Gn5rnAAB",
-                  "refundAmount": null,
-                  "paymentStatus": "Captured",
-                  "paymentMethodId": "a013600000Ij3BfAAJ",
-                  "paymentGatewayId": "a003600000AjOeLAAV",
-                  "openOnly": false,
-                  "errorMessage": null,
-                  "dueDate": null,
-                  "customFieldMap": null,
-                  "authOnly": false,
-                  "amount": 77
-              }
-          ],
-          "success": true,
-          "paymentMethodList": [
-              {
-                  "transactionList": null,
-                  "stripePayload": null,
-                  "status": "Valid",
-                  "publishableKey": null,
-                  "paymentMethodId": "a013600000Ij3BfAAJ",
-                  "paymentGatewayId": "a003600000AjOeLAAV",
-                  "matchByEmail": null,
-                  "last4": "4242",
-                  "holderName": "Holder Maki",
-                  "expYear": "2019",
-                  "expMonth": "5",
-                  "email": null,
-                  "customFieldMap": null,
-                  "customerId": "a053600000HbMpUAAV",
-                  "contactId": null,
-                  "brand": "Visa",
-                  "addressStreet": "Add l. 1",
-                  "addressPostalCode": "1234",
-                  "addressCountry": "Hungary",
-                  "addressCity": "Budapest",
-                  "accountId": null
-              }
-          ],
-          "errorParam": null,
-          "errorMessage": null,
-          "customerList": null
-      }
-      ```
+```
+{
+    "transactionList": [
+        {
+            "transactionStatus": "Completed",
+            "transactionId": "a083600000Gn5rlAAB",
+            "refundAmount": null,
+            "paymentStatus": "Authorized",
+            "paymentMethodId": "a013600000Ij3BfAAJ",
+            "paymentGatewayId": "a003600000AjOeLAAV",
+            "openOnly": false,
+            "errorMessage": null,
+            "dueDate": "2019-01-01",
+            "customFieldMap": null,
+            "authOnly": true,
+            "amount": 111
+        },
+        {
+            "transactionStatus": "Open",
+            "transactionId": "a083600000Gn5rmAAB",
+            "refundAmount": null,
+            "paymentStatus": null,
+            "paymentMethodId": "a013600000Ij3BfAAJ",
+            "paymentGatewayId": "a003600000AjOeLAAV",
+            "openOnly": true,
+            "errorMessage": null,
+            "dueDate": "2019-03-03",
+            "customFieldMap": null,
+            "authOnly": false,
+            "amount": 55
+        },
+        {
+            "transactionStatus": "Completed",
+            "transactionId": "a083600000Gn5rnAAB",
+            "refundAmount": null,
+            "paymentStatus": "Captured",
+            "paymentMethodId": "a013600000Ij3BfAAJ",
+            "paymentGatewayId": "a003600000AjOeLAAV",
+            "openOnly": false,
+            "errorMessage": null,
+            "dueDate": null,
+            "customFieldMap": null,
+            "authOnly": false,
+            "amount": 77
+        }
+    ],
+    "success": true,
+    "paymentMethodList": [
+        {
+            "transactionList": null,
+            "stripePayload": null,
+            "status": "Valid",
+            "publishableKey": null,
+            "paymentMethodId": "a013600000Ij3BfAAJ",
+            "paymentGatewayId": "a003600000AjOeLAAV",
+            "matchByEmail": null,
+            "last4": "4242",
+            "holderName": "Holder Maki",
+            "expYear": "2019",
+            "expMonth": "5",
+            "email": null,
+            "customFieldMap": null,
+            "customerId": "a053600000HbMpUAAV",
+            "contactId": null,
+            "brand": "Visa",
+            "addressStreet": "Add l. 1",
+            "addressPostalCode": "1234",
+            "addressCountry": "Hungary",
+            "addressCity": "Budapest",
+            "accountId": null
+        }
+    ],
+    "errorParam": null,
+    "errorMessage": null,
+    "customerList": null
+}
+```
  
 * **Error Response:**
 
@@ -270,17 +270,17 @@
 
     * **Code:** 200 <br />
       **Content:** 
-      ```
-      {
-          "transactionList": null,
-          "success": false,
-          "paymentMethodList": null,
-          "errorParam": "id",
-          "errorMessage": "in-valid payment gateway id",
-          "customerList": null
-      }
-      ```
-      
+```
+{
+    "transactionList": null,
+    "success": false,
+    "paymentMethodList": null,
+    "errorParam": "id",
+    "errorMessage": "in-valid payment gateway id",
+    "customerList": null
+}
+```
+
 * **Payment Method List**
     The API returns a list of successfully created Payment Methods in the __paymentMethodList__ property. For most of the actions this is a single Payment Method.
 
@@ -290,5 +290,127 @@
 
 * **Customer List**
 
-    The API returns a list of successfully created Stripe Customers in the __customerList__ property. You can't add a Payment Method without creating a Stripe Customer, so if you are not linking your Payment Method to an existing Stripe Customer, it is automatically created.      
+    The API returns a list of successfully created Stripe Customers in the __customerList__ property. You can't add a Payment Method without creating a Stripe Customer, so if you are not linking your Payment Method to an existing Stripe Customer, it is automatically created.     
+
+
+**Available API Actions**
+-------------------------
+
+Every request should have an __action__ parameter. This parameter tells the API what to do. Every action has its list of required and optional parameters (so they vary with the action).
+
+**createPaymentMethod**
+
+Currently the __createPaymentMethod__ is the only available action on the public endpoint. You can create a new Payment Method, link it to a Contact, Account or Stripe Customer. 
+
+Optionally, you can add one or more Transactions to the newly created Payment Method. These Transaction(s) can be in Open status (so charged later), Authorized or charged immediately.
+
+It is important to understand that you can not pass directly credit card data to your endpoint. Instead, you are retrieving a JSON token from stripe.js and passing this data as the __stripePayload__ parameter. This way credit card data doesn't travel through a possibly insecure network or code. 
+
+
+Params:
+
+* __action__ : required, always equals `createPaymentMethod`.
+* __paymentGatewayId__ : required. The SF Id of your Payment Gateway. This represents your Stripe Account.
+* __publishableKey__ : optional. Instead of __paymentGatewayId__ you can provide this property of the Payment Gateway.
+* __stripePayload__ : required. String representation value of the JSON object returned by stripe.js
+* __email__ : optional. The customer's email. If provided, this email is set on the newly created Stripe Customer.
+* __contactId__ : optional. The customer's Contact id. The Payment Method will be linked to this Contact.
+* __accountId__ : optional. The customer's Account id. The Payment Method will be linked to this Account.
+* __customerId__ : optional The customer's String Customer id. The Payment Method will be linked to this Stripe Customer, so no new Stripe Customer is created. The Stripe Customer should exist on the same Payment Gateway that you are using in this call.
+
+#### Examples
+
+Creating a new Payment Method. No charges.
+```
+{
+    "action": "createPaymentMethod",
+    "paymentGatewayId": "a003600000AjOeL",
+    "stripePayload": "{\"id\":\"tok_19NftIDXJoGaqeOAok9pc4oY\",\"object\":\"token\",\"card\":{\"id\":\"card_19NftIDXJoGaqeOAkW7uEBa3\",\"object\":\"card\",\"address_city\":\"Budapest\",\"address_country\":\"Hungary\",\"address_line1\":\"Add l. 1\",\"address_line1_check\":\"unchecked\",\"address_line2\":null,\"address_state\":null,\"address_zip\":\"1234\",\"address_zip_check\":\"unchecked\",\"brand\":\"Visa\",\"country\":\"US\",\"cvc_check\":\"unchecked\",\"dynamic_last4\":null,\"exp_month\":5,\"exp_year\":2019,\"funding\":\"credit\",\"last4\":\"4242\",\"metadata\":{},\"name\":\"Holder Maki\",\"tokenization_method\":null},\"client_ip\":\"94.21.254.28\",\"created\":1481018980,\"livemode\":false,\"type\":\"card\",\"used\":false}"
+}
+```
+
+
+Creating a new Payment Method and connecting to an existing Stripe Customer.
+
+```
+{
+    "action": "createPaymentMethod",
+    "paymentGatewayId": "a003600000AjOeL",
+    "customerId": "a053600000HbCTiAAN",
+    "stripePayload": "{\"id\":\"tok_19NftODXJoGaqeOAKIU8S1if\",\"object\":\"token\",\"card\":{\"id\":\"card_19NftODXJoGaqeOA8AgWiOZr\",\"object\":\"card\",\"address_city\":\"Budapest\",\"address_country\":\"Hungary\",\"address_line1\":\"Add l. 1\",\"address_line1_check\":\"unchecked\",\"address_line2\":null,\"address_state\":null,\"address_zip\":\"1234\",\"address_zip_check\":\"unchecked\",\"brand\":\"Visa\",\"country\":\"US\",\"cvc_check\":\"unchecked\",\"dynamic_last4\":null,\"exp_month\":5,\"exp_year\":2019,\"funding\":\"credit\",\"last4\":\"4242\",\"metadata\":{},\"name\":\"Holder Maki\",\"tokenization_method\":null},\"client_ip\":\"94.21.254.28\",\"created\":1481018986,\"livemode\":false,\"type\":\"card\",\"used\":false}"
+}
+```
+
+
+Creating a new Payment Method and connecting it to a Contact.
+
+```
+{
+    "action": "createPaymentMethod",
+    "paymentGatewayId": "a003600000AjOeL",
+    "contactId": "0033600000JHribAAD",
+    "stripePayload": "{\"id\":\"tok_19NftQDXJoGaqeOA7rY3Rss8\",\"object\":\"token\",\"card\":{\"id\":\"card_19NftQDXJoGaqeOApBD6xhfI\",\"object\":\"card\",\"address_city\":\"Budapest\",\"address_country\":\"Hungary\",\"address_line1\":\"Add l. 1\",\"address_line1_check\":\"unchecked\",\"address_line2\":null,\"address_state\":null,\"address_zip\":\"1234\",\"address_zip_check\":\"unchecked\",\"brand\":\"Visa\",\"country\":\"US\",\"cvc_check\":\"unchecked\",\"dynamic_last4\":null,\"exp_month\":5,\"exp_year\":2019,\"funding\":\"credit\",\"last4\":\"4242\",\"metadata\":{},\"name\":\"Holder Maki\",\"tokenization_method\":null},\"client_ip\":\"94.21.254.28\",\"created\":1481018988,\"livemode\":false,\"type\":\"card\",\"used\":false}"
+}
+```
+
+
+Creating a new Payment Method and charging it.
+
+
+```
+{
+    "action": "createPaymentMethod",
+    "paymentGatewayId": "a003600000AjOeL",
+    "transactionList": [
+        {
+            "amount": 100
+        }
+    ],
+    "stripePayload": "{\"id\":\"tok_19NftUDXJoGaqeOAt4NYdA1O\",\"object\":\"token\",\"card\":{\"id\":\"card_19NftUDXJoGaqeOA08ug7x36\",\"object\":\"card\",\"address_city\":\"Budapest\",\"address_country\":\"Hungary\",\"address_line1\":\"Add l. 1\",\"address_line1_check\":\"unchecked\",\"address_line2\":null,\"address_state\":null,\"address_zip\":\"1234\",\"address_zip_check\":\"unchecked\",\"brand\":\"Visa\",\"country\":\"US\",\"cvc_check\":\"unchecked\",\"dynamic_last4\":null,\"exp_month\":5,\"exp_year\":2019,\"funding\":\"credit\",\"last4\":\"4242\",\"metadata\":{},\"name\":\"Holder Maki\",\"tokenization_method\":null},\"client_ip\":\"94.21.254.28\",\"created\":1481018992,\"livemode\":false,\"type\":\"card\",\"used\":false}"
+}
+```
+
+
+Creating a new Payment Method and creating a Transaction which will be charged in the future.
+
+```
+{
+    "action": "createPaymentMethod",
+    "paymentGatewayId": "a003600000AjOeL",
+    "transactionList": [
+        {
+            "amount": 100,
+            "dueDate": "2019-12-31",
+            "openOnly": true
+        }
+    ],
+    "stripePayload": "{\"id\":\"tok_19NftaDXJoGaqeOAt1pllkR3\",\"object\":\"token\",\"card\":{\"id\":\"card_19NftaDXJoGaqeOAzjXPWPu9\",\"object\":\"card\",\"address_city\":\"Budapest\",\"address_country\":\"Hungary\",\"address_line1\":\"Add l. 1\",\"address_line1_check\":\"unchecked\",\"address_line2\":null,\"address_state\":null,\"address_zip\":\"1234\",\"address_zip_check\":\"unchecked\",\"brand\":\"Visa\",\"country\":\"US\",\"cvc_check\":\"unchecked\",\"dynamic_last4\":null,\"exp_month\":5,\"exp_year\":2019,\"funding\":\"credit\",\"last4\":\"4242\",\"metadata\":{},\"name\":\"Holder Maki\",\"tokenization_method\":null},\"client_ip\":\"94.21.254.28\",\"created\":1481018998,\"livemode\":false,\"type\":\"card\",\"used\":false}"
+}
+```
+
+
+Creating a new Payment Method and creating 3 Transactions. First one is authorized only, the second one will be charged in the future, and the third one is charged immediatelly.
+
+```
+{
+    "action": "createPaymentMethod",
+    "paymentGatewayId": "a003600000AjOeL",
+    "transactionList": [
+        {
+            "amount": 111,
+            "dueDate": "2019-1-1",
+            "authOnly": true
+        },
+        {
+            "amount": 55,
+            "dueDate": "2019-3-3",
+            "openOnly": true
+        },
+        {
+            "amount": 77
+        }
+    ],
+    "stripePayload": "{\"id\":\"tok_19NftkDXJoGaqeOAxA4r211C\",\"object\":\"token\",\"card\":{\"id\":\"card_19NftkDXJoGaqeOAaHJO8cZx\",\"object\":\"card\",\"address_city\":\"Budapest\",\"address_country\":\"Hungary\",\"address_line1\":\"Add l. 1\",\"address_line1_check\":\"unchecked\",\"address_line2\":null,\"address_state\":null,\"address_zip\":\"1234\",\"address_zip_check\":\"unchecked\",\"brand\":\"Visa\",\"country\":\"US\",\"cvc_check\":\"unchecked\",\"dynamic_last4\":null,\"exp_month\":5,\"exp_year\":2019,\"funding\":\"credit\",\"last4\":\"4242\",\"metadata\":{},\"name\":\"Holder Maki\",\"tokenization_method\":null},\"client_ip\":\"94.21.254.28\",\"created\":1481019008,\"livemode\":false,\"type\":\"card\",\"used\":false}"
+}
+```     
 
