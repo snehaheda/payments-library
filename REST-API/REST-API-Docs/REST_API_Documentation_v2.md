@@ -2,17 +2,17 @@
 -------------------------------------
   payment360 provides REST API for developers in subscriber orgs to create applications and public websites that use payment360 functionality for custom web applications. To keep things simple, our API is structured on simple REST based POST calls with action based JSON payloads. The API consists of two kinds of actions:
   
-  # Public actions: Public actions are for providing unaunthenticated access to API functionalities which can be used by public websites providing payment method and transaction creation. We will cover them in detail below.
+  * **Public actions:** Public actions are for providing unaunthenticated access to API functionalities which can be used by public websites providing payment method and transaction creation. We will cover them in detail below.
   
-  # Private actions: Private actions are more comprehensive list of functionalities which can be used in authenticated user context and consists of API calls for retrieving, creating and updating core payment360 entities. We will cover them in detail later in this document.
+  * **Private actions:** Private actions are more comprehensive list of functionalities which can be used in authenticated user context and consists of API calls for retrieving, creating and updating core payment360 entities. We will cover them in detail later in this document.
   
 **Getting started**
 -------------------
   In order to get started, we first need to setup payment360 API access and class permissions. Please complete steps mentioned under Setup section.
   
-* **Setting up and Testing the payment360 REST API**
+**Setting up and Testing the payment360 REST API**
 
-* **Setting up your public facing site**
+**Setting up your public facing site**
 
   Go to __Setup | Sites__ and click __New__.
 
@@ -20,9 +20,9 @@
 
   Note the url of your site. We suggest you to set up a HTTPS endpoint if available. However, as your endpoint is NOT dealing directly with sensitive credit card details, you can use HTTP as well.
 
-* **Setting up guest user permissions**
+**Setting up guest user permissions**
 
-* **Objects**
+**Objects**
 
   Your guest user should have permissions to use all the payment360 objects.
 
@@ -31,14 +31,14 @@
   * Grant read access to __Payment Gateways__ and to all its fields
   * Grant read/write/edit access to __Stripe Customer__, __Payment Method__ and __Transaction__ objects and all fields. Grant access to all __Transaction__ record types.
 
-* **Apex Class Access**
+**Apex Class Access**
 
   On the guest user profile go to __Apex Class Access__ section.
   Click __Edit__ and grant access to the __bt_stripe.REST_API_v1__ class.
 
   ![Apex Class Access](class_access.png)
 
-* **Test your endpoint**
+**Test your endpoint**
 
   You can test your endpoint by 'pinging' it with a dummy request. This way you can make sure the Apex Class is available for your guest user.
 
@@ -50,11 +50,11 @@
 
   ![curl response](curl.png)
 
-* **Downloading the automated frontend tests**
+**Downloading the automated frontend tests**
 
   You can test the payment360 REST endpoint from your browser, so you can make sure your org is set up properly.
 
-* **Clone the payment360 library repository**
+**Clone the payment360 library repository**
 
   In order to get the testing environment, you need to clone the payment360 library. Type in the following command:
 
@@ -63,9 +63,9 @@
 
   After this command, you should have the `payment360-library` folder in your working directory.
 
-* **Runnig the automated frontend tests**
+**Runnig the automated frontend tests**
 
-* **Running the testing environment on your own machine**
+**Running the testing environment on your own machine**
   
   Enter the `payment360-library` folder : `cd payment360-library`
   
@@ -76,7 +76,7 @@
   ![local HTTP server](local_server.png)
   
   
-* **Opening the testing environment in your browser**
+**Opening the testing environment in your browser**
   
   Open the following URL in your browser:
   
@@ -105,7 +105,7 @@
   ![mocha test page](mocha2.png)
 
 
-* **Considerations**
+**Considerations**
 
   * You should use long (18-byte long) record Id's in Account, Contact and Stripe Customer Fields
   * If some test cases are failing, make sure your the USD is a valid value on the __Currency ISO__ on the 'Stripe' record type
@@ -115,7 +115,7 @@
 
   payment360 REST API is designed to use simple and uniform request and response structure for intuitive usage and increased code reuse. Any API call to payment360 REST API will need following components:
 
-* **Endpoints**
+**Endpoints**
 
   There are 2 endpoints:
   Public: https://<YOUR_FORCE_DOT_COM_URL>/<YOUR_SITE_LABEL>/services/apexrest/v1 
@@ -164,7 +164,7 @@
 
   The Stripe Payload parameter used in __createPaymentMethod__ is returned by the stripe.js. Its purpose is to tokenize your customer's credit card data, so payment360's public endpoint doesn't handle raw credit card data directly. You can think about this payload as a token.
 
-  It should have a specific format: a JSON object dumbed to a string. Please see the example above.
+  It should have a specific format: a JSON object converted to a string. Please see the example above.
 
 **API Response Structure**
 --------------------------
