@@ -280,6 +280,7 @@
           "customerList": null
       }
       ```
+      
 * **Payment Method List**
     The API returns a list of successfully created Payment Methods in the __paymentMethodList__ property. For most of the actions this is a single Payment Method.
 
