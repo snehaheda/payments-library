@@ -1,0 +1,151 @@
+# Example YAML to get you started quickly.
+# Be aware that YAML has indentation based scoping.
+# Code completion support is available so start typing for available options.
+swagger: '2.0'
+
+# This is your document metadata
+info:
+  version: "1.0.0"
+  title: payment360 REST API
+  description: This is the payment360 app's rest API. bla bla bla
+  
+  
+schemes:
+  - https
+host: your.sf.org
+basePath: /v1/
+
+
+
+paths:
+  # This is a path endpoint. Change it.
+  /createPaymentMethod:
+    # This is a HTTP operation
+    post:
+      # Describe this verb here. Note: you can use markdown
+      description: Creates a new PM from a stripe.js payload.
+      # This is array of GET operation parameters:
+      parameters:
+        # An example parameter that is in query and is required
+      - name: stripePayload
+        in: query
+        description: Payload returned, serialized and escaped as a string,from stripe.js
+        required: true
+        type: string
+      - name: customerId
+        in: query
+        description: Stripe Customer Id. If passed, don't pass contactId and/or accountId
+        required: false
+        type: string
+      - name: accountId
+        in: query
+        description: Account Id.
+        required: false
+        type: string       
+      - name: contactId
+        in: query
+        description: Contact Id.
+        required: false
+        type: string  
+      - name: paymentGatewayId
+        in: query
+        description: Payment Gateway or publishableKey are required. Only one of them should be passed.
+        required: false
+        type: string  
+      - name: publishableKey
+        in: query
+        description: This key can be found on your Payment Gateway record in Salesforce. This is not a key from the Stripe Dashboard.
+        required: false
+        type: string
+      - name: matchByEmail
+        in: query
+        description: If set to True, matches to an existing customer based on email.
+        required: false
+        type: boolean  
+      - name: customFieldMap
+        in: query
+        description: A key/value map for any other maps to be populated.
+        required: false
+        type: string          
+      - name: transactionList
+        in: query
+        description: List of Transaction records. If a transactionList param provided, creates and links the transaction(s) to the PM. If the Transactions doesn't have the openOnly param set to true, the transaction will be charged immediately.
+        type: string
+        #$ref: "#/definitions/Transactions"
+      - name: email
+        in: query
+        description: A key/value map for any other maps to be populated.
+        required: false
+        type: string 
+        
+        
+        
+        
+        
+        
+        
+        
+      responses:
+        200:
+          description: A list of Person
+          schema:
+            type: array
+            items:
+              required:
+                - username
+              properties:
+                firstName:
+                  type: string
+                lastName:
+                  type: string
+                username:
+                  type: string
+
+
+
+definitions:
+
+  CustomFieldMap:
+    properties:
+      upsert:
+        type: boolean
+        
+  Transaction:
+    properties:
+      paymentGatewayId:
+        type: string
+      amount:
+        type: number
+        description: Amount of the transaction (currently only in USD until multi-currency is supported)
+      authOnly:
+        type: boolean
+        description: If true, will create an auth only transaction.
+      openOnly:
+        type: boolean
+        description: openOnly If true, will not charge the transaction.
+      dueDate:
+        type: string
+      transactionId:
+        type: string
+        description: If this is an existing record. Used only in private mode.
+      paymentMethodId:
+        type: string
+        description: The associated PM Id. Used only in private mode.
+      transactionStatus:
+        type: string
+        description: A read only field
+      paymentStatus:
+        type: string
+        description: A read only field
+      customFieldMap:
+        type: string
+      refundAmount:
+        type: number
+        description: Amount to refund. Used only in refund context.
+
+
+        
+
+                  
+
+
