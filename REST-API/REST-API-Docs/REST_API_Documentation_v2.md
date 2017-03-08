@@ -160,7 +160,7 @@
     }
     ```
   
-* **The stripe.js payload (stripePayload parameter)
+* **The stripe.js payload (stripePayload parameter)**
 
     The Stripe Payload parameter used in __createPaymentMethod__ is returned by the stripe.js. Its purpose is to tokenize your customer's credit card data, so payment360's public endpoint doesn't handle raw credit card data directly. You can think about this payload as a token.
 
@@ -177,30 +177,117 @@
   * Tra[] transactionList
   * PM[] paymentMethodList
   * Customer[] customerList
+  
+  Since, we are dealing with request failures using __errorMessage__ and __errorParam__ properties, the HTTP Status Code returned is always __200__.
 
 * **Success Response:**
   
     The __success__ property is always provided by the REST API. If it equals true, than the action was performed properly, and you should receive your data in the corresponding properties. 
 
     * **Code:** 200 <br />
-      **Content:** `{ id : 12 }`
+      **Content:** 
+      ```
+      {
+          "transactionList": [
+              {
+                  "transactionStatus": "Completed",
+                  "transactionId": "a083600000Gn5rlAAB",
+                  "refundAmount": null,
+                  "paymentStatus": "Authorized",
+                  "paymentMethodId": "a013600000Ij3BfAAJ",
+                  "paymentGatewayId": "a003600000AjOeLAAV",
+                  "openOnly": false,
+                  "errorMessage": null,
+                  "dueDate": "2019-01-01",
+                  "customFieldMap": null,
+                  "authOnly": true,
+                  "amount": 111
+              },
+              {
+                  "transactionStatus": "Open",
+                  "transactionId": "a083600000Gn5rmAAB",
+                  "refundAmount": null,
+                  "paymentStatus": null,
+                  "paymentMethodId": "a013600000Ij3BfAAJ",
+                  "paymentGatewayId": "a003600000AjOeLAAV",
+                  "openOnly": true,
+                  "errorMessage": null,
+                  "dueDate": "2019-03-03",
+                  "customFieldMap": null,
+                  "authOnly": false,
+                  "amount": 55
+              },
+              {
+                  "transactionStatus": "Completed",
+                  "transactionId": "a083600000Gn5rnAAB",
+                  "refundAmount": null,
+                  "paymentStatus": "Captured",
+                  "paymentMethodId": "a013600000Ij3BfAAJ",
+                  "paymentGatewayId": "a003600000AjOeLAAV",
+                  "openOnly": false,
+                  "errorMessage": null,
+                  "dueDate": null,
+                  "customFieldMap": null,
+                  "authOnly": false,
+                  "amount": 77
+              }
+          ],
+          "success": true,
+          "paymentMethodList": [
+              {
+                  "transactionList": null,
+                  "stripePayload": null,
+                  "status": "Valid",
+                  "publishableKey": null,
+                  "paymentMethodId": "a013600000Ij3BfAAJ",
+                  "paymentGatewayId": "a003600000AjOeLAAV",
+                  "matchByEmail": null,
+                  "last4": "4242",
+                  "holderName": "Holder Maki",
+                  "expYear": "2019",
+                  "expMonth": "5",
+                  "email": null,
+                  "customFieldMap": null,
+                  "customerId": "a053600000HbMpUAAV",
+                  "contactId": null,
+                  "brand": "Visa",
+                  "addressStreet": "Add l. 1",
+                  "addressPostalCode": "1234",
+                  "addressCountry": "Hungary",
+                  "addressCity": "Budapest",
+                  "accountId": null
+              }
+          ],
+          "errorParam": null,
+          "errorMessage": null,
+          "customerList": null
+      }
+      ```
  
 * **Error Response:**
 
     If the __success__ parameter equals false, than your action was not successful. You should get an error message in the __errorMessage__ property, and the __errorParam__ propery usually gives you some clue about the wrong parameter.
 
-    * **Code:** 401 UNAUTHORIZED <br />
-      **Content:** `{ error : "Log in" }`
+    * **Code:** 200 <br />
+      **Content:** 
+      ```
+      {
+          "transactionList": null,
+          "success": false,
+          "paymentMethodList": null,
+          "errorParam": "id",
+          "errorMessage": "in-valid payment gateway id",
+          "customerList": null
+      }
+      ```
+* **Payment Method List**
+    The API returns a list of successfully created Payment Methods in the __paymentMethodList__ property. For most of the actions this is a single Payment Method.
 
-    OR
+* **Transaction List**
 
-    * **Code:** 422 UNPROCESSABLE ENTRY <br />
-      **Content:** `{ error : "Email Invalid" }`
+    The API returns a list of successfully created Transactions in the __transactionList__ property. Note that these Transactions can be in _Open_, _Authorized_ or _Charged_ properties.
 
-* **Sample Call:**
+* **Customer List**
 
-  <_Just a sample call to your endpoint in a runnable format ($.ajax call or a curl request) - this makes life easier and more predictable._> 
+    The API returns a list of successfully created Stripe Customers in the __customerList__ property. You can't add a Payment Method without creating a Stripe Customer, so if you are not linking your Payment Method to an existing Stripe Customer, it is automatically created.      
 
-* **Notes:**
-
-  <_This is where all uncertainties, commentary, discussion etc. can go. I recommend timestamping and identifying oneself when leaving comments here._> 
