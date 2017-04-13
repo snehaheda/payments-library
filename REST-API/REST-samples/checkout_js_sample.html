@@ -1,0 +1,71 @@
+<html>
+<body>
+
+	<script src="https://checkout.stripe.com/checkout.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+	<button id="customButton">Pay</button>
+
+	<script>
+		var endpoint = 'https://bestbox-urbanspace.cs12.force.com/checkout/services/apexrest/bt_stripe/v1';
+
+		var publishableKey = 'pk_test_6H4IOsPtVH5EAhDwP0VYDqtr';
+		var amount = 33;
+
+		var handler = StripeCheckout.configure({
+			key: publishableKey,
+			//image: 'https://stripe.com/img/documentation/checkout/marketplace.png',
+			locale: 'auto',
+			token: function(token) {
+				sendTokenToEndpoint(token);
+			}
+  		});
+
+		document.getElementById('customButton').addEventListener('click', function(e) {
+			handler.open({
+		    	name: 'Demo Site',
+		    	description: '2 widgets',
+		    	amount: amount * 100
+		  	});
+		  	e.preventDefault();
+		});
+
+		// Close Checkout on page navigation:
+		window.addEventListener('popstate', function() {
+		  handler.close();
+		});
+
+
+		function sendTokenToEndpoint(stripeResponse) {
+			var d = {
+				stripePayload : JSON.stringify(stripeResponse),
+			 	//paymentGatewayId : paymentGatewayId,
+			 	action : "createPaymentMethod",
+			 	publishableKey : publishableKey,
+			 	transactionList : [
+			 		{"amount" : amount}
+			 	],
+			 	//contactId : contactId,
+			 	email : stripeResponse.email
+		 	};		
+
+		 	console.log('### d:', d);
+
+			$.ajax({
+				type : 'POST',
+				url : endpoint,
+				headers : {
+					"content-type": "text/plain"
+				},
+				data : JSON.stringify(d),
+				success : salesforceCallback
+			}); 
+		};
+
+		function salesforceCallback(r) {
+			console.log('gut!', r);
+		}
+	</script>
+
+</body>
+</html>
