@@ -1,10 +1,27 @@
 <html>
 <body>
 
-	<script src="https://checkout.stripe.com/checkout.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	<script src="https://js.stripe.com/v3/"></script>
 
-	<button id="customButton">Pay</button>
+	<h1>stripe.js v3 Absolut minimun</h1>
+	<div>
+	For more info read <a href="https://stripe.com/docs/stripe.js?">https://stripe.com/docs/stripe.js?</a>
+	</div>
+
+	<div id="card-element"></div>
+
+	<div>
+		<input id="holder-name" placeholder="Holder Name" />
+	</div>
+
+	<div>
+		<input id="holder-email" placeholder="Holder Email" />
+	</div>
+
+	<div>
+		<button onclick="submit()">Submit</button>
+	</div>
 
 	<script>
 
@@ -12,34 +29,27 @@
  		var publishableKey = 'pk_test_PI2EwzybDtndtIwlaElyF1dN';
 		var amount = 33;
 
-		var handler = StripeCheckout.configure({
-			key: publishableKey,
-			//image: 'https://stripe.com/img/documentation/checkout/marketplace.png',
-			locale: 'auto',
-			token: function(token) {
-				sendTokenToEndpoint(token);
-			}
-  		});
+		var stripe = Stripe(publishableKey);
 
-		document.getElementById('customButton').addEventListener('click', function(e) {
-			handler.open({
-		    	name: 'Demo Site',
-		    	description: '2 widgets',
-		    	amount: amount * 100
-		  	});
-		  	e.preventDefault();
-		});
+		var e = stripe.elements();
+		var card = e.create('card');
+		card.mount('#card-element');
 
-		// Close Checkout on page navigation:
-		window.addEventListener('popstate', function() {
-		  handler.close();
-		});
-
+		function submit() {
+			stripe.createToken(card, {name : $('#holder-name').val() })
+				.then(function(r) {
+					if (r.token) {
+						sendTokenToEndpoint(r.token);
+					}
+				});
+		}	
 
 		function sendTokenToEndpoint(stripeResponse) {
+
+			console.log("stripeResponse", stripeResponse);
+
 			var d = {
 				stripePayload : JSON.stringify(stripeResponse),
-			 	//paymentGatewayId : paymentGatewayId,
 			 	action : "createPaymentMethod",
 			 	publishableKey : publishableKey,
 			 	transactionList : [
@@ -47,8 +57,7 @@
 			 			"amount" : amount
 			 		}
 			 	],
-			 	//contactId : contactId,
-			 	email : stripeResponse.email
+			 	email : $('#holder-email').val()
 		 	};		
 
 		 	console.log('### d:', d);
@@ -66,8 +75,10 @@
 
 		function salesforceCallback(r) {
 			console.log('gut!', r);
-		}
+		}	
+
 	</script>
+
 
 </body>
 </html>
