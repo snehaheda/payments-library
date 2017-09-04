@@ -29,8 +29,6 @@
 
 		var stripe = Stripe(publishableKey);
 
-		var e = stripe.elements();
-
 		function submit() {
 			stripe.createToken('bank_account', {
 				  country: 'us',
