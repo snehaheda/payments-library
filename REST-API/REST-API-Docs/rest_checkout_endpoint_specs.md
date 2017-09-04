@@ -176,6 +176,7 @@ Creates a transaction.
 * __dueDate__ 🐱 Due date of the transaction, in YYYY-MM-DD format.
 * __paymentMethodId__ 🐱 The associated PM Id. Used only in private mode. 
 * __customFieldMap__ A key/value map for any other maps to be populated. 
+* __forceCapture__ 🐱 If true, the transactions will captured immediately. If false(or not included) the Transaction will be Open
 
 
 ### getTransactions 🐱
