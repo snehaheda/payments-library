@@ -188,6 +188,8 @@ Creates a Tra class from an existing SOQL **bt_stripe__Transaction__c** object.
 * __authOnly__ Boolean flag for creating authorize-only transaction. Default value is false.
 * __paymentGatewayId__ Id of the Payment Gateway associated with the Stripe Transaction. Required.
 * __record__ **bt_stripe__Transaction__c** record of the Payment Method. Available after calling the `register()` method.
+* __currencyCode__ 3-letter ISO code of the used currency. If not set, default Payment Gateway currency is used.
+* __description__ Description of the Transaction. Will be displayed on the record and in the Stripe Dashboard.
 
 #### Actions
 

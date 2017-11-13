@@ -7,11 +7,11 @@
 	<button id="customButton">Pay</button>
 
 	<script>
-		//var endpoint = 'https://bestbox-urbanspace.cs12.force.com/checkout/services/apexrest/bt_stripe/v1';
 		var endpoint = 'https://peti-maki-developer-edition.na50.force.com/wh/services/apexrest/v1/';
 
-		//var publishableKey = 'pk_test_6H4IOsPtVH5EAhDwP0VYDqtr';
-		var publishableKey = 'pk_test_rx6uxcAgv6PZM2LuH7TL9imW';
+
+		var endpoint = 'https://mu-paym-dev-peter-developer-edition.na59.force.com/c/services/apexrest/v1';
+ 		var publishableKey = 'pk_test_PI2EwzybDtndtIwlaElyF1dN';
 		var amount = 33;
 
 		var handler = StripeCheckout.configure({
@@ -53,6 +53,7 @@
 			 			//"customFieldMap" : {
 			 				//"Case__c" : "50046000000m7ps"
 			 			//}
+
 			 		}
 			 	],
 			 	//contactId : contactId,

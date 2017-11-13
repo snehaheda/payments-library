@@ -1,0 +1,86 @@
+<html>
+<body>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	<script src="https://js.stripe.com/v3/"></script>
+
+	<h1>stripe.js v3 Absolut minimun; ACH flow</h1>
+	<div>
+	For more info read <a href="https://stripe.com/docs/stripe.js?">https://stripe.com/docs/stripe.js?</a>
+	</div>
+
+	<div>
+		<input id="holder-name" placeholder="Holder Name" />
+	</div>
+
+	<div>
+		<input id="holder-email" placeholder="Holder Email" />
+	</div>
+
+	<div>
+		<button onclick="submit()">Submit</button>
+	</div>
+
+	<script>
+
+		var endpoint = 'https://peter-beta3-developer-edition.na59.force.com/x/services/apexrest/bt_stripe/v1';
+ 		var publishableKey = 'pk_test_fZz8zR7G8ZfzlsUoQup6yXFr';
+		var amount = 900;
+
+		var stripe = Stripe(publishableKey);
+
+		function submit() {
+			stripe.createToken('bank_account', {
+				  country: 'us',
+				  currency: 'usd',
+				  routing_number: '110000000',
+				  account_number: '000123456789',
+				  account_holder_name: $('#holder-name').val(),
+				  account_holder_type: 'individual',
+				})
+				.then(function(r) {
+					if (r.token) {
+						sendTokenToEndpoint(r.token);
+					}
+				});
+		}	
+
+		function sendTokenToEndpoint(stripeResponse) {
+
+			console.log("stripeResponse", stripeResponse);
+
+			var d = {
+				stripePayload : JSON.stringify(stripeResponse),
+			 	action : "createPaymentMethod",
+			 	publishableKey : publishableKey,
+			 	transactionList : [
+			 		{
+			 			"amount" : amount,
+			 			"openOnly" : true
+			 		}
+			 	],
+			 	email : $('#holder-email').val()
+		 	};		
+
+		 	console.log('### d:', d);
+
+			$.ajax({
+				type : 'POST',
+				url : endpoint,
+				headers : {
+					"content-type": "text/plain"
+				},
+				data : JSON.stringify(d),
+				success : salesforceCallback
+			}); 
+		};
+
+		function salesforceCallback(r) {
+			console.log('gut!', r);
+		}	
+
+	</script>
+
+
+</body>
+</html>
