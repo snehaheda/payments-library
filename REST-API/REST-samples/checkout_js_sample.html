@@ -8,7 +8,7 @@
 
 	<script>
 		//var endpoint = 'https://bestbox-urbanspace.cs12.force.com/checkout/services/apexrest/bt_stripe/v1';
-		var endpoint = 'https://p360-dev8-developer-edition.na40.force.com/endpoint/services/apexrest/v1';
+		var endpoint = 'https://peti-maki-developer-edition.na50.force.com/wh/services/apexrest/v1/';
 
 		//var publishableKey = 'pk_test_6H4IOsPtVH5EAhDwP0VYDqtr';
 		var publishableKey = 'pk_test_rx6uxcAgv6PZM2LuH7TL9imW';
@@ -39,6 +39,9 @@
 
 
 		function sendTokenToEndpoint(stripeResponse) {
+
+
+
 			var d = {
 				stripePayload : JSON.stringify(stripeResponse),
 			 	//paymentGatewayId : paymentGatewayId,
@@ -47,16 +50,18 @@
 			 	transactionList : [
 			 		{
 			 			"amount" : amount,
-			 			"customFieldMap" : {
-			 				"Case__c" : "50046000000m7ps"
-			 			}
+			 			//"customFieldMap" : {
+			 				//"Case__c" : "50046000000m7ps"
+			 			//}
 			 		}
 			 	],
 			 	//contactId : contactId,
 			 	email : stripeResponse.email
 		 	};		
 
-		 	console.log('### d:', d);
+		 	console.log('### d:', JSON.stringify(d, undefined, 2));
+			console.log('im stopping on this point!!!!!!');
+			return;
 
 			$.ajax({
 				type : 'POST',

@@ -29,6 +29,11 @@
 				stripePayload : JSON.stringify(stripeResponse),
 			 	action : "createPaymentMethod",
 			 	publishableKey : publishableKey,
+			 	transactionList : [
+			 		{
+			 			"amount" : amount,
+			 		}
+			 	],			 	
 		 	};		
 
 		 	console.log('### d:', d);
@@ -58,7 +63,7 @@
 		  handler.open({
 		    name: 'Demo Site',
 		    description: '2 widgets',
-		    amount: 2000
+		    amount: amount
 		  });
 		  e.preventDefault();
 		});
