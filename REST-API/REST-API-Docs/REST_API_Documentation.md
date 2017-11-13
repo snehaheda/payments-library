@@ -118,8 +118,8 @@
 **Endpoints**
 
   There are 2 endpoints:
-  Public: https://<YOUR_FORCE_DOT_COM_URL>/<YOUR_SITE_LABEL>/services/apexrest/v1 
-  Private: https://<YOUR_ORG_URL>/services/apexrest/v1
+  Public: https://<YOUR_FORCE_DOT_COM_URL>/<YOUR_SITE_LABEL>/services/apexrest/bt_stripe/v1 
+  Private: https://<YOUR_ORG_URL>/services/apexrest/bt_stripe/v1
   
   The difference between these 2 endpoints is that you can access the public one without oAuth authentication, while the second one is available only for an authenticated users.
   
