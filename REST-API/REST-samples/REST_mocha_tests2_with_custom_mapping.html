@@ -1,0 +1,235 @@
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Mocha Tests</title>
+	<link href="https://cdn.rawgit.com/mochajs/mocha/2.2.5/mocha.css" rel="stylesheet" />
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://js.stripe.com/v2/"></script>
+
+    <script src="https://cdn.rawgit.com/mochajs/mocha/2.2.5/mocha.js"></script>
+    <script src="http://chaijs.com/chai.js"></script>
+
+</head>
+
+<body>
+    <div>
+        <div>
+            Endpoint
+            <br/>
+            <input id="endpoint" value="https://p360-dev8-developer-edition.na40.force.com/endpoint/services/apexrest/v1" style="width: 500px;"/>
+        </div>
+
+        <div>
+            Publishable Key
+            <br/>
+            <input id="publishable_key" value="pk_test_rx6uxcAgv6PZM2LuH7TL9imW" style="width: 500px;"/>
+        </div>
+
+        <div>
+            Payment Gateway Id
+            <br/>
+            <input id="payment_gateway_id" value="a0146000000EikD" style="width: 500px;"/>
+        </div>
+
+        <div>
+            Contact Id
+            <br/>
+            <input id="contact_id" value="00346000001UfLsAAK" style="width: 500px;"/>
+        </div>
+
+        <div>
+            Account Id
+            <br/>
+            <input id="account_id" value="00146000002GkRZAA0" style="width: 500px;"/>
+        </div>
+
+        <div>
+            Customer Id
+            <br/>
+            <input id="customer_id" value="a0646000000Ljmc" style="width: 500px;"/>
+        </div>
+
+        <div>
+            <button id="start_tests">Start Tests</button>
+        </div>
+    </div>
+
+	<div id="mocha"></div>
+
+
+
+	<script>
+
+
+        var ENDPOINT;
+        var PUBLISHABLE_KEY;
+        var PAYMENT_GATEWAY_ID;
+        var CONTACT_ID;
+        var ACCOUNT_ID;
+        var CUSTOMER_ID;
+
+        var TIMEOUT_MS = 10000;
+
+        var CC_HOLDER_NAME = "Holder Maki";
+        var CC_NUMBER = "4242424242424242";
+        var CC_CVC = "123";
+        var EXP_MONTH = "5";
+        var EXP_YEAR = "2019";
+
+        var ADDRESS_CITY = "Budapest";
+        var ADDRESS_LINE1 = "Add l. 1";
+        var ADDRESS_ZIP = "1234";
+        var ADDRES_COUNTRY = "Hungary";
+        var CUSTOMER_EMAIL = "maki@gmail.com";
+
+        var FAULTY_CVC_CARD = '4000000000000127';
+        var FAULTY_EXPIRED_CARD = '4000000000000069';
+        var FAULTY_PROCESSING_ERROR_CARD = '4000000000000119';
+        var FAULTY_INCORRECT_NUMBER_CARD = '4242424242424241';
+        var FAULTY_FAILED_TRANSCTIONS_CARD = '4000000000000341';
+
+
+        $(document).ready(function() {
+            $('#start_tests').click(function() {
+                ENDPOINT = $('#endpoint').val();
+                PUBLISHABLE_KEY = $('#publishable_key').val();
+                PAYMENT_GATEWAY_ID = $('#payment_gateway_id').val();
+                CONTACT_ID = $('#contact_id').val();
+                ACCOUNT_ID = $('#account_id').val();
+                CUSTOMER_ID = $('#customer_id').val();
+                startTests();
+            });
+        });
+
+        var getTokenAndCallREST_API = function(d, callback, alternate_cc_number) {
+            Stripe.setPublishableKey(PUBLISHABLE_KEY);
+
+            var cc_number = CC_NUMBER;
+            if (alternate_cc_number) {
+                cc_number = alternate_cc_number;
+            }
+
+            Stripe.card.createToken({
+                number: cc_number,
+                cvc: CC_CVC,
+                exp_month: EXP_MONTH,
+                exp_year: EXP_YEAR,
+                name: CC_HOLDER_NAME,
+                address_line1: ADDRESS_LINE1,
+                address_city: ADDRESS_CITY, 
+                address_zip: ADDRESS_ZIP,
+                address_country: ADDRES_COUNTRY
+            }, function(status, response) {
+                if (response.error) {
+                    throw "Something went wrong when getting token from Stripe " + response.error.message;
+                }
+                d.stripePayload = JSON.stringify(response);
+                callREST_API(d, callback);             
+            });
+        }
+
+        var callREST_API = function(d, callback) {
+
+            console.log('## callREST_API', d);
+            //console.log(JSON.stringify(d, null, 4));
+            $.ajax({
+                type : 'POST',
+                url : ENDPOINT,
+                headers : {
+                    "content-type": "text/plain"
+                },
+                data : JSON.stringify(d),
+                success : callback
+            }); 
+        }
+        
+        var startTests = function() {
+            mocha.run();
+        }
+
+
+
+        // the test cases
+        mocha.setup('bdd');
+        
+        var should = chai.should();
+        var expect = chai.expect;
+
+        describe("p360 REST API test #1", function() {
+
+
+            describe("createPaymentMethod action tests", function() {
+
+  
+
+                it("Success: Stripe payload, paymentGatewayId set, 1 transaction to charge, currency set to EUR", function(done) {
+
+                    var d = {
+                        "action" : "createPaymentMethod",
+                        "paymentGatewayId" : PAYMENT_GATEWAY_ID,
+                        "customFieldMap" : {
+                                'Test_String__c' : 'maki value'
+                            },
+                        "transactionList" : [
+                            {
+                                "amount" : 100,
+                                "dueDate" : "2019-05-17",
+                                "currencyISO" : "EUR",
+                                'customFieldMap' : {
+                                        //'Test_Lead__c' : '00Q46000000yEVB',
+                                        'Test_Lead__c' : {
+                                            //'Email' : 'buuu@xx.com'
+                                        },
+                                        'Test_Picklist__c' : 'Cat',
+                                        'Test_String__c' : 'buu'
+                                    }
+                            }
+                        ]
+                    };
+
+                    getTokenAndCallREST_API(d, function(r) {
+                        try {
+                            console.log('API result: ', r);
+                            r.success.should.equal(true);
+                            r.paymentMethodList.length.should.equal(1);                            
+                            r.paymentMethodList[0].addressCity.should.equal(ADDRESS_CITY);
+                            r.paymentMethodList[0].addressCountry.should.equal(ADDRES_COUNTRY);
+                            r.paymentMethodList[0].addressPostalCode.should.equal(ADDRESS_ZIP);
+                            r.paymentMethodList[0].brand.should.equal("Visa");
+                            r.paymentMethodList[0].expMonth.should.equal(EXP_MONTH);
+                            r.paymentMethodList[0].expYear.should.equal(EXP_YEAR);
+                            r.paymentMethodList[0].holderName.should.equal(CC_HOLDER_NAME);
+                            r.paymentMethodList[0].last4.should.equal(CC_NUMBER.substr(CC_NUMBER.length-4));
+                            r.paymentMethodList[0].brand.should.equal("Visa");
+                            r.paymentMethodList[0].customerId.should.not.equal(null);
+
+                            r.transactionList.length.should.equal(1);
+                            r.transactionList[0].amount.should.equal(100);
+                            r.transactionList[0].currencyISO.should.equal('EUR');
+
+                            r.transactionList[0].dueDate.should.equal('2019-05-17');
+                            r.transactionList[0].paymentGatewayId.should.equal(r.paymentMethodList[0].paymentGatewayId);
+                            r.transactionList[0].paymentStatus.should.equal('Captured');
+                            r.transactionList[0].transactionId.should.not.equal(null);
+                            r.transactionList[0].transactionStatus.should.equal('Completed');
+
+                            done();
+                        } catch(e) {
+                            console.log('This is failed assertion:');
+                            console.log(r);
+                            done(e);
+                        }
+                    });                    
+                }).timeout(TIMEOUT_MS); 
+
+
+
+            });
+        
+
+        }); // end of all mocha tests
+
+	</script>
+</body>
+</html>
