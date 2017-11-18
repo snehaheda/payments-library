@@ -10,10 +10,10 @@ var PUBLIC_ENDPOINT = 'https://paym6-dev-developer-edition.na35.force.com/h/serv
 var PRIVATE_ENDPOINT = 'https://p360-dev-6-dev-ed.my.salesforce.com/services/apexrest/v1';
 var PUBLISHABLE_KEY = 'pk_test_rx6uxcAgv6PZM2LuH7TL9imW';
 
-var CONSUMER_KEY = '3MVG9szVa2RxsqBaVMAZFSLdWv5BZvhnb15ChwBZzbVVyb_u9j08M.xnlQ5Ly15mI6KZfVRTsjTQSMsY27rDT';
-var CONSUMER_SECRET = '5979639566859185104';
+var CONSUMER_KEY = '';
+var CONSUMER_SECRET = '';
 var SF_USERNAME = 'peter@paym6.dev';
-var SF_PASSWORD = 'stdev+1984';
+var SF_PASSWORD = '';
 
 var CONTACT_ID = "00341000003ftLlAAI";
 var ACCOUNT_ID = "00141000004fyVJAAY";
