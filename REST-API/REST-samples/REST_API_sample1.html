@@ -75,18 +75,18 @@
 		/*
 			These are the parameters which you are passing to the endpoint hosted on your SF org.
 
-			A good way to test if you endpoint works is to ping it with 'curl':
+			A good way to test if your endpoint works is to ping it with 'curl':
 				curl https://paym6-dev-developer-edition.na35.force.com/h/services/apexrest/bt_stripe/checkout -d x
 
 			You should get something like this:
 				{"tra":null,"success":false,"pm":null,"errorMessage":"null input to JSON parser\n Class.System.JSON.deserialize: line 15, column 1\nClass.REST_Checkout.doPost: line 25, column 1"}18:02:16-tempflip~/sf/payment360-library/REST-samples (master)$ 
 
-			You MUST pass the following parameters:
+			The following parameter is required:
 				* publishableKey - the value of 'Stripe Publishable Key' field on your 'Payment Gateway' record
 			
 			The following parameters are optional:
 				* contactId - if it is passed, the created Payment Method will be linked to the specified Contact
-				* amount - if it is passsed, after creating the Payment Method, the card will be charged with the specified amount.
+				* amount - if it is passed, after creating the Payment Method, the card will be charged with the specified amount.
 				  The amount is set in dollars as we do not yet support currency processing other than USD (coming soon).
 				* targetId - value of the parent lookup on the transaction
 				* email - email of the newly created cusomer
@@ -127,7 +127,7 @@
 
 
 		// After passing credit card data to Stripe, you will get back a token.
-		// If there was no error, you should pass this token to the Salesforce endpoint. (the sendToSalesforceInstance() function)
+		// If there was no error, you should pass this token to the Salesforce endpoint (the sendToSalesforceInstance() function.
 		function stripeResponseHandler(status, response) {
 			// Grab the form:
 			var $form = $('#payment-form');
@@ -186,8 +186,8 @@
 			It is a JSON object with the following properties:
 				* success - A boolean, indicates if the operation was successful
 				* errorMessage - A message, if something went wrong
-				* pm - The newly created Payment Methods record
-				* tra - The newly create Transaction (if there is so)
+				* pm - The newly created Payment Method record
+				* tra - The newly create Transaction (if there is one)
 		*/
 		function salesforceCallback(d) {
 			console.log('### response', d);
