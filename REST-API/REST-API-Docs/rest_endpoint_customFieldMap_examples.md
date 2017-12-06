@@ -1,7 +1,8 @@
-# Custom field map passing on the Transaction object
+# Custom field mapping on the Transaction object
+--------------------------
 
 ## Example 1
-You are populating fields on the Transaction record.
+Populating fields on the Transaction record.
 
 ```
 {
@@ -33,8 +34,9 @@ You are populating fields on the Transaction record.
 }
 ```
 
+---------------
 ## Example 2
-You can create nested records in the `customFieldMap`. The records are inserted automatically.
+Create nested records in the `customFieldMap`. The records are inserted automatically.
 `test_lookup__c` is a lookup field, so it can be both an Id or a nested object.
 
 ```
