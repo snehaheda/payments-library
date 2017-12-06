@@ -2,7 +2,7 @@
 
 ## Introduction
 
-The purpose of the Apex API is to provide Salesforce developers classes and methods to manipulate payment methods, transactions and Stripe customers. The API is created in the form of a global Apex class, so it is available in your org if the payment360 package is installed.
+The purpose of the Apex API is to provide Salesforce developers classes and methods to manipulate Payment Methods, Transactions and Stripe Customers. The API is created in the form of a global Apex class, so it is available in your org if the payment360 package is installed.
 
 ## Structure
 All of the classes are part of the `bt_stripe.P360_API_v1` class.
@@ -13,7 +13,7 @@ The following wrapper classes are available:
 * `bt_stripe.PM` represents Payment Method in Stripe's database. Corresponds to the **bt_stripe__Payment_Method__c** object
 * `bt_stripe.Tra` represents Transaction in Stripe's database. Corresponds to the **bt_stripe__Transaction__c** object
 
-You should create these objects using factory methods because the API class should register them in the background. Use the following factory methods:
+Create these objects using factory methods below because the API class should register them in the background:
 
 * `bt_stripe.P360_API_v1.customerFactory()`
 * `bt_stripe.P360_API_v1.paymentMethodFactory()`
@@ -25,7 +25,7 @@ After you create your entity objects and some actions, you need to commit your w
 
 This call saves your work in existing or new SOQL objects. This is a DML operation, so make sure you don't make any HTTP callouts after making the commit call. Also, after the commit don't do any payment360 API actions -- this should be the last action in your executing context.
 
-## A basic example
+## Basic example
 
 This code snippet creates a new Customer and adds a new Payment Method. Once the Payment Method is registered to Stripe, a new Transaction is created and captured.
 
@@ -33,7 +33,7 @@ Note that all the entities are created using the factory methods. You need to se
 
 Also note that `bt_stripe.P360_API_v1.commitWork()` is happening as the very last action.
 
-It is very important to catch the error. If some error happens (for example, a Payment Method can't be registered for some reason), the API is throwing a `bt_stripe.P360_API_v1.P360_Exception`. Catching the error can let you decide about the further flow of your business logic. 
+It is very important to catch the error. If an error happens (for example, a Payment Method can't be registered for some reason), the API is throwing a `bt_stripe.P360_API_v1.P360_Exception`. Catching the error can let you decide about the further flow of your business logic. 
 
 
 ```
@@ -45,7 +45,7 @@ It is very important to catch the error. If some error happens (for example, a P
 													WHERE bt_stripe__Default__c = true];
 		
 		
-		// It is a good practice to put your p360 action in a try block. If something goes wrong,
+		// It is good practice to put your p360 action in a try block. If something goes wrong,
 		// the API throws a bt_stripe.P360_API_v1.P360_Exception exception
 		
 		try {
@@ -82,8 +82,8 @@ It is very important to catch the error. If some error happens (for example, a P
 			t.capture();
 
 			// It is important to call the commitWork() method after calling the action methods.
-			// If you not call this method, the data IS NOT SAVED as SOQL in records.
-			// Also, as this is a DML action, you can not do any HTTP callouts after this point.
+			// If you don't call this method, the data IS NOT SAVED as SOQL in records.
+			// Also, since this is a DML action, you cannot do any HTTP callouts after this point.
 		
 			bt_stripe.P360_API_v1.commitWork();
 			
@@ -153,7 +153,7 @@ Creates a PM class from an existing SOQL **bt_stripe__Payment_Method__c** object
 * __cardNumber__ The card number, as a string without any separators. Required.
 * __cardExpYear__ Two or four digit number representing the card's expiration year. Required. 
 * __cardExpMonth__ Two digit number representing the card's expiration month. Required.
-* __cvv__ Card security code. Not required, but it is a good practive to always pass this property.
+* __cvv__ Card security code. Not required, but it is good practice to always pass this property.
 * __paymentGatewayId__ Id of the Payment Gateway associated with the Stripe Payment Method. Required.
 * __record__ **bt_stripe__Payment_Method__c** record of the Payment Method. Available after calling the `registerPM()` method.
 
@@ -184,8 +184,8 @@ Creates a Tra class from an existing SOQL **bt_stripe__Transaction__c** object.
 
 * __pm__ reference to bt_stripe.P360_API_v1.PM object for associating Transaction to Payment Method. Required.
 * __amount__ Decimal number representing how much to charge (in dollars). The smallest accepted amount is 0.05. Required.
-* __dueDate__ Non-mandatory information, used by Payment360 app for auto-processing transactions on scheduled dates.
-* __authOnly__ Boolean flag for creating authorize-only transaction. Default value is false.
+* __dueDate__ Used by Payment360 app for auto-processing transactions on scheduled dates. Optional.
+* __authOnly__ Boolean flag for creating authorize-only transactions. Default value is false.
 * __paymentGatewayId__ Id of the Payment Gateway associated with the Stripe Transaction. Required.
 * __record__ **bt_stripe__Transaction__c** record of the Payment Method. Available after calling the `register()` method.
 * __currencyCode__ 3-letter ISO code of the used currency. If not set, default Payment Gateway currency is used.
@@ -197,17 +197,17 @@ Creates a Tra class from an existing SOQL **bt_stripe__Transaction__c** object.
 
 * `authorize()` Authorizes a new or existing open transaction. Throws exception if transaction is already authorized or captured.
 
-* `capture()` Captures a new or existing open/authorized transaction. Throws exception if transaction is already captured.
+* `capture()` Captures a new or existing open/authorized transaction. Throws exception if the transaction is already captured.
 
-* `refund()` For making full refund on captured transaction. Need to implement.
+* `refund()` For making full refund on captured transactions. Need to implement.
 
-* `refundAmount(Decimal refundAmount)` For making partial refund on captured transaction. Need to implement.
+* `refundAmount(Decimal refundAmount)` For making partial refund on captured transactions. Need to implement.
 
-* `setParent(Schema.SObjectField field, Object value)` For associating transaction record to a parent SObject record. Need to implement.
+* `setParent(Schema.SObjectField field, Object value)` For associating a transaction record to a parent SObject record. Need to implement.
 
 ### Examples
 
-Example 1: creating a Stripe Customer
+Example 1: Creating a Stripe Customer
 
 	try {
 		bt_stripe.P360_API_v1.Customer c = bt_stripe.P360_API_v1.customerFactory();
@@ -229,7 +229,7 @@ Example 1: creating a Stripe Customer
 		//do error handling here
 	}
 
-Example 2: creating a Stripe Customer and Stripe Payment Method
+Example 2: Creating a Stripe Customer and Stripe Payment Method
 
 	try {
 		bt_stripe.P360_API_v1.Customer c = bt_stripe.P360_API_v1.customerFactory();
@@ -260,7 +260,7 @@ Example 2: creating a Stripe Customer and Stripe Payment Method
 		//do error handling here
 	}
 
-Example 3: creating a Stripe Customer, Stripe Payment Method and capture Stripe Transaction
+Example 3: Creating a Stripe Customer, Stripe Payment Method and capture Stripe Transaction
 
 	try {
 		bt_stripe.P360_API_v1.Customer c = bt_stripe.P360_API_v1.customerFactory();
@@ -268,10 +268,10 @@ Example 3: creating a Stripe Customer, Stripe Payment Method and capture Stripe 
 		c.paymentGatewayId = pgList[0].Id;
 		c.name = name;
 		c.email = email;
-		//optionally set AccountId and/or ContactId for associating new customer with
+		//optionally set AccountId and/or ContactId for associating the new customer with
 		c.accountId = accountId;
 		c.contactId = contactId;
-		//bt_stripe.P360_API_v1.P360_Exception if something goes wrong with creating customer in Stripe
+		//bt_stripe.P360_API_v1.P360_Exception if something goes wrong with creating the customer in Stripe
 		c.registerCustomer();
 		
 		bt_stripe.P360_API_v1.PM pm = bt_stripe.P360_API_v1.paymentMethodFactory();
@@ -282,14 +282,14 @@ Example 3: creating a Stripe Customer, Stripe Payment Method and capture Stripe 
 		pm.cardExpYear = '19';
 		pm.cardExpMonth = '09';
 		pm.cvv = '000';
-		//bt_stripe.P360_API_v1.P360_Exception if something goes wrong with creating Payment Method in Stripe
+		//bt_stripe.P360_API_v1.P360_Exception if something goes wrong with creating the Payment Method in Stripe
 		pm.registerPM();
 		
 		bt_stripe.P360_API_v1.Tra t = bt_stripe.P360_API_v1.transactionFactory();
 		t.paymentGatewayId = pgList[0].Id;
 		t.pm = pm;
 		t.amount = 110.5;
-		//bt_stripe.P360_API_v1.P360_Exception if something goes wrong with processing Transaction
+		//bt_stripe.P360_API_v1.P360_Exception if something goes wrong with processing the Transaction
 		t.capture();
 		
 		//bt_stripe.P360_API_v1.P360_Exception if something goes wrong with committing records in database
@@ -298,7 +298,7 @@ Example 3: creating a Stripe Customer, Stripe Payment Method and capture Stripe 
 		//do error handling here
 	}
 	
-Example 4: Creating Payment Method for existing Customer
+Example 4: Creating Payment Method for an existing Customer
 
 	try {
 		bt_stripe.P360_API_v1.Customer c = bt_stripe.P360_API_v1.customerFactory('0Xxxx0123afg');
@@ -311,7 +311,7 @@ Example 4: Creating Payment Method for existing Customer
 		pm.cardExpYear = '19';
 		pm.cardExpMonth = '09';
 		pm.cvv = '000';
-		//bt_stripe.P360_API_v1.P360_Exception if something goes wrong with creating Payment Method in Stripe
+		//bt_stripe.P360_API_v1.P360_Exception if something goes wrong with creating a Payment Method in Stripe
 		pm.registerPM();
 		
 		//bt_stripe.P360_API_v1.P360_Exception if something goes wrong with committing records in database
@@ -392,7 +392,7 @@ Example 7: Processing multiple transactions
 
 Example 7: Error handling and partial commits
 
-Each `registerCustomer()`, `registerPM()`, `capture()` and `authorize()` call is one webservice callout and is independent of each other. Therefore, its possible to handle error and perform partial commits to database.
+Each `registerCustomer()`, `registerPM()`, `capture()` and `authorize()` call is one webservice callout and is independent of each other. Therefore, its possible to handle errors and perform partial commits to database.
 
 	try {
 		bt_stripe.P360_API_v1.PM pm = bt_stripe.P360_API_v1.paymentMethodFactory('0Xxxx0123afg');
