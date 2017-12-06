@@ -1,4 +1,4 @@
-**payment360 REST API Documentation**
+**Payment360 REST API Documentation**
 -------------------------------------
   Payment360 provides REST API for developers in subscriber orgs to create applications and public websites that use payment360 functionality for custom web applications. To keep things simple, our API is structured on simple REST based POST calls with action based JSON payloads. The API consists of two kinds of actions:
   
