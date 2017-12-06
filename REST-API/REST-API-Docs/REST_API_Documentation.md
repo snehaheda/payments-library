@@ -1,26 +1,27 @@
 **payment360 REST API Documentation**
 -------------------------------------
-  payment360 provides REST API for developers in subscriber orgs to create applications and public websites that use payment360 functionality for custom web applications. To keep things simple, our API is structured on simple REST based POST calls with action based JSON payloads. The API consists of two kinds of actions:
+  Payment360 provides REST API for developers in subscriber orgs to create applications and public websites that use payment360 functionality for custom web applications. To keep things simple, our API is structured on simple REST based POST calls with action based JSON payloads. The API consists of two kinds of actions:
   
-  * **Public actions:** Public actions are for providing unaunthenticated access to API functionalities which can be used by public websites providing payment method and transaction creation. We will cover them in detail below.
+  * **Public Actions:** Public actions are for providing unauthenticated access to API functionalities which can be used by public websites providing payment method and transaction creation. We will cover them in detail below.
   
-  * **Private actions:** Private actions are more comprehensive list of functionalities which can be used in authenticated user context and consists of API calls for retrieving, creating and updating core payment360 entities. We will cover them in detail later in this document.
+  * **Private Actions:** Private actions have a larger list of functionalities which can be used in authenticated user context and consist of API calls for retrieving, creating and updating core Blackthorn | Payments entities. We will cover them in detail later in this document.
   
 **Getting started**
 -------------------
   In order to get started, we first need to setup payment360 API access and class permissions. Please complete steps mentioned under Setup section.
   
-**Setting up and Testing the payment360 REST API**
+**Setup and Test payment360 REST API**
+-------------------
 
-**Setting up your public facing site**
+**Setup public facing site**
 
   Go to __Setup | Sites__ and click __New__.
 
   ![Public facing site](site1.png)
 
-  Note the url of your site. We suggest you to set up a HTTPS endpoint if available. However, as your endpoint is NOT dealing directly with sensitive credit card details, you can use HTTP as well.
+  Note the url of your site. We suggest you to set up an HTTPS endpoint, if available. However, as your endpoint is NOT dealing directly with sensitive credit card details, you can use HTTP as well.
 
-**Setting up guest user permissions**
+**Setup guest user permissions**
 
 **Objects**
 
@@ -29,7 +30,8 @@
   * Click the __Public Access Settings__ button
   * Go to __Object Settings__
   * Grant read access to __Payment Gateways__ and to all its fields
-  * Grant read/write/edit access to __Stripe Customer__, __Payment Method__ and __Transaction__ objects and all fields. Grant access to all __Transaction__ record types.
+  * Grant read/write/edit access to __Stripe Customer__, __Payment Method__ and __Transaction__ objects and all fields. 
+  * Grant access to all __Transaction__ record types.
 
 **Apex Class Access**
 
@@ -40,17 +42,19 @@
 
 **Test your endpoint**
 
-  You can test your endpoint by 'pinging' it with a dummy request. This way you can make sure the Apex Class is available for your guest user.
+  Test your endpoint by 'pinging' it with a dummy request. This way you can make sure the Apex Class is available for your guest user.
 
-  Open Terminal and type in the following command:
+  Open "Terminal" and type in the following command:
 
   `curl https://<YOUR_SITE_URL>/services/apexrest/bt_stripe/v1 -d x`
 
-  Your response should be similar to the following. You should see a JSON response, with a 'false' success property.
+  Your response should be similar to the following: 
 
   ![curl response](curl.png)
+  
+  You should see a JSON response, with a 'false' success property.
 
-**Downloading the automated frontend tests**
+**Download the automated frontend tests**
 
   You can test the payment360 REST endpoint from your browser, so you can make sure your org is set up properly.
 
@@ -63,9 +67,9 @@
 
   After this command, you should have the `payment360-library` folder in your working directory.
 
-**Runnig the automated frontend tests**
+**Run the automated frontend tests**
 
-**Running the testing environment on your own machine**
+**Run the testing environment on your own machine**
   
   Enter the `payment360-library` folder : `cd payment360-library`
   
@@ -76,7 +80,7 @@
   ![local HTTP server](local_server.png)
   
   
-**Opening the testing environment in your browser**
+**Open the testing environment in your browser**
   
   Open the following URL in your browser:
   
@@ -89,11 +93,11 @@
   Fill out all the field values __from your own org__ (the default settings are referring to blackthorn.io's test org).
   
   * __Endpoint__ : your payment360 REST API's endpoint (see section one in this document)
-  * __Publishable key__ : copy this field value from your org's Payment Gateway
+  * __Publishable Key__ : copy this field value from your org's Payment Gateway
   * __Payment Gateway Id__ : your org's Payment Gateway Id (please note that your Payment Gateway should be connected to Stripe before testing the REST API)
   * __Contact Id__ : An Id of an arbitrary Contact from your org 
   * __Account Id__ : An Id of an arbitrary Account from your org 
-  * __Customer Id__ : An Id of an arbitrary Stripe Customer. Therefore, you should have at least one Stripe Custmer registered, otherwise some test cases will fail.
+  * __Customer Id__ : An Id of an arbitrary Stripe Customer. Therefore, you should have at least one Stripe Customer registered, otherwise some test cases will fail.
   
   Click __Start Tests__ button.
   
@@ -107,13 +111,13 @@
 
 **Considerations**
 
-  * You should use long (18-byte long) record Id's in Account, Contact and Stripe Customer Fields
-  * If some test cases are failing, make sure your the USD is a valid value on the __Currency ISO__ on the 'Stripe' record type
+  * You should use long (18-byte long) record Id's in Account, Contact and Stripe Customer Fields.
+  * If some test cases are failing, make sure the USD is a valid value for the __Currency ISO__ field on the 'Stripe' record type.
 
 **API Request Structure**
 -------------------------
 
-  payment360 REST API is designed to use simple and uniform request and response structure for intuitive usage and increased code reuse. Any API call to payment360 REST API will need following components:
+  payment360 REST API is designed to use simple and uniform request and response structure for intuitive usage and increased code reuse. Any API call to payment360 REST API will need the following components:
 
 **Endpoints**
 
@@ -121,15 +125,17 @@
   Public: https://<YOUR_FORCE_DOT_COM_URL>/<YOUR_SITE_LABEL>/services/apexrest/bt_stripe/v1 
   Private: https://<YOUR_ORG_URL>/services/apexrest/bt_stripe/v1
   
-  The difference between these 2 endpoints is that you can access the public one without oAuth authentication, while the second one is available only for an authenticated users.
+  The difference between these 2 endpoints is that you can access the public one without oAuth authentication, while the second one is available only for authenticated users.
   
-* **Public endpoint**
+* **Public Endpoint**
 
-    The primary use case for the public endpoint is to register a new Payment Method, and optionally capture a Transaction. Because you can use this endpoint without authentication, it is safe to implement a call on the front-end. However, as this is a publicly accessible endpoint, only some actions are available. You can't perform any actions from the public endoint which touch any existing payment360 records. (Payment Method linking to existing Stripe Customers or Contacts doesn't count if you already have the Id's of the existing records.)
+    The primary use case for the public endpoint is to register a new Payment Method, and optionally capture a Transaction. Because you can use this endpoint without authentication, it is safe to implement a call on the front-end. However, as this is a publicly accessible endpoint, only some actions are available. You can't perform any actions from the public endoint which touch any existing payment360 records. 
+    Note: Payment Method linking to existing Stripe Customers or Contacts doesn't count if you already have the Id's of the existing records.
   
     In order to set up the public endpoint, create a public site (Setup | Site) and grant access to your Guest User to the REST_API_v1 class and related objects. See http://docs.payment360.io/docs/setup for a listing of all the objects to configure.
 
 * **Private Endpoint**
+    
     The purpose of the private endpoint is to perform actions that deal with existing payment360 data. As this data is sensitive, you always need to authenticate yourself before performing actions.
   
     The payment360 private endpoint is a standard Force.com web service, so you can use one of the available oAuth authentication flows. Please see the documentation here:
@@ -141,7 +147,7 @@
 
 * **Method:**
   
-    To keep things simple, payment360 API works with HTTP POST calls only for create, update and retrieve actions according to action parameter passed in data parameter (payload).
+    Payment360 API works with HTTP POST calls only for create, update and retrieve actions according to action parameter passed in data parameter (payload).
   
 * **Payload**
 
@@ -266,7 +272,7 @@
  
 * **Error Response:**
 
-    If the __success__ parameter equals false, than your action was not successful. You should get an error message in the __errorMessage__ property, and the __errorParam__ propery usually gives you some clue about the wrong parameter.
+    If the __success__ parameter equals false, than your action was not successful. You should get an error message in the __errorMessage__ property, and the __errorParam__ property usually gives you some clue about the wrong parameter.
 
     * **Code:** 200 <br />
       **Content:** 
@@ -276,14 +282,14 @@
     "success": false,
     "paymentMethodList": null,
     "errorParam": "id",
-    "errorMessage": "in-valid payment gateway id",
+    "errorMessage": "invalid payment gateway id",
     "customerList": null
 }
 ```
 
 * **Payment Method List**
 
-    The API returns a list of successfully created Payment Methods in the __paymentMethodList__ property. For most of the actions this is a single Payment Method.
+    The API returns a list of successfully created Payment Methods in the __paymentMethodList__ property. For most of the actions, this is a single Payment Method.
 
 * **Transaction List**
 
@@ -301,23 +307,23 @@ Every request should have an __action__ parameter. This parameter tells the API 
 
 **createPaymentMethod**
 
-Currently the __createPaymentMethod__ is the only available action on the public endpoint. You can create a new Payment Method, link it to a Contact, Account or Stripe Customer. 
+Currently the __createPaymentMethod__ is the only available action on the public endpoint. You can create a new Payment Method and link it to a Contact, Account or Stripe Customer. 
 
-Optionally, you can add one or more Transactions to the newly created Payment Method. These Transaction(s) can be in Open status (so charged later), Authorized or charged immediately.
+Optionally, you can add one or more Transactions to the newly created Payment Method. These Transaction(s) can be in a status of "Open" (so charged later), "Authorized" or "Charged" immediately.
 
-It is important to understand that you can not pass directly credit card data to your endpoint. Instead, you are retrieving a JSON token from stripe.js and passing this data as the __stripePayload__ parameter. This way credit card data doesn't travel through a possibly insecure network or code. 
+It is important to understand that you cannot pass credit card data directly to your endpoint. Instead, you are retrieving a JSON token from stripe.js and passing this data as the __stripePayload__ parameter. This way credit card data doesn't travel through a potential insecure network or code. 
 
 
-Params:
+Parameters:
 
-* __action__ : required, always equals `createPaymentMethod`.
+* __action__ : required. Always equals `createPaymentMethod`.
 * __paymentGatewayId__ : required. The SF Id of your Payment Gateway. This represents your Stripe Account.
 * __publishableKey__ : optional. Instead of __paymentGatewayId__ you can provide this property of the Payment Gateway.
 * __stripePayload__ : required. String representation value of the JSON object returned by stripe.js
 * __email__ : optional. The customer's email. If provided, this email is set on the newly created Stripe Customer.
 * __contactId__ : optional. The customer's Contact id. The Payment Method will be linked to this Contact.
 * __accountId__ : optional. The customer's Account id. The Payment Method will be linked to this Account.
-* __customerId__ : optional The customer's String Customer id. The Payment Method will be linked to this Stripe Customer, so no new Stripe Customer is created. The Stripe Customer should exist on the same Payment Gateway that you are using in this call.
+* __customerId__ : optional. The customer's Stripe Customer id. The Payment Method will be linked to this Stripe Customer, so no new Stripe Customer is created. The Stripe Customer should exist on the same Payment Gateway that you are using in this call.
 
 #### Examples
 
@@ -331,7 +337,7 @@ Creating a new Payment Method. No charges.
 ```
 
 
-Creating a new Payment Method and connecting to an existing Stripe Customer.
+Creating a new Payment Method and connecting it to an existing Stripe Customer.
 
 ```
 {
@@ -355,7 +361,7 @@ Creating a new Payment Method and connecting it to a Contact.
 ```
 
 
-Creating a new Payment Method and charging it.
+Creating a new Payment Method and Charging it.
 
 
 ```
@@ -372,7 +378,7 @@ Creating a new Payment Method and charging it.
 ```
 
 
-Creating a new Payment Method and creating a Transaction which will be charged in the future.
+Creating a new Payment Method and creating an "Open" Transaction (charged in the future).
 
 ```
 {
@@ -390,7 +396,7 @@ Creating a new Payment Method and creating a Transaction which will be charged i
 ```
 
 
-Creating a new Payment Method and creating 3 Transactions. First one is authorized only, the second one will be charged in the future, and the third one is charged immediatelly.
+Creating a new Payment Method and creating 3 Transactions. First one is authorized only, the second one will be charged in the future, and the third one is charged immediately.
 
 ```
 {
