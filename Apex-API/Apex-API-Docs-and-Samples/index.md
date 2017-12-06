@@ -1,4 +1,4 @@
-# payment360 Apex API
+# Payment360 Apex API
 
 ## Introduction
 
