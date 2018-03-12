@@ -327,7 +327,7 @@ Parameters:
 
 #### Examples
 
-Creating a new Payment Method. No charges.
+1. Creating a new Payment Method. No charges.
 ```
 {
     "action": "createPaymentMethod",
@@ -337,7 +337,7 @@ Creating a new Payment Method. No charges.
 ```
 
 
-Creating a new Payment Method and connecting it to an existing Stripe Customer.
+2. Creating a new Payment Method and connecting it to an existing Stripe Customer.
 
 ```
 {
@@ -349,7 +349,7 @@ Creating a new Payment Method and connecting it to an existing Stripe Customer.
 ```
 
 
-Creating a new Payment Method and connecting it to a Contact.
+3. Creating a new Payment Method and connecting it to a Contact.
 
 ```
 {
@@ -361,7 +361,7 @@ Creating a new Payment Method and connecting it to a Contact.
 ```
 
 
-Creating a new Payment Method and Charging it.
+4. Creating a new Payment Method and Charging it.
 
 
 ```
@@ -378,7 +378,7 @@ Creating a new Payment Method and Charging it.
 ```
 
 
-Creating a new Payment Method and creating an "Open" Transaction (charged in the future).
+5. Creating a new Payment Method and creating an "Open" Transaction (charged in the future).
 
 ```
 {
@@ -396,7 +396,7 @@ Creating a new Payment Method and creating an "Open" Transaction (charged in the
 ```
 
 
-Creating a new Payment Method and creating 3 Transactions. First one is authorized only, the second one will be charged in the future, and the third one is charged immediately.
+6. Creating a new Payment Method and creating 3 Transactions. First one is authorized only, the second one will be charged in the future, and the third one is charged immediately.
 
 ```
 {
