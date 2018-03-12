@@ -327,7 +327,7 @@ Parameters:
 
 #### Examples
 
-1. Creating a new Payment Method. No charges.
+1. Creating a new Payment Method. No charges. Add the __customerId__ parameter to match on an existing Stripe Customer. Leave this null to create a new Stripe Customer. If you leave this null, when the Stripe Customer is created, we attempt to match on the inserted Stripe Customer Email against all related Contact email addresses.
 ```
 {
     "action": "createPaymentMethod",
