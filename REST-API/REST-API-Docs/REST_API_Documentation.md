@@ -1,6 +1,6 @@
-**Payment360 REST API Documentation**
+**Blackthorn | Payments REST API Documentation**
 -------------------------------------
-  Payment360 provides REST API for developers in subscriber orgs to create applications and public websites that use payment360 functionality for custom web applications. To keep things simple, our API is structured on simple REST based POST calls with action based JSON payloads. The API consists of two kinds of actions:
+  Blackthorn | Payments provides REST API for developers in subscriber orgs to create applications and public websites that use Blackthorn | Payments functionality for custom web applications. To keep things simple, our API is structured on simple REST based POST calls with action based JSON payloads. The API consists of two kinds of actions:
   
   * **Public Actions:** Public actions are for providing unauthenticated access to API functionalities which can be used by public websites providing payment method and transaction creation. We will cover them in detail below.
   
@@ -8,9 +8,9 @@
   
 **Getting started**
 -------------------
-  In order to get started, we first need to setup payment360 API access and class permissions. Please complete steps mentioned under Setup section.
+  In order to get started, we first need to setup Blackthorn | Payments API access and class permissions. Please complete steps mentioned under Setup section.
   
-**Setup and Test payment360 REST API**
+**Setup and Test Blackthorn | Payments REST API**
 -------------------
 
 **Setup public facing site**
@@ -25,7 +25,7 @@
 
 **Objects**
 
-  Your guest user should have permissions to use all the payment360 objects.
+  Your guest user should have permissions to use all the Blackthorn | Payments objects.
 
   * Click the __Public Access Settings__ button
   * Go to __Object Settings__
