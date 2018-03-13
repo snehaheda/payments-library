@@ -1,8 +1,8 @@
-# Payment360 Apex API
+# Payment360 Apex API v1
 
 ## Introduction
 
-The purpose of the Apex API is to provide Salesforce developers classes and methods to manipulate Payment Methods, Transactions and Stripe Customers. The API is created in the form of a global Apex class, so it is available in your org if the payment360 package is installed.
+The purpose of the Apex API is to provide Salesforce developers classes and methods to manipulate Payment Methods, Transactions and Stripe Customers. The API is created in the form of a global Apex class, so it is available in your org when the payments package is installed.
 
 ## Structure
 All of the classes are part of the `bt_stripe.P360_API_v1` class.
