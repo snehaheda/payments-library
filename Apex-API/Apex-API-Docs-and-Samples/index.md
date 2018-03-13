@@ -19,11 +19,11 @@ Create these objects using factory methods below because the API class should re
 * `bt_stripe.P360_API_v1.paymentMethodFactory()`
 * `bt_stripe.P360_API_v1.transactionFactory()`
 
-After you create your entity objects and some actions, you need to commit your work using the following method:
+After you create your entity objects and do some actions, you need to commit your work using the following method:
 
 `bt_stripe.P360_API_v1.commitWork()`
 
-This call saves your work in existing or new SOQL objects. This is a DML operation, so make sure you don't make any HTTP callouts after making the commit call. Also, after the commit don't do any payment360 API actions -- this should be the last action in your executing context.
+This call saves your work in existing or new SOQL recods. This is a DML operation, so make sure you don't make any HTTP callouts after making the commit call. Also, after the commit don't do any payment360 API actions -- this should be the last action in your executing context.
 
 ## Basic example
 
