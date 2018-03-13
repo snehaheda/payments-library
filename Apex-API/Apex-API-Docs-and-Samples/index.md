@@ -29,11 +29,11 @@ This call saves your work in existing or new SOQL recods. This is a DML operatio
 
 This code snippet creates a new Customer and adds a new Payment Method. Once the Payment Method is registered to Stripe, a new Transaction is created and captured.
 
-Note that all the entities are created using the factory methods. You need to set all the required properties and after they are set, you can call action methods on them. For example `c.registerCustomer()` or `t.capture()`.
+Note that all the entities are created using the factory methods. You need to set all the required properties. After they are set, you can call action methods on them. For example `c.registerCustomer()` or `t.capture()`.
 
 Also note that `bt_stripe.P360_API_v1.commitWork()` is happening as the very last action.
 
-It is very important to catch the error. If an error happens (for example, a Payment Method can't be registered for some reason), the API is throwing a `bt_stripe.P360_API_v1.P360_Exception`. Catching the error can let you decide about the further flow of your business logic. 
+It is very important to catch any errors. If an error happens (for example, a Payment Method can't be registered for some reason), the API is throwing a `bt_stripe.P360_API_v1.P360_Exception`. Catching the error can let you decide about the further flow of your business logic. 
 
 
 ```
