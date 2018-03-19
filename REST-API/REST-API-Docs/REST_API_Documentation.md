@@ -20,6 +20,8 @@
   ![Public facing site](site1.png)
 
   Note the url of your site. We suggest you to set up an HTTPS endpoint, if available. However, as your endpoint is NOT dealing directly with sensitive credit card details, you can use HTTP as well.
+  
+  **Note:** To allow code running in a Web browser to communicate with Salesforce from a specific origin, whitelist the origin.
 
 **Setup guest user permissions**
 
