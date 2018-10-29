@@ -284,7 +284,15 @@ Example 2: Creating a Stripe Customer and Stripe Payment Method
 		pm.cvv = '000';
 		//bt_stripe.P360_API_v1.P360_Exception if something goes wrong with creating Payment Method in Stripe
 		pm.registerPM();
-		
+
+		/* look for error messages on the Payment Method - this field is set if Stripe returns a decline code or if
+		the card fails the fraud/cvv/zip check */
+		if (String.isNotBlank(pm.record.bt_stripe__Error_Message__c)) {
+			// if you're in this if statement, the Payment Method was declined
+			System.debug('bt_stripe__Payment_Method_Status__c = ' + pm.record.bt_stripe__Payment_Method_Status__c);
+			System.debug('bt_stripe__Error_Message__c = ' + pm.record.bt_stripe__Error_Message__c);
+		}
+
 		//bt_stripe.P360_API_v1.P360_Exception if something goes wrong with committing records in database
 		bt_stripe.P360_API_v1.commitWork();
 	} catch (Exception ex) {
@@ -315,7 +323,15 @@ Example 3: Creating a Stripe Customer, Stripe Payment Method and capture Stripe 
 		pm.cvv = '000';
 		//bt_stripe.P360_API_v1.P360_Exception if something goes wrong with creating the Payment Method in Stripe
 		pm.registerPM();
-		
+
+		/* look for error messages on the Payment Method - this field is set if Stripe returns a decline code or if
+		the card fails the fraud/cvv/zip check */
+		if (String.isNotBlank(pm.record.bt_stripe__Error_Message__c)) {
+			// if you're in this if statement, the Payment Method was declined
+			System.debug('bt_stripe__Payment_Method_Status__c = ' + pm.record.bt_stripe__Payment_Method_Status__c);
+			System.debug('bt_stripe__Error_Message__c = ' + pm.record.bt_stripe__Error_Message__c);
+		}
+
 		bt_stripe.P360_API_v1.Tra t = bt_stripe.P360_API_v1.transactionFactory();
 		t.paymentGatewayId = pgList[0].Id;
 		t.pm = pm;
@@ -344,7 +360,7 @@ Example 4: Creating Payment Method for an existing Customer
 		pm.cvv = '000';
 		//bt_stripe.P360_API_v1.P360_Exception if something goes wrong with creating a Payment Method in Stripe
 		pm.registerPM();
-		
+
 		//bt_stripe.P360_API_v1.P360_Exception if something goes wrong with committing records in database
 		bt_stripe.P360_API_v1.commitWork();
 	} catch (Exception ex) {
