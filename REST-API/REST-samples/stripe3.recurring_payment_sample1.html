@@ -1,0 +1,85 @@
+<html>
+    <head>
+        <script src="https://js.stripe.com/v3/"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+    </head>    
+
+    <body>
+
+        <h1> PSC 6 times, capture first
+        <div id="card-element"></div>
+
+        <div>
+            <input id="amount" />
+        </div>
+
+        <div>
+            <select id="preset">
+                <option value="Daily">Daily</option>
+                <option value="Weekly">Weekly</option>
+                <option value="Monthly">Monthly</option>
+            </select> 
+        </div>
+            
+        <div>
+            <button onclick="submit()">Submit</button>
+        </div>
+
+        <script>
+            var endpoint = 'https://mu-paym-dev-peter-developer-edition.na59.force.com/c/services/apexrest/v1';
+            var publishableKey = 'pk_test_PI2EwzybDtndtIwlaElyF1dN';
+
+            var stripe = Stripe(publishableKey);
+            var elements = stripe.elements();
+            var card = elements.create('card');
+            card.mount('#card-element');
+
+            function submit() {
+                stripe.createToken(card)
+                    .then(function(r) {
+                    if (r.token) {
+                        sendTokenToEndpoint(r.token);
+                    }
+                });
+            }   
+
+            function sendTokenToEndpoint(stripeResponse) {
+
+                console.log("stripeResponse", stripeResponse);
+
+                var d = {
+                    stripePayload : JSON.stringify(stripeResponse),
+                    action : "createPaymentMethodWithPaymentSchedules",
+                    publishableKey : publishableKey,
+                    paymentSchedule : {
+                        "preset" : $('#preset').val(),
+                        "eachamount" : $('#amount').val(),
+                        "count" : 6,
+                        "captureFirst" : true
+                    }
+                };      
+
+                console.log('### d:', d);
+
+                $.ajax({
+                    type : 'POST',
+                    url : endpoint,
+                    headers : {
+                        "content-type": "text/plain"
+                    },
+                    data : JSON.stringify(d),
+                    success : salesforceCallback
+                }); 
+            };
+
+            function salesforceCallback(r) {
+                console.log('gut!', r);
+            }   
+
+
+        </script>
+
+               
+    </body>
+</html>
