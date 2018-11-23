@@ -7,28 +7,67 @@
 
     <body>
 
-        <h1> PSC 6 times, capture first
+        <h1>Sample Payment Schedule Form</h1>
         <div id="card-element"></div>
 
         <div>
-            <input id="amount" />
+            Amount
+            <br/>
+            <input id="amount" value="10"/>
+        </div>
+
+        <div>Count
+            
+            <br/>
+            <input id="count" value="3"/>
         </div>
 
         <div>
+            Description
+            <br/>
+            <input id="description" value="My lovely PSC"/>
+        </div>
+
+        <div>
+            Start Date
+            <br/>
+            <input type="date" id="startDate" value="2018-12-01"/>
+        </div>
+
+        <div>
+            Preset
+            <br/>
             <select id="preset">
                 <option value="Daily">Daily</option>
                 <option value="Weekly">Weekly</option>
                 <option value="Monthly">Monthly</option>
+                <option value="Quarterly">Quarterly</option>
             </select> 
         </div>
+
+        <div>
+            Capture First
+            <input id="captureFirst" type="checkbox" />
+        </div>
+
             
         <div>
             <button onclick="submit()">Submit</button>
         </div>
 
+        <hr>
+
+        <div>
+            <a id="record" target="_blank"></a>
+            <br>
+            Your PSC Id is : <span id="recordId"></span>
+
+        </div>
+
         <script>
             var endpoint = 'https://mu-paym-dev-peter-developer-edition.na59.force.com/c/services/apexrest/v1';
             var publishableKey = 'pk_test_PI2EwzybDtndtIwlaElyF1dN';
+            var sfLink = 'https://p-paym-p-11-dev-ed.my.salesforce.com/';
 
             var stripe = Stripe(publishableKey);
             var elements = stripe.elements();
@@ -55,8 +94,10 @@
                     paymentSchedule : {
                         "preset" : $('#preset').val(),
                         "eachamount" : $('#amount').val(),
-                        "count" : 6,
-                        "captureFirst" : true
+                        "count" : $('#count').val(),
+                        "description" : $('#description').val(),
+                        "startDate" : $('#startDate').val(),
+                        "captureFirst" : $('#captureFirst').val() == 'on' ? true : false
                     }
                 };      
 
@@ -74,7 +115,15 @@
             };
 
             function salesforceCallback(r) {
-                console.log('gut!', r);
+                console.log(r);
+                if (r.success !== true) {
+                    alert('Fail. Please check the console.')
+                    return;
+                }
+
+                $('#record').attr('href', sfLink + r.paymentScheduleId);
+                $('#record').attr('recordId', r.paymentScheduleId);
+                $('#record').text('See here the record!');
             }   
 
 
