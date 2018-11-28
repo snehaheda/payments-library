@@ -12,6 +12,7 @@ The call can be sent without submission. In this case, only the price calculatio
 ## Example
 
 Endpoint: `https://<INSTANCE_URL>/services/apexrest/bt_stripe/checkout`
+
 Method: POST
 Content-Type : application/json
 Authorization : oAuth
