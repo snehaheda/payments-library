@@ -1,5 +1,11 @@
 **Blackthorn | Payments REST API Documentation**
 -------------------------------------
+This is a documentation for the generic usage of the API and the `createPaymentMethod` action (create Payment Methods with or without Transactions).
+
+If you are looking for documentation about creating Payment Schedules with Payment Methods:
+* [Javascript Example about creating Recurring Payments](https://github.com/blackthornio/payments-library/blob/master/REST-API/REST-samples/stripe3.recurring_payment_sample1.html)
+* [Payment Schedules Object description](https://github.com/blackthornio/payments-library/blob/master/Apex-API/Apex-API-Docs-and-Samples/Payment_Schedule_APEX_API.md)
+-------------------------------------
   Blackthorn | Payments provides REST API for developers in subscriber orgs to create applications and public websites that use Blackthorn | Payments functionality for custom web applications. To keep things simple, our API is structured on simple REST based POST calls with action based JSON payloads. The API consists of two kinds of actions:
   
   * **Public Actions:** Public actions are for providing unauthenticated access to API functionalities which can be used by public websites providing payment method and transaction creation. We will cover them in detail below.
