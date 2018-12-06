@@ -16,7 +16,7 @@ The call can be sent without submission. In this case, only the price calculatio
 ### `Payload` object
 
 * `String currencyISO` If null, USD is used
-* `Id priceBookId; // The priceBook for the given calculation. Every Product should have a price entry for products
+* `Id priceBookId` The PriceBook for the given calculation. Every Product should have a price entry for products
 * `APIpayloadLineItem[] lineItemList` List of APIpayloadLineItem objects 
 * `Id discountCodeId` Discount code applied
 * `String discountCodeName` OR discount code name
