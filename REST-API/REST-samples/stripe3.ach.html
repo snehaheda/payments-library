@@ -23,8 +23,8 @@
 
 	<script>
 
-		var endpoint = 'https://peter-beta3-developer-edition.na59.force.com/x/services/apexrest/bt_stripe/v1';
- 		var publishableKey = 'pk_test_fZz8zR7G8ZfzlsUoQup6yXFr';
+		var endpoint = 'https://mu-paym-dev-peter-developer-edition.na59.force.com/c/services/apexrest/v1';
+ 		var publishableKey = 'pk_test_PI2EwzybDtndtIwlaElyF1dN';
 		var amount = 900;
 
 		var stripe = Stripe(publishableKey);
@@ -34,7 +34,8 @@
 				  country: 'us',
 				  currency: 'usd',
 				  routing_number: '110000000',
-				  account_number: '000123456789',
+				  // account_number: '000123456789',
+				  account_number: '000111111116',
 				  account_holder_name: $('#holder-name').val(),
 				  account_holder_type: 'individual',
 				})
