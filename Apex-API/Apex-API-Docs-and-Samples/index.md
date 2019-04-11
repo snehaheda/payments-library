@@ -191,6 +191,15 @@ OR
 * __cvv__ Card security code. Not required, but it is good practice to always pass this property.
 * __record__ **bt_stripe__Payment_Method__c** record of the Payment Method. Available after calling the `registerPM()` method.
 
+AND
+
+* __street__ Credit card holder's street
+* __city__ Credit card holder's city
+* __country__ Credit card holder's country
+* __postalCode__ Credit card holder's postalcode
+* __state__ Credit card holder's state
+* __email__ Credit card holder's email
+* __defaultpm__ If set to `true`, the new Payment Method is set as the Customer's default
 #### Actions
 
 * `registerPM()` Registers the Payment Method in Stripe. After calling the method, __record__ property is available.
