@@ -74,6 +74,15 @@
 		<input type="text" id="transaction-id" />
 	</div>
 
+	<div>
+		Amount update:
+		<input type="text" id="amount" />
+	</div>
+
+	<div>
+		Description update:
+		<input type="text" id="description" />
+	</div>
 
 
 	<script type="text/javascript">	
@@ -102,7 +111,6 @@
  		var publishableKey = 'pk_test_FGvMluMK9UkTEbpBYq44xGLe00hbVN5d8G';
  		var paymentGatewayId = ''
 		var contactId = '00346000001UfLs';
-		var amount = 900;
 
 		// You are setting the keys for Stripe
  		Stripe.setPublishableKey(publishableKey);
@@ -166,12 +174,14 @@
 			 	action : "createPaymentMethod",
 			 	publishableKey : publishableKey,
 			 	email : email,
-			 	transactionList : [
-			 		{
-			 			transactionId : $('#transaction-id').val()
-			 		}
-			 	]
-		 	};		
+			 	transactionList : []
+		 	};	
+
+		 	var trans = {transactionId : $('#transaction-id').val()};
+		 	if ( $('#amount').val()) trans.amount = parseInt($('#amount').val());
+		 	if ( $('#description').val()) trans.description = $('#description').val();
+
+		 	d.transactionList.push(trans);
 
 		 	console.log('### d:', d);
 
