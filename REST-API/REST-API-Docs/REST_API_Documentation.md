@@ -429,7 +429,7 @@ Parameters:
 }
 ```     
 
-4. Creating a new Payment Method and use to to Charge an _existing_ Transaction records.
+7. Creating a new Payment Method and use to to Charge an _existing_ Transaction records.
 In this case, you need to add the `transactionId` properties to objects on your `transactionList` list.
 
 Note that you also can update `amount` and `description` properties.
