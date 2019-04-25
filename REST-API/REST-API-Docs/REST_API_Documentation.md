@@ -429,3 +429,45 @@ Parameters:
 }
 ```     
 
+4. Creating a new Payment Method and use to to Charge an _existing_ Transaction records.
+In this case, you need to add the `transactionId` properties to objects on your `transactionList` list.
+
+Note that you also can update `amount` and `description` properties.
+
+```
+{
+    "action": "createPaymentMethod",
+    "paymentGatewayId": "a003600000AjOeL",
+    "transactionList": [
+        {
+            "transactionId" : "a0X2D000000RkXX",
+            "amount" : 100,
+            "description : "My updated description"
+        }
+    ],
+    "stripePayload": "{\"id\":\"tok_19NftUDXJoGaqeOAt4NYdA1O\",\"object\":\"token\",\"card\":{\"id\":\"card_19NftUDXJoGaqeOA08ug7x36\",\"object\":\"card\",\"address_city\":\"Budapest\",\"address_country\":\"Hungary\",\"address_line1\":\"Add l. 1\",\"address_line1_check\":\"unchecked\",\"address_line2\":null,\"address_state\":null,\"address_zip\":\"1234\",\"address_zip_check\":\"unchecked\",\"brand\":\"Visa\",\"country\":\"US\",\"cvc_check\":\"unchecked\",\"dynamic_last4\":null,\"exp_month\":5,\"exp_year\":2019,\"funding\":\"credit\",\"last4\":\"4242\",\"metadata\":{},\"name\":\"Holder Maki\",\"tokenization_method\":null},\"client_ip\":\"94.21.254.28\",\"created\":1481018992,\"livemode\":false,\"type\":\"card\",\"used\":false}"
+}
+```
+
+If you want to update (or set) `Related_Account__c` or `Related_Contact__c` fields on the transaction, set the following properties on the transaction.
+
+For Account:
+```
+"transactionList": [
+        {
+            "transactionId" : "a0X2D000000RkXX",
+            "account" : { "id" : "a0Q2D000000Sfd9" }
+        }
+    ]
+```
+
+For Contact:
+```
+"transactionList": [
+        {
+            "transactionId" : "a0X2D000000RkXX",
+            "contact" : { "id" : "a0Q2D000000Sfd9" }
+        }
+    ]
+```
+
