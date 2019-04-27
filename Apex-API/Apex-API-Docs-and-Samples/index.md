@@ -181,7 +181,7 @@ Creates a PM class from an existing SOQL **bt_stripe__Payment_Method__c** object
 * __paymentGatewayId__ Id of the Payment Gateway associated with the Stripe Payment Method. Required.
 * __customer__ reference to bt_stripe.P360_API_v1.Customer object for associating Payment Method to Customer. Required.
 * __cardHolderName__ Name on the card. Required.
-* __stripeToken__ Tokenized card string represantation (tok_XXXXXXXXX); see Token object on Stripe REST API docs. USE THIS instead of raw card data if possible.
+* __stripeToken__ Tokenized card or ACH. string represantation (tok_XXXXXXXXX); see Token object on Stripe REST API docs. USE THIS instead of raw card data if possible.
 
 OR
 
