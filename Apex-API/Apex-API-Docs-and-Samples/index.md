@@ -182,6 +182,9 @@ Creates a PM class from an existing SOQL **bt_stripe__Payment_Method__c** object
 * __customer__ reference to bt_stripe.P360_API_v1.Customer object for associating Payment Method to Customer. Required.
 * __cardHolderName__ Name on the card. Required.
 * __stripeToken__ Tokenized card or ACH. string represantation (tok_XXXXXXXXX); see Token object on Stripe REST API docs. USE THIS instead of raw card data if possible.
+* __connectedAccountId__ Id of the Stripe Connect Account. Required if you want to create External Account.
+* __isACH__ Set this flag to true if you are trying to register bank account.
+
 
 OR
 
@@ -492,9 +495,55 @@ Each `registerCustomer()`, `registerPM()`, `capture()` and `authorize()` call is
 		//do error handling here
 	}
 
+Example 8: Creating a External Account(Card) for a Connected Account
 
+	try {
+		
+		bt_stripe.P360_API_v1.PM pm = bt_stripe.P360_API_v1.paymentMethodFactory();
+		pm.paymentGatewayId = pgList[0].Id;
+		pm.connectedAccountId = connectId;
+		pm.stripeToken = 'tok_AMEX';
+		//bt_stripe.P360_API_v1.P360_Exception if something goes wrong with creating Payment Method in Stripe
+		pm.registerExternalAccount();
 
+		/* look for error messages on the Payment Method - this field is set if Stripe returns a decline code or if
+		the card fails the fraud/cvv/zip check */
+		if (String.isNotBlank(pm.record.bt_stripe__Error_Message__c)) {
+			// if you're in this if statement, the Payment Method was declined
+			System.debug('bt_stripe__Payment_Method_Status__c = ' + pm.record.bt_stripe__Payment_Method_Status__c);
+			System.debug('bt_stripe__Error_Message__c = ' + pm.record.bt_stripe__Error_Message__c);
+		}
 
+		//bt_stripe.P360_API_v1.P360_Exception if something goes wrong with committing records in database
+		bt_stripe.P360_API_v1.commitWork();
+	} catch (Exception ex) {
+		//do error handling here
+	}
+
+Example 9: Creating a External Account(Bank Account) for a Connected Account
+
+	try {
+		
+		bt_stripe.P360_API_v1.PM pm = bt_stripe.P360_API_v1.paymentMethodFactory();
+		pm.paymentGatewayId = pgList[0].Id;
+		pm.connectedAccountId = connectId;
+		pm.stripeToken = 'tok_BANK';
+		pm.isACH = true;
+		//bt_stripe.P360_API_v1.P360_Exception if something goes wrong with creating Payment Method in Stripe
+		pm.registerExternalAccount();
+
+		/* look for error messages on the Payment Method - this field is set if Stripe returns a decline code */
+		if (String.isNotBlank(pm.record.bt_stripe__Error_Message__c)) {
+			// if you're in this if statement, the Payment Method was declined
+			System.debug('bt_stripe__Payment_Method_Status__c = ' + pm.record.bt_stripe__Payment_Method_Status__c);
+			System.debug('bt_stripe__Error_Message__c = ' + pm.record.bt_stripe__Error_Message__c);
+		}
+
+		//bt_stripe.P360_API_v1.P360_Exception if something goes wrong with committing records in database
+		bt_stripe.P360_API_v1.commitWork();
+	} catch (Exception ex) {
+		//do error handling here
+	}
 
 
 
